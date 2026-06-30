@@ -858,6 +858,16 @@ html.dark .tag-badge:hover {
   opacity: 0.5;
 }
 
+/* ========== SPA content focus (a11y without blue ring) ========== */
+#content:focus {
+  outline: none;
+}
+#content:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: -2px;
+  border-radius: 4px;
+}
+
 /* ========== Utility buttons ========== */
 .theme-toggle-btn, .open-share-btn, #sidebar-toggle {
   background: transparent !important;
