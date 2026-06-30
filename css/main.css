@@ -685,14 +685,6 @@ html.dark .code-block-wrapper pre {
   color: #e2e8f0 !important;
 }
 
-#section-syntax pre[class*="language-"] {
-  background: transparent !important;
-  border: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-}
-
 /* ========== Diagram Wrappers ========== */
 .diagram-wrapper {
   border: 1px solid var(--border-default);
@@ -984,19 +976,6 @@ html:not(.dark) .readme-content .bg-slate-900\/60 {
 }
 html.dark #docs-dynamic-content tbody tr:nth-child(even) {
   background-color: rgba(255, 255, 255, 0.02) !important;
-}
-
-/* ========== Deep Dive Container ========== */
-.deep-dive-box {
-  background-color: var(--brand-light) !important;
-  border: 1px solid rgba(233, 84, 32, 0.2) !important;
-  color: var(--text-secondary) !important;
-}
-html.dark .deep-dive-box {
-  border-color: rgba(233, 84, 32, 0.35) !important;
-}
-.deep-dive-box h4 {
-  color: var(--text-primary) !important;
 }
 
 /* ========== Dark Mode Button Contrast Fix ========== */
