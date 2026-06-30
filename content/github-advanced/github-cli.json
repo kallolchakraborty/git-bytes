@@ -32,5 +32,6 @@
     "github",
     "cli",
     "automation"
-  ]
+  ],
+  "cheatSheet": "<h4>Core Commands</h4><ul><li><code>gh pr create --fill --reviewer @me</code> — create PR from current branch.</li><li><code>gh pr merge --squash</code> — squash merge.</li><li><code>gh issue list --label bug --json number,title</code> — structured JSON output.</li><li><code>gh release create v1.0 --generate-notes</code> — release with auto-release notes.</li><li><code>gh api /repos/{owner}/{repo}</code> — raw API access.</li></ul><h4>Staff+ Patterns</h4><ul><li>Use <code>gh api graphql -f query=...</code> for complex queries beyond built-in commands — makes <code>gh</code> a universal GitHub client.</li><li>Script with <code>--json --jq '.[].title'</code> for pipeline-friendly output parsing.</li></ul><h4>Watch Outs</h4><ul><li><code>GITHUB_TOKEN</code> on CI is repo-scoped. For cross-repo operations, use a PAT with broader scope.</li><li><code>gh auth login</code> stores creds in keyring. On headless CI, use <code>GH_TOKEN</code> env var.</li></ul><h4>Interview Angle</h4><p>Proficiency with <code>gh</code> signals operational maturity. Mention <code>gh api</code> for automation at scale — shows understanding of the underlying API and its rate limits.</p>"
 }

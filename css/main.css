@@ -1040,6 +1040,64 @@ details.group[open] summary {
   background-color: var(--brand-light);
 }
 
+/* ========== Cheat Sheet ========== */
+details.cheat-sheet {
+  border-left: 4px solid var(--brand-primary);
+  background-color: var(--bg-secondary);
+  border-radius: 0 0.75rem 0.75rem 0;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+details.cheat-sheet summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  color: var(--brand-primary);
+  cursor: pointer;
+  list-style: none;
+  outline: none;
+  user-select: none;
+}
+details.cheat-sheet summary::-webkit-details-marker { display: none; }
+details.cheat-sheet[open] summary {
+  border-bottom: 1px solid var(--border-default);
+}
+details.cheat-sheet .cheat-sheet-body {
+  padding: 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+details.cheat-sheet .cheat-sheet-body h4 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-primary);
+  margin: 0.75rem 0 0.25rem 0;
+}
+details.cheat-sheet .cheat-sheet-body h4:first-child { margin-top: 0; }
+details.cheat-sheet .cheat-sheet-body code {
+  background-color: rgba(233, 84, 32, 0.1);
+  color: var(--brand-primary);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-size: 0.75rem;
+}
+details.cheat-sheet .cheat-sheet-body ul {
+  margin: 0.25rem 0 0.5rem 0;
+  padding-left: 1.25rem;
+}
+details.cheat-sheet .cheat-sheet-body li {
+  margin-bottom: 0.25rem;
+}
+details.cheat-sheet .cheat-sheet-body strong {
+  color: var(--text-primary);
+}
+
 /* ========== Print Overrides Extension ========== */
 @media print {
   #article-actions-toolbar,

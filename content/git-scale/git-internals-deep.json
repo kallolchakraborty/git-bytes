@@ -38,5 +38,6 @@
     "git",
     "internals",
     "performance"
-  ]
+  ],
+  "cheatSheet": "<h4>Core Commands</h4><ul><li><code>git cat-file --batch</code> — bulk object inspection. Pipe object SHAs for efficient scanning.</li><li><code>git verify-pack .git/objects/pack/*.idx</code> — validate packfile integrity.</li><li><code>git rev-list --objects --all</code> — list all objects in the repo.</li><li><code>git gc --auto</code> — auto-garbage-collect. Prefer over <code>--aggressive</code>.</li></ul><h4>Staff+ Patterns</h4><ul><li>Use <code>git cat-file --batch-check</code> in scripts to identify large objects: pipe <code>git rev-list --objects --all | awk '{print $1}'</code> to batch-check with object sizes.</li><li>Monitor <code>git count-objects -v</code> for loose object count. High loose count = GC needed. Automate GC in cron.</li></ul><h4>Watch Outs</h4><ul><li><code>git gc --aggressive</code> can take hours on large repos and provides marginal benefit over <code>git gc --auto</code>.</li><li>Delta compression in packfiles is a read-time trade-off: deeper delta chains = smaller packs but slower object access.</li></ul><h4>Interview Angle</h4><p>Google L6 asks about Git hosting design. Understanding the object model and Merkle DAG is essential. Know that the SHA-1 hash is computed as <code>sha1(type + ' ' + size + '\\0' + content)</code> and that identical files always produce the same blob hash (automatic dedup).</p>"
 }

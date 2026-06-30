@@ -38,5 +38,6 @@
     "actions",
     "cost",
     "staff+"
-  ]
+  ],
+  "cheatSheet": "<h4>Core Commands</h4><ul><li><code>concurrency: group: ci group: ci cancel-in-progress: true</code> — cancel redundant runs.</li><li><code>actions/cache@v4</code> — cache dependencies across runs.</li><li><code>self-hosted</code> runner — free compute, no per-minute billing.</li></ul><h4>Staff+ Patterns</h4><ul><li>Use <code>paths-ignore</code> and <code>paths-filter</code> to skip CI on docs-only or non-source changes — biggest quick cost save.</li><li>Cache <code>~/.npm</code>, <code>~/.cache/pip</code>, and <code>node_modules</code> with language-specific keys including <code>hashFiles</code> for exact restoration.</li></ul><h4>Watch Outs</h4><ul><li>Self-hosted runners still cost maintenance time. Factor in admin overhead vs. per-minute savings.</li><li>Cache restore is not guaranteed (cache eviction, key mismatch). Always fall back to <code>npm ci</code>.</li></ul><h4>Interview Angle</h4><p>Cost optimization is a Staff+ concern — show you think about the bottom line. Discuss trade-offs: faster CI (more parallelism) vs cheaper CI (conservative parallelism, caching, self-hosted).</p>"
 }

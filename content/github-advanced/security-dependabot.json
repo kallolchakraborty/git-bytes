@@ -32,5 +32,6 @@
     "github",
     "security",
     "dependabot"
-  ]
+  ],
+  "cheatSheet": "<h4>Core Commands</h4><ul><li><code>.github/dependabot.yml</code> — config for automated dependency updates.</li><li><code>github/codeql-action@v3</code> — CodeQL analysis in CI.</li><li><code>GH_TOKEN</code> with <code>security_events: write</code> — API-based security management.</li></ul><h4>Staff+ Patterns</h4><ul><li>Dependabot with <code>open-pull-requests-limit: 10</code> + <code>reviewers: team-security</code>. Auto-merge patches, manually review major updates.</li><li>Use CodeQL <code>security-extended</code> query suite (not just default) — catches XSS, SQL injection, path traversal.</li></ul><h4>Watch Outs</h4><ul><li>Secret scanning push protection can block legitimate commits. Have a bypass process (admins can allow specific pushes).</li><li>Dependabot PRs consume CI minutes. Set <code>schedule.interval: weekly</code> to avoid daily CI storms.</li></ul><h4>Interview Angle</h4><p>Stripe/Microsoft ask about supply chain security. The key insight is defense-in-depth: Dependabot + CodeQL + secret scanning + signed commits. Discuss the friction vs security trade-off.</p>"
 }

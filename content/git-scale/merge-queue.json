@@ -38,5 +38,6 @@
     "git",
     "merge",
     "faang"
-  ]
+  ],
+  "cheatSheet": "<h4>Core Commands</h4><ul><li><code>git merge --squash feature</code> — squash all feature commits into one.</li><li><code>git merge --no-ff feature</code> — force merge commit to preserve branch topology.</li><li><code>git merge-base --all main feature</code> — find the merge base(s) for criss-cross merges.</li><li><code>git merge-tree main feature</code> — preview merge result without actual merge (Git 2.34+).</li></ul><h4>Staff+ Patterns</h4><ul><li>Use a <strong>merge queue</strong> to prevent CI skew: PRs are batched and validated together before landing. GitHub's merge queue (since 2023) creates a temporary branch, runs CI on the combined diff, then fast-forwards main.</li><li>For the merge-ort strategy (Git 2.34+): it avoids index file locking issues in large repos and provides better conflict messages.</li></ul><h4>Watch Outs</h4><ul><li>Squash merge loses individual commit authorship. Use <code>--squash</code> only for feature branches, not for shared branches.</li><li>Merge queues add latency. Set a reasonable queue timeout and have a bypass for hotfixes.</li></ul><h4>Interview Angle</h4><p>Amazon L6 asks about merge algorithm internals. Know: recursive merge (default) vs ort (new), rename detection (50% similarity threshold), and the LCA computation for criss-cross histories. The merge queue is a distributed coordination problem.</p>"
 }

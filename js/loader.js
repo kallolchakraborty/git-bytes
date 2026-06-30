@@ -480,6 +480,7 @@ async function loadContent(hash) {
       (data.tags && data.tags.length > 0 ? '<div class="flex flex-wrap gap-1.5 mt-0.5">' + data.tags.map(function(t) { return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="' + t + '">' + t + '</span>'; }).join('') + '</div>' : '') +
       '</div>' +
       '<p class="theme-text-muted leading-relaxed text-base">' + data.description + '</p>' +
+      (data.cheatSheet ? '<details class="cheat-sheet mt-6"><summary><span class="material-symbols-outlined text-[16px]" aria-hidden="true">quick_reference</span> Staff+ Cheat Sheet<span class="material-symbols-outlined text-[16px] ml-auto">expand_more</span></summary><div class="cheat-sheet-body">' + data.cheatSheet + '</div></details>' : '') +
       embedCode +
       (data.details ? '<div id="section-dive" class="scroll-mt-24"><details class="group border theme-border theme-bg-subtle rounded-xl overflow-hidden transition-all duration-300">' +
       '<summary class="flex items-center justify-between p-4 font-bold text-sm theme-text cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">' +

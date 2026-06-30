@@ -38,5 +38,6 @@
     "git",
     "monorepo",
     "scale"
-  ]
+  ],
+  "cheatSheet": "<h4>Core Commands</h4><ul><li><code>git clone --filter=blob:none &lt;url&gt;</code> — partial clone: fetch commits/trees but defer blobs.</li><li><code>git sparse-checkout set --cone src/</code> — limit working tree to specific directories.</li><li><code>git maintenance start</code> — background maintenance (fetch, commit-graph, loose-objects).</li></ul><h4>Staff+ Patterns</h4><ul><li>Combine partial clone + sparse checkout for monorepo performance: <code>--filter=tree:0</code> defers ALL object fetching, <code>--cone mode</code> limits to your team's directory.</li><li>Use <code>git fsmonitor--daemon</code> with <code>watchman</code> to eliminate <code>lstat()</code> calls — makes <code>git status</code> instant even in large working trees.</li></ul><h4>Watch Outs</h4><ul><li>Partial clone requires Git 2.26+ and server-side support (GitHub supports it since 2021). Older Git versions fall back to full clone.</li><li>Blobless clones (<code>--filter=blob:none</code>) still fetch blobs on demand — the first <code>git log -p</code> will be slow as blobs are lazily fetched.</li></ul><h4>Interview Angle</h4><p>Meta L6–L7 asks about monorepo architecture. Key insight: 90% of engineers only touch 10% of the codebase. Partial clone + sparse checkout + fsmonitor make monorepos practical at 10K+ engineer scale. CI must use dependency graph analysis to build only affected projects.</p>"
 }

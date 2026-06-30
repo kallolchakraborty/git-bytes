@@ -38,5 +38,6 @@
     "actions",
     "advanced",
     "staff+"
-  ]
+  ],
+  "cheatSheet": "<h4>Core Commands</h4><ul><li><code>workflow_call</code> — reusable workflows, called from other workflows.</li><li><code>workflow_run</code> — trigger workflows based on another workflow's completion.</li><li><code>environment: production</code> — deployment environments with approvals.</li><li><code>concurrency: group: ci-${{ github.ref }}</code> — cancel duplicates.</li></ul><h4>Staff+ Patterns</h4><ul><li>Use <code>reusable workflows</code> with <code>workflow_call</code> to define a deployment pipeline once and share across all repos — DRY your CI/CD.</li><li>Use <code>matrix</code> with <code>include</code> for conditional job variants: <code>matrix: os: [ubuntu, macos], include: [{ os: ubuntu, node: 18 }, { os: macos, node: 20 }]</code>.</li></ul><h4>Watch Outs</h4><ul><li>Reusable workflows can't call other reusable workflows (no nesting). Use composite actions instead for nested reuse.</li><li><code>GITHUB_TOKEN</code> in reusable workflows is the caller's token, not the callee's. Permission issues arise when the caller doesn't have access to the callee's secrets.</li></ul><h4>Interview Angle</h4><p>Netflix L7 asks about deployment pipeline design at scale. Discuss the trade-off between <code>workflow_run</code> (decoupled, async) and <code>needs</code> (coupled, synchronous). The key insight is idempotency and rollback strategy.</p>"
 }
