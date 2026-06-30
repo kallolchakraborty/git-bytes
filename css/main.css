@@ -55,9 +55,9 @@ html.dark {
   --svg-accent-stroke: #a78bfa;
   --svg-accent-text: #ddd6fe;
 }
-html { font-size: 13px; font-family: 'Ubuntu', sans-serif; }
-code { font-family: 'Ubuntu Mono', monospace; }
-pre { font-family: 'Ubuntu Mono', monospace; }
+html { font-size: 13px; font-family: 'Ubuntu'; }
+code { font-family: 'Ubuntu Mono'; }
+pre { font-family: 'Ubuntu Mono'; }
 a { text-decoration: none; }
 button, input { border: none; outline: none; font-family: inherit; }
 
@@ -458,7 +458,7 @@ html.dark .glass-nav {
 .timeline-dot-year {
   font-size: 12px;
   font-weight: 700;
-  font-family: 'Ubuntu', sans-serif;
+  font-family: 'Ubuntu';
   color: var(--brand-primary);
   white-space: nowrap;
   background: var(--brand-light);
@@ -533,7 +533,7 @@ html.dark .timeline-entry:hover .timeline-dot-ring {
 .readme-content li { margin: 0.25rem 0; }
 #docs-dynamic-content code,
 .readme-content code {
-  font-family: 'Ubuntu Mono', monospace;
+  font-family: 'Ubuntu Mono';
   font-size: 13px;
   background: var(--bg-secondary);
   padding: 2px 6px;
@@ -607,7 +607,7 @@ html.dark .token.punctuation { color: #6B7280 !important; }
 html.dark .token.comment { color: #6B7280 !important; font-style: italic !important; }
 
 pre[class*="language-"] {
-  font-family: 'Ubuntu Mono', monospace !important;
+  font-family: 'Ubuntu Mono' !important;
   color: inherit !important;
   text-shadow: none !important;
   background: transparent !important;
@@ -621,7 +621,7 @@ pre[class*="language-"] {
 code[class*="language-"] {
   text-shadow: none !important;
   color: inherit !important;
-  font-family: 'Ubuntu Mono', monospace !important;
+  font-family: 'Ubuntu Mono' !important;
   font-size: inherit !important;
 }
 :not(pre) > code[class*="language-"] { background: transparent !important; padding: 0 !important; }
@@ -647,7 +647,7 @@ code[class*="language-"] {
 }
 .code-block-wrapper pre {
   color: #334155 !important;
-  font-family: 'Ubuntu Mono', monospace !important;
+  font-family: 'Ubuntu Mono' !important;
   font-size: 13px !important;
   line-height: 1.5 !important;
   letter-spacing: 0 !important;
@@ -1124,14 +1124,14 @@ html.dark .related-topic-card:hover {
 /* ========== SVG Text Rendering ========== */
 svg text,
 svg tspan {
-  font-family: 'Ubuntu', sans-serif !important;
+  font-family: 'Ubuntu' !important;
 }
 
 svg text[class*="-lbl"]:not([class*="-title"]),
 svg text[font-family="monospace"],
 svg text[class*="mono"],
 svg text.monospace {
-  font-family: 'Ubuntu Mono', monospace !important;
+  font-family: 'Ubuntu Mono' !important;
   letter-spacing: -0.04em !important;
   text-rendering: optimizeLegibility !important;
 }
@@ -1141,7 +1141,7 @@ svg text[class*="-lbl-val"] {
 }
 
 svg text[class*="-lbl-title"] {
-  font-family: 'Ubuntu', sans-serif !important;
+  font-family: 'Ubuntu' !important;
   font-size: 11px !important;
   letter-spacing: -0.01em !important;
 }
