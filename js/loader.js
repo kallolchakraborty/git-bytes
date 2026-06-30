@@ -223,15 +223,32 @@ function codeBlock(code, langClass, langName) {
 }
 
 function wrapDiagrams(container) {
-  var svgs = container.querySelectorAll('svg');
-  svgs.forEach(function(svg) {
+  container.querySelectorAll('svg').forEach(function(svg) {
     if (svg.closest('.diagram-wrapper, iframe, .code-block-wrapper, button, nav')) return;
     if (svg.parentElement && svg.parentElement.classList.contains('diagram-wrapper')) return;
-    var hasBg = svg.querySelector('rect[fill*="var(--bg-secondary)"]');
     var wrapper = document.createElement('div');
-    wrapper.className = 'diagram-wrapper' + (hasBg ? '' : ' diagram-bg');
+    wrapper.className = 'diagram-wrapper';
     svg.parentNode.insertBefore(wrapper, svg);
     wrapper.appendChild(svg);
+  });
+}
+
+function animateDiagrams(container) {
+  var wrappers = container.querySelectorAll('.diagram-wrapper');
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('anim-ready');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  wrappers.forEach(function(w, i) {
+    if (w.getBoundingClientRect().top < window.innerHeight) {
+      setTimeout(function() { w.classList.add('anim-ready'); }, i * 100);
+    } else {
+      obs.observe(w);
+    }
   });
 }
 
@@ -454,6 +471,7 @@ async function loadContent(hash) {
     }
     enhanceCodeBlocks(contentArea);
     wrapDiagrams(contentArea);
+    animateDiagrams(contentArea);
 
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {

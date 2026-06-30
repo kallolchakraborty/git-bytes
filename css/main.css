@@ -699,26 +699,30 @@ html.dark .code-block-wrapper pre {
   border: 1px solid var(--border-default);
   border-radius: 8px;
   background: var(--bg-secondary);
-  overflow: hidden;
-  margin: 2rem 0;
+  margin: 2rem auto;
+  padding: 0.75rem;
   box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(15px);
+}
+.diagram-wrapper.anim-ready {
+  animation: fadeUp 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 .diagram-wrapper:hover {
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   border-color: var(--brand-primary);
 }
 .diagram-wrapper svg {
-  display: block !important;
-  margin: 0 !important;
+  display: inline-block !important;
+  margin: 0 auto !important;
   max-width: 100% !important;
   height: auto !important;
+  vertical-align: middle;
 }
-.diagram-wrapper.diagram-bg {
-  padding: 0.75rem;
-}
-.diagram-wrapper.diagram-bg svg {
-  margin: 0 auto !important;
+.diagram-wrapper svg[width] {
+  width: 100% !important;
 }
 
 html.dark .diagram-wrapper {
