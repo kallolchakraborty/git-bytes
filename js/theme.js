@@ -1,48 +1,66 @@
-(function() {
-  var key = 'gb_theme';
+(function () {
+  'use strict';
 
+  /* ── localStorage helpers (safe across storage-restricted contexts) ── */
   function safeGet(key) {
-    try { return localStorage.getItem(key); } catch (e) { return null; }
+    try {
+      return localStorage.getItem(key);
+    } catch (_) {
+      return null;
+    }
   }
-
   function safeSet(key, val) {
-    try { localStorage.setItem(key, val); } catch (e) {}
+    try {
+      localStorage.setItem(key, val);
+    } catch (_) { /* quota exceeded or blocked */ }
   }
 
+  /* ── Theme key ── */
+  var STORAGE_KEY = 'gb_theme';
+
+  /* ── Read persisted theme; default to light ── */
   function getTheme() {
-    var stored = safeGet(key);
+    var stored = safeGet(STORAGE_KEY);
     if (stored === 'dark' || stored === 'light') return stored;
     return 'light';
   }
 
-  function apply(t) {
-    document.documentElement.classList.toggle('dark', t === 'dark');
-    var icons = document.querySelectorAll('.theme-toggle-btn .material-symbols-outlined');
-    for (var i = 0; i < icons.length; i++) {
-      icons[i].textContent = t === 'dark' ? 'light_mode' : 'dark_mode';
-    }
+  /* ── Apply a theme: toggle `.dark` on <html>, update toggle icons,
+       dispatch custom event so other modules can react ── */
+  function apply(theme) {
+    var isDark = theme === 'dark';
+    document.documentElement.classList.toggle('dark', isDark);
+
+    /* update all theme-toggle icon buttons */
+    document.querySelectorAll('.theme-toggle-btn .material-symbols-outlined').forEach(function (icon) {
+      icon.textContent = isDark ? 'light_mode' : 'dark_mode';
+    });
+
+    /* let loader.js refresh tag colors, sidebar state, etc. */
     try {
-      window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: t } }));
-    } catch (e) {}
+      window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: theme } }));
+    } catch (_) {}
   }
 
+  /* ── Bootstrap ── */
   apply(getTheme());
 
-  document.addEventListener('DOMContentLoaded', function() {
-    var btns = document.querySelectorAll('.theme-toggle-btn');
-    for (var i = 0; i < btns.length; i++) {
-      btns[i].addEventListener('click', function() {
+  /* ── Wire up toggle buttons once DOM is ready ── */
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.theme-toggle-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
         var isDark = document.documentElement.classList.contains('dark');
-        var t = isDark ? 'light' : 'dark';
-        apply(t);
-        safeSet(key, t);
+        var next = isDark ? 'light' : 'dark';
+        apply(next);
+        safeSet(STORAGE_KEY, next);
       });
-    }
+    });
   });
 
+  /* ── macOS/iOS: show ⌘ symbol instead of Ctrl in keyboard shortcuts ── */
   if (/(Mac|iPhone|iPad|iPod)/i.test(navigator.userAgent)) {
-    document.addEventListener('DOMContentLoaded', function() {
-      document.querySelectorAll('kbd').forEach(function(el) {
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('kbd').forEach(function (el) {
         el.textContent = el.textContent.replace('Ctrl', '\u2318');
       });
     });

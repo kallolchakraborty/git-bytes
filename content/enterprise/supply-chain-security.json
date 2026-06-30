@@ -33,5 +33,6 @@
     "enterprise",
     "security",
     "supply-chain"
-  ]
+  ],
+  "cheatSheet": "<h4>Core Commands</h4><ul><li><code>cosign sign --oidc-issuer https://token.actions.githubusercontent.com $IMAGE</code> \u2014 keyless signing.</li><li><code>cosign verify --cert-identity \"$EXPECTED_IDENTITY\" $IMAGE</code> \u2014 verify signed artifacts.</li><li><code>curl -H \"Accept: application/spdx+json\" /repos/org/repo/dependency-graph/sbom</code> \u2014 export SBOM.</li></ul><h4>Staff+ Patterns</h4><ul><li>Sigstore flow: OIDC token \u2192 Fulcio (ephemeral cert) \u2192 Cosign (sign) \u2192 Rekor (transparency log). No long-lived keys.</li><li>SLSA L3 requires a hosted builder with prevented source/tampering. Use <code>slsa-github-generator</code>.</li><li>Dependabot auto-merge for non-breaking updates gated on CI passing.</li></ul><h4>Watch Outs</h4><ul><li>SBOM from Git alone misses runtime dependencies. Generate SBOM at build time, not from lockfiles.</li><li>GPG-signed commits are not the same as signed artifacts. Commits prove authorship; artifacts prove build provenance.</li><li>Without a Rekor entry, a Cosign signature cannot be verified by third parties.</li></ul><h4>Interview Angle</h4><p>Google/Microsoft L7: \"Design a software supply chain for a regulated financial product.\" Discuss: SLSA L4 (hermetic + reproducible builds), SBOM with VEX (Vulnerability Exploitability eXchange), signed attestations with in-toto, and automated compliance evidence generation for auditors.</p>"
 }
