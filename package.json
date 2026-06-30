@@ -6,9 +6,10 @@
   "scripts": {
     "build:css": "npx tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind.css --minify",
     "generate:sitemap": "node scripts/generate-sitemap.js",
+    "watermark:svgs": "node scripts/watermark-svgs.js",
     "generate:static": "node scripts/generate-static-pages.js",
     "generate:categories": "node scripts/generate-category-pages.js",
-    "build": "npm run build:css && npm run generate:static && npm run generate:categories && npm run generate:sitemap"
+    "build": "npm run build:css && npm run watermark:svgs && npm run generate:static && npm run generate:categories && npm run generate:sitemap"
   },
   "keywords": [],
   "author": "",
