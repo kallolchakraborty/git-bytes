@@ -235,6 +235,7 @@ function codeBlock(code, langClass, langName) {
 }
 
 function wrapDiagrams(container) {
+  if (!container) return;
   container.querySelectorAll('svg').forEach(function(svg) {
     if (svg.closest('.diagram-wrapper, iframe, .code-block-wrapper, button, nav')) return;
     if (svg.parentElement && svg.parentElement.classList.contains('diagram-wrapper')) return;
@@ -246,6 +247,7 @@ function wrapDiagrams(container) {
 }
 
 function animateDiagrams(container) {
+  if (!container) return;
   var wrappers = container.querySelectorAll('.diagram-wrapper');
   var obs = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
@@ -265,6 +267,7 @@ function animateDiagrams(container) {
 }
 
 function highlightWithPrism(container, callback) {
+  if (!container) { if (callback) callback(); return; }
   function tryHighlight() {
     if (typeof Prism !== 'undefined') {
       if (container.querySelector('pre code')) Prism.highlightAllUnder(container);
@@ -277,6 +280,7 @@ function highlightWithPrism(container, callback) {
 }
 
 function enhanceCodeBlocks(container) {
+  if (!container) return;
   container.querySelectorAll('pre').forEach(function(pre) {
     if (pre.closest('.code-block-wrapper, iframe, .diagram-wrapper')) return;
     var code = pre.querySelector(':scope > code');
@@ -523,28 +527,33 @@ async function loadContent(hash) {
 
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
-        var section = contentArea.querySelector('article');
-        if (section) section.classList.add('anim-ready');
-        if (data.sections) {
-          data.sections.forEach(function(_, idx) {
-            var sec = document.getElementById('section-' + data.id + '-' + idx);
-            if (sec) sec.classList.add('anim-ready');
-          });
-        }
-        var syntax = document.getElementById('section-syntax');
-        if (syntax) syntax.classList.add('anim-ready');
-        var dive = document.getElementById('section-dive');
-        if (dive) {
-          if (dive.getBoundingClientRect().top < window.innerHeight) {
-            dive.classList.add('anim-ready');
-          } else {
-            var obs = new IntersectionObserver(function(entries) {
-              entries.forEach(function(entry) {
-                if (entry.isIntersecting) { entry.target.classList.add('anim-ready'); obs.unobserve(entry.target); }
-              });
-            }, { threshold: 0.15 });
-            obs.observe(dive);
+        try {
+          if (!contentArea || !data) return;
+          var section = contentArea.querySelector('article');
+          if (section) section.classList.add('anim-ready');
+          if (data.sections) {
+            data.sections.forEach(function(_, idx) {
+              var sec = document.getElementById('section-' + data.id + '-' + idx);
+              if (sec) sec.classList.add('anim-ready');
+            });
           }
+          var syntax = document.getElementById('section-syntax');
+          if (syntax) syntax.classList.add('anim-ready');
+          var dive = document.getElementById('section-dive');
+          if (dive) {
+            if (dive.getBoundingClientRect().top < window.innerHeight) {
+              dive.classList.add('anim-ready');
+            } else {
+              var obs = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                  if (entry.isIntersecting) { entry.target.classList.add('anim-ready'); obs.unobserve(entry.target); }
+                });
+              }, { threshold: 0.15 });
+              obs.observe(dive);
+            }
+          }
+        } catch (e) {
+          if (e.name !== 'AbortError') console.warn('Animation error:', e);
         }
       });
     });
