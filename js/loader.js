@@ -392,6 +392,7 @@ function codeBlock(code, langClass, langName) {
 function wrapDiagrams(container) {
   if (!container) return;
   container.querySelectorAll('svg').forEach(function (svg) {
+    if (svg.querySelector('animate')) return; /* skip SVGs with inline animations */
     if (svg.closest('.diagram-wrapper, iframe, .code-block-wrapper, button, nav')) return;
     if (svg.parentElement && svg.parentElement.classList.contains('diagram-wrapper')) return;
     var wrapper = document.createElement('div');
