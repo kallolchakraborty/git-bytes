@@ -1,0 +1,16 @@
+{
+  "name": "github-bytes",
+  "version": "1.0.0",
+  "description": "A modern, search-first documentation portal for Git, GitHub, DevOps, and engineering study resources — designed for FAANG/Staff+ interview preparation.",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind.css --minify",
+    "build": "npm run build:css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

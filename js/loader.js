@@ -199,17 +199,29 @@ function renderRelated(currentHash, currentTags, currentCategory) {
     '<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">' + cards + '</div></div>';
 }
 
-async function fetchWithCache(path) {
+var _currentAbort = null;
+
+async function fetchWithCache(path, signal) {
   var cacheKey = 'gb:' + path;
   try {
     var cached = sessionStorage.getItem(cacheKey);
     if (cached) { var parsed = JSON.parse(cached); if (parsed && typeof parsed === 'object') return parsed; }
   } catch (e) {}
-  var res = await fetch(path);
-  if (!res.ok) throw new Error('Failed to fetch content');
-  var data = await res.json();
-  try { sessionStorage.setItem(cacheKey, JSON.stringify(data)); } catch (e) {}
-  return data;
+  var lastErr;
+  for (var attempt = 1; attempt <= 3; attempt++) {
+    try {
+      var res = await fetch(path, { signal: signal, cache: 'no-cache' });
+      if (!res.ok) throw new Error('Failed to fetch content (status ' + res.status + ')');
+      var data = await res.json();
+      try { sessionStorage.setItem(cacheKey, JSON.stringify(data)); } catch (e) {}
+      return data;
+    } catch (err) {
+      if (err.name === 'AbortError') throw err;
+      lastErr = err;
+      if (attempt < 3) await new Promise(function(r) { setTimeout(r, Math.min(1000, 200 * attempt)); });
+    }
+  }
+  throw lastErr;
 }
 
 function codeBlock(code, langClass, langName) {
@@ -252,6 +264,18 @@ function animateDiagrams(container) {
   });
 }
 
+function highlightWithPrism(container, callback) {
+  function tryHighlight() {
+    if (typeof Prism !== 'undefined') {
+      if (container.querySelector('pre code')) Prism.highlightAllUnder(container);
+      if (callback) callback();
+    } else {
+      setTimeout(tryHighlight, 100);
+    }
+  }
+  tryHighlight();
+}
+
 function enhanceCodeBlocks(container) {
   container.querySelectorAll('pre').forEach(function(pre) {
     if (pre.closest('.code-block-wrapper, iframe, .diagram-wrapper')) return;
@@ -280,12 +304,35 @@ function enhanceCodeBlocks(container) {
     pre.parentNode.insertBefore(wrapper, pre);
     wrapper.appendChild(header);
     wrapper.appendChild(pre);
-    if (typeof Prism !== 'undefined') Prism.highlightElement(code);
+    highlightWithPrism(null, function() { Prism.highlightElement(code); });
   });
 }
 
 function escapeHtml(text) {
   return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function sanitizeHtml(html) {
+  var doc = document.implementation.createHTMLDocument('');
+  doc.body.innerHTML = html;
+  var scripts = doc.body.querySelectorAll('script, iframe, object, embed, onload, onerror, onclick, on*');
+  for (var i = 0; i < scripts.length; i++) {
+    var el = scripts[i];
+    if (el.tagName === 'SCRIPT' || el.tagName === 'IFRAME' || el.tagName === 'OBJECT' || el.tagName === 'EMBED') {
+      el.remove();
+    } else {
+      [].slice.call(el.attributes).forEach(function(attr) {
+        if (/^on/i.test(attr.name)) el.removeAttribute(attr.name);
+      });
+    }
+  }
+  [].slice.call(doc.body.querySelectorAll('*')).forEach(function(el) {
+    [].slice.call(el.attributes).forEach(function(attr) {
+      if (/^on/i.test(attr.name)) el.removeAttribute(attr.name);
+      if (attr.name === 'href' && /^\s*javascript:/i.test(attr.value)) el.removeAttribute('href');
+    });
+  });
+  return doc.body.innerHTML;
 }
 
 function showToast(msg) {
@@ -367,6 +414,9 @@ function setupOutlineScrollSpy() {
 
 async function loadContent(hash) {
   if (scrollSpyCleanup) { scrollSpyCleanup(); scrollSpyCleanup = null; }
+  if (_currentAbort) { _currentAbort.abort(); }
+  _currentAbort = new AbortController();
+  var signal = _currentAbort.signal;
   var path = _routeMap[hash] || _routeMap['#git-basics'];
   var contentArea = document.getElementById('docs-dynamic-content');
   if (!contentArea) return;
@@ -379,7 +429,7 @@ async function loadContent(hash) {
   if (outline) outline.parentElement.style.display = '';
 
   try {
-    var data = await fetchWithCache(path);
+    var data = await fetchWithCache(path, signal);
     var langClass = data.language ? 'language-' + data.language : 'theme-text';
     var dataLang = data.language || 'code';
     var embedCode = '';
@@ -420,7 +470,7 @@ async function loadContent(hash) {
       '<button onclick="window.print()" class="w-8 h-8 rounded-lg border theme-border text-slate-400 hover:text-brand-500 hover:border-brand-500/30 flex items-center justify-center transition-all theme-bg" aria-label="Print"><span class="material-symbols-outlined text-[18px]">print</span></button></div></div>' +
       '<h1 class="text-3xl sm:text-4xl font-bold theme-text tracking-tight">' + data.title + '</h1>' +
       '<div class="flex flex-wrap items-center gap-3 text-xs theme-text-muted select-none">' +
-      '<span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-slate-405">schedule</span><span>' + meta.time + ' min read</span></span>' +
+      '<span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span><span>' + meta.time + ' min read</span></span>' +
       '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wider ' + meta.diffColor + '">' +
       '<span class="material-symbols-outlined text-[12px]">' + meta.diffIcon + '</span><span>' + meta.difficulty + '</span></span></div>' +
       (data.tags && data.tags.length > 0 ? '<div class="flex flex-wrap gap-1.5 mt-0.5">' + data.tags.map(function(t) { return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="' + t + '">' + t + '</span>'; }).join('') + '</div>' : '') +
@@ -466,9 +516,7 @@ async function loadContent(hash) {
       scrollSpyCleanup = setupOutlineScrollSpy();
     }
 
-    if (contentArea.querySelector('pre code') && typeof Prism !== 'undefined') {
-      Prism.highlightAllUnder(contentArea);
-    }
+    highlightWithPrism(contentArea);
     enhanceCodeBlocks(contentArea);
     wrapDiagrams(contentArea);
     animateDiagrams(contentArea);
@@ -527,13 +575,14 @@ window.addEventListener('DOMContentLoaded', function() {
     var ticking = false;
     function updateProgress() {
       var article = document.getElementById('docs-dynamic-content');
-      if (!article) { bar.style.width = '0%'; ticking = false; return; }
+      if (!article) { bar.style.transform = 'scaleX(0)'; ticking = false; return; }
       var top = article.offsetTop || 0;
       var h = article.scrollHeight || 1;
       var vh = window.innerHeight;
       var scrollable = top + h - vh;
-      if (scrollable <= 0) { bar.style.width = '100%'; ticking = false; return; }
-      bar.style.width = Math.min(100, Math.max(0, ((window.scrollY - top + vh * 0.1) / scrollable) * 100)).toFixed(1) + '%';
+      if (scrollable <= 0) { bar.style.transform = 'scaleX(1)'; ticking = false; return; }
+      var pct = Math.min(1, Math.max(0, ((window.scrollY - top + vh * 0.1) / scrollable)));
+      bar.style.transform = 'scaleX(' + pct.toFixed(3) + ')';
       ticking = false;
     }
     window.addEventListener('scroll', function() { if (!ticking) { requestAnimationFrame(updateProgress); ticking = true; } }, { passive: true });

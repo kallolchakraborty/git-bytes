@@ -101,10 +101,6 @@ html.dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
 html.dark ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
 
 /* ========== Shared: Navigation ========== */
-.glass-nav {
-  backdrop-filter: blur(8px);
-}
-
 .sidebar-sections { display: flex; flex-direction: column; gap: 2px; }
 .sidebar-section { margin-bottom: 2px; }
 .sidebar-label {
@@ -125,7 +121,9 @@ html.dark ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2)
   margin-top: 4px;
 }
 .sidebar-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 4px 8px 4px 10px;
   font-size: 13px;
   color: var(--text-secondary);
@@ -1038,12 +1036,6 @@ body, header, aside, nav, main, article, section, footer, .glass-nav, .sidebar-l
 }
 #sidebar-bookmarks-list .sidebar-link {
   font-weight: 500;
-}
-.sidebar-link {
-  display: flex !important;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
 }
 .completion-indicator {
   font-size: 13px !important;

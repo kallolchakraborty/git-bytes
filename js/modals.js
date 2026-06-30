@@ -1,3 +1,16 @@
+function sanitizeHtml(html) {
+  var doc = document.implementation.createHTMLDocument('');
+  doc.body.innerHTML = html;
+  [].slice.call(doc.body.querySelectorAll('*')).forEach(function(el) {
+    [].slice.call(el.attributes).forEach(function(attr) {
+      if (/^on/i.test(attr.name)) el.removeAttribute(attr.name);
+      if (attr.name === 'href' && /^\s*javascript:/i.test(attr.value)) el.removeAttribute('href');
+    });
+  });
+  [].slice.call(doc.body.querySelectorAll('script, iframe, object, embed')).forEach(function(el) { el.remove(); });
+  return doc.body.innerHTML;
+}
+
 (function() {
   'use strict';
 
@@ -491,10 +504,10 @@
       '<div class="flex flex-col h-full justify-between gap-6">',
       '  <div class="flex flex-col gap-3 min-w-0">',
       '    <div class="flex items-center gap-1.5">',
-      '      <span class="text-[10px] font-bold text-brand-500 uppercase tracking-wider bg-brand-light px-2.5 py-1 rounded-md">' + item.category + '</span>',
+      '      <span class="text-[10px] font-bold text-brand-500 uppercase tracking-wider bg-brand-light px-2.5 py-1 rounded-md">' + sanitizeHtml(item.category) + '</span>',
       '    </div>',
-      '    <h4 class="text-base font-bold theme-text leading-snug tracking-tight">' + item.title + '</h4>',
-      '    <p class="text-xs theme-text-muted leading-relaxed font-sans mt-1">' + item.description + '</p>',
+      '    <h4 class="text-base font-bold theme-text leading-snug tracking-tight">' + sanitizeHtml(item.title) + '</h4>',
+      '    <p class="text-xs theme-text-muted leading-relaxed font-sans mt-1">' + sanitizeHtml(item.description) + '</p>',
       sectionsHtml,
       tagsHtml,
       '  </div>',

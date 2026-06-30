@@ -16,7 +16,7 @@
     },
     {
       "title": "Merge Strategies",
-      "description": "<p>Three strategies: <strong>Merge commit</strong> preserves all commits with a merge bubble. <strong>Squash</strong> collapses all commits into one — clean but loses granularity. <strong>Rebase</strong> linearizes history but rewrites hashes. Configure per-repo in Settings > Merge button. The merge queue option adds CI gating.</p><pre><code># gh CLI merge strategies\ngh pr merge --merge         # merge commit\nghe pr merge --squash       # squash\nghe pr merge --rebase       # rebase</code></pre>"
+      "description": "<p>Three strategies: <strong>Merge commit</strong> preserves all commits with a merge bubble. <strong>Squash</strong> collapses all commits into one — clean but loses granularity. <strong>Rebase</strong> linearizes history but rewrites hashes. Configure per-repo in Settings > Merge button. The merge queue option adds CI gating.</p><pre><code># gh CLI merge strategies\ngh pr merge --merge         # merge commit\ngh pr merge --squash       # squash\ngh pr merge --rebase       # rebase</code></pre>"
     },
     {
       "title": "Status Checks",
