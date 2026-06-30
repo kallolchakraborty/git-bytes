@@ -1,0 +1,37 @@
+{
+  "id": "audit-log-streaming",
+  "title": "Audit Log Streaming",
+  "category": "Enterprise",
+  "subcategory": "Audit",
+  "language": "bash",
+  "description": "<p>Audit log streaming forwards GitHub enterprise events to your SIEM in near real-time, enabling security monitoring, compliance reporting, and threat detection.</p><svg viewBox='0 0 800 180' xmlns='http://www.w3.org/2000/svg' style='max-width:100%;height:auto;display:block;margin:2rem 0'><defs><marker id='ag-blue' markerWidth='10' markerHeight='7' refX='9' refY='3.5' orient='auto'><polygon points='0 0, 10 3.5, 0 7' fill='#C34113'/></marker><marker id='ag-bright' markerWidth='10' markerHeight='7' refX='9' refY='3.5' orient='auto'><polygon points='0 0, 10 3.5, 0 7' fill='#E95420'/></marker></defs><rect x='5' y='10' width='130' height='55' rx='8' fill='#C34113'/><text x='70' y='33' text-anchor='middle' fill='#fff' font-size='12' font-weight='bold'>GitHub Event</text><text x='70' y='50' text-anchor='middle' fill='rgba(255,255,255,0.8)' font-size='10'>push / repo.create</text><path d='M135 37 L175 37' stroke='#C34113' stroke-width='2' marker-end='url(#ag-blue)'/><rect x='185' y='10' width='130' height='55' rx='8' fill='#E95420'/><text x='250' y='33' text-anchor='middle' fill='#fff' font-size='12' font-weight='bold'>Audit Stream</text><text x='250' y='50' text-anchor='middle' fill='rgba(255,255,255,0.8)' font-size='10'>Webhook batch</text><path d='M315 37 L355 37' stroke='#C34113' stroke-width='2' marker-end='url(#ag-blue)'/><rect x='365' y='10' width='130' height='55' rx='8' fill='#E95420'/><text x='430' y='33' text-anchor='middle' fill='#fff' font-size='12' font-weight='bold'>SIEM Connector</text><text x='430' y='50' text-anchor='middle' fill='rgba(255,255,255,0.8)' font-size='10'>Parse + enrich</text><path d='M495 37 L535 37' stroke='#E95420' stroke-width='2' marker-end='url(#ag-bright)'/><rect x='545' y='10' width='175' height='55' rx='8' fill='var(--bg-secondary)' stroke='#E95420' stroke-width='2'/><text x='632' y='28' text-anchor='middle' fill='#E95420' font-size='12' font-weight='bold'>Splunk / Datadog</text><text x='632' y='45' text-anchor='middle' fill='rgba(233,84,32,0.8)' font-size='10'>Dashboards + alerts</text></svg>",
+  "sections": [
+    {
+      "title": "Event Taxonomy",
+      "description": "<p>Audit events fall into categories: authentication (login, SSO), repository (create, delete, visibility change), organization (member add/remove, policy change), team (create, membership), security (Dependabot alert, secret scan), and Actions (workflow run, self-hosted runner). Each event has <code>@timestamp</code>, <code>actor</code>, <code>action</code>, <code>resource</code>, and <code>org</code>. Query via the REST API <code>GET /enterprises/{enterprise}/audit-log</code> with filters for <code>phrase</code>, <code>include</code> (git/web/all), and time ranges.</p><pre><code># Fetch audit events for the last hour\ngh api /enterprises/my-ent/audit-log \\\n  --jq '.[] | select(.action == \"repo.create\")' \\\n  -f phrase='created:>2025-01-01'</code></pre>"
+    },
+    {
+      "title": "SIEM Integration",
+      "description": "<p>Audit log streaming sends events to AWS S3, Azure Blob Storage, Google Cloud Storage, or HTTP endpoints (Splunk HEC, Datadog). Configure streaming at the enterprise level under <code>Monitor > Audit log > Streaming</code>. Events are delivered in JSONL format with batching. Each batch contains multiple events with <code>@timestamp</code> and <code>event_type</code>. Set up a SIEM connector to parse fields into the common schema.</p><pre><code># Splunk HEC configuration\nurl: https://splunk.company.com:8088/services/collector\n  token: ****\n  index: github_audit\n  sourcetype: github:audit</code></pre>"
+    },
+    {
+      "title": "Webhook Enrichment",
+      "description": "<p>Audit log webhooks include <code>action</code>, <code>actor</code>, <code>actor_ip</code>, <code>user_agent</code>, <code>org</code>, <code>repo</code>, and detailed payload fields. Enrich events by joining with SCIM user directory or IP geolocation. Build a serverless function to enrich the webhook payload before forwarding to the SIEM. Store enriched fields as index-time fields for faster search.</p><pre><code># Enriched payload\n{\n  \"action\": \"repo.create\",\n  \"actor\": \"jdoe\",\n  \"department\": \"engineering\",\n  \"geo\": {\"city\": \"San Francisco\", \"country\": \"US\"},\n  \"risk_score\": 10\n}</code></pre>"
+    },
+    {
+      "title": "Compliance Reporting",
+      "description": "<p>Audit logs support SOC 2, FedRAMP, and GDPR compliance. Retain audit logs for at least 365 days (or as required by your compliance framework). Build dashboards for: privilege escalation (admin changes), unusual access patterns (off-hours logins), and external collaboration (outside collaborator additions). Use the <code>audit-log</code> GraphQL API for custom compliance queries.</p><pre><code>query {\n  enterprise(slug: \"my-ent\") {\n    auditLog(stream: true, after: $cursor) {\n      edges {\n        node {\n          action\n          actor { name }\n          occurredAt\n        }\n      }\n    }\n  }\n}</code></pre>"
+    },
+    {
+      "title": "Alerting Rules",
+      "description": "<p>Define alerting rules in your SIEM for high-severity events: org ownership changes, audit log configuration changes, API token creation without expiry, and mass repo visibility changes. Integrate with PagerDuty or Slack via webhooks. Use rate-based alerts for brute force attempts and geo-anomaly detection for impossible travel.</p><pre><code># Example alert: unauthorized access attempt\nsourcetype=\"github:audit\" action=login.failed\n| stats count by actor_ip\n| where count > 10</code></pre>"
+    }
+  ],
+  "details": "<p>Audit log streaming is the backbone of GitHub enterprise security monitoring. Every event — from <code>repo.create</code> to <code>org.update_member_role</code> — is captured with the actor IP, user agent, and timestamp. Events are streamed via webhooks to configured endpoints or cloud storage. AWS S3 is the most common target: events are delivered as <code>.jsonl</code> files with a path pattern like <code>year=2025/month=01/day=15/</code>. Enable streaming in the enterprise settings or via the API <code>POST /enterprises/{enterprise}/audit-log/streams</code>. Each stream can be configured with <code>enabled_events</code> filters to reduce noise. The audit log API supports the <code>phrase</code> query parameter for full-text search across event fields, with <code>include=git</code> for Git-related events and <code>include=web</code> for UI/API events. Retention is managed by the SIEM, not GitHub — ensure your storage lifecycle policy archives old data. For compliance, extract audit log data daily to an immutable storage bucket (S3 Object Lock / Azure Immutable Blob). Build an alerting pipeline that enriches events with context (user department from SCIM, IP risk score) and routes critical alerts to security team PagerDuty. Monitor streaming health — GitHub reports stream health status in the UI and via the API at <code>GET /enterprises/{enterprise}/audit-log/streams</code>.</p>",
+  "tags": [
+    "staff+",
+    "enterprise",
+    "audit",
+    "security"
+  ]
+}

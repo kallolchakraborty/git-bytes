@@ -1,0 +1,37 @@
+{
+  "id": "git-culture-strategy",
+  "title": "Git Culture & CI/CD Strategy",
+  "category": "Leadership",
+  "subcategory": "Strategy",
+  "language": "text",
+  "description": "<p>Building a Git-centric engineering culture requires a deliberate maturity model from ad-hoc workflows to optimized, data-driven delivery pipelines.</p><svg viewBox='0 0 800 200' xmlns='http://www.w3.org/2000/svg' style='max-width:100%;height:auto;display:block;margin:2rem 0'><defs><marker id='ag-blue' markerWidth='10' markerHeight='7' refX='9' refY='3.5' orient='auto'><polygon points='0 0, 10 3.5, 0 7' fill='#C34113'/></marker><marker id='ag-bright' markerWidth='10' markerHeight='7' refX='9' refY='3.5' orient='auto'><polygon points='0 0, 10 3.5, 0 7' fill='#E95420'/></marker></defs><rect x='5' y='15' width='170' height='60' rx='8' fill='#C34113'/><text x='90' y='42' text-anchor='middle' fill='#fff' font-size='13' font-weight='bold'>Ad Hoc</text><text x='90' y='59' text-anchor='middle' fill='rgba(255,255,255,0.8)' font-size='10'>No branching strategy</text><path d='M175 45 L215 45' stroke='#C34113' stroke-width='2' marker-end='url(#ag-blue)'/><rect x='225' y='15' width='170' height='60' rx='8' fill='#E95420'/><text x='310' y='42' text-anchor='middle' fill='#fff' font-size='13' font-weight='bold'>Standardized</text><text x='310' y='59' text-anchor='middle' fill='rgba(255,255,255,0.8)' font-size='10'>Branch + review rules</text><path d='M395 45 L435 45' stroke='#C34113' stroke-width='2' marker-end='url(#ag-blue)'/><rect x='445' y='15' width='170' height='60' rx='8' fill='#E95420'/><text x='530' y='42' text-anchor='middle' fill='#fff' font-size='13' font-weight='bold'>Automated</text><text x='530' y='59' text-anchor='middle' fill='rgba(255,255,255,0.8)' font-size='10'>CI + CD pipeline</text><path d='M615 45 L655 45' stroke='#E95420' stroke-width='2' marker-end='url(#ag-bright)'/><rect x='665' y='15' width='130' height='60' rx='8' fill='var(--bg-secondary)' stroke='#E95420' stroke-width='2'/><text x='730' y='42' text-anchor='middle' fill='#E95420' font-size='13' font-weight='bold'>Optimized</text><text x='730' y='59' text-anchor='middle' fill='rgba(233,84,32,0.8)' font-size='10'>Data-driven</text></svg>",
+  "sections": [
+    {
+      "title": "CI/CD Maturity Model",
+      "description": "<p>Level 1 — <strong>Ad Hoc</strong>: No branching strategy, manual deployments, no CI. Level 2 — <strong>Standardized</strong>: Established branching model (GitHub Flow), PR reviews required, basic CI (lint + test). Level 3 — <strong>Automated</strong>: Deploy on merge, automated releases, environment promotion gates, security scanning. Level 4 — <strong>Optimized</strong>: DORA metrics tracked, deployment frequency measured, continuous improvement, developer productivity data drives tooling investments.</p>"
+    },
+    {
+      "title": "Team Workflows",
+      "description": "<p>Define expected workflows for each team type: platform teams (trunk-based, short-lived branches, frequent merges), application teams (GitHub Flow, feature branches, PRs with reviewers), and SRE teams (GitOps, declarative configs in Git, approval gates). Document the expected workflow in a <code>CONTRIBUTING.md</code> and enforce via branch protection rulesets and <code>.github/workflows</code> templates.</p>"
+    },
+    {
+      "title": "Training Programs",
+      "description": "<p>Invest in Git training for all engineers. Foundational: <code>git init</code> through <code>rebase</code> and <code>bisect</code>. Intermediate: <code>rerere</code>, <code>worktree</code>, <code>filter-branch</code> (and <code>filter-repo</code>). Advanced: Git internals, custom merge drivers, hooks, and performance optimization. Pair training with internal documentation and <code>gh</code> extension tutorials. Run regular Git office hours for Q&A.</p>"
+    },
+    {
+      "title": "Org Standards",
+      "description": "<p>Establish org-wide standards enforced through policy as code: commit message format, branch naming convention (<code>type/ticket-description</code>), PR size limits (&lt;400 lines), required checks before merge, and signed commits. Use <code>.github</code> repositories for default community health files and reusable workflows. Publish a handbook page on Git conventions with examples and rationale.</p><pre><code># Branch naming\nfeat/AUTH-123-add-oidc\nfix/BILL-456-rounding-error\nchore/deps-upgrade-express</code></pre>"
+    },
+    {
+      "title": "Measuring Adoption",
+      "description": "<p>Track adoption of Git culture through metrics: % of PRs following commit conventions, deployment frequency per team, average PR cycle time, % of repos with branch protection, and CI pass rate. Build a dashboard that breaks down by team. Use GitHub API to collect data weekly and trend over time. Celebrate teams that level up with internal showcases.</p><pre><code># Query: repos without branch protection\nrepos=$(gh api /orgs/$ORG/repos --jq '.[].name')\nfor r in $repos; do\n  gh api repos/$ORG/$r/branches/main/protection \\\n    --silent || echo \"$r: no protection\"\ndone</code></pre>"
+    }
+  ],
+  "details": "<p>Git culture is not about using Git — it's about how Git usage enables engineering velocity, quality, and collaboration. The maturity model provides a roadmap: teams at Level 1 need basic Git training and branching strategy adoption; Level 2 requires PR culture and CI basics; Level 3 needs deployment automation and environment management; Level 4 demands continuous improvement based on data. The progression is not purely linear — larger orgs may have teams at different levels, and the platform team should focus on raising the floor. Culture change requires top-down support (executive sponsorship, dedicated time for improvement) and bottom-up adoption (champions, guilds, internal communities). Training should be tracked and repeated — a single Git workshop is not enough. Pair training with hands-on labs in a sandbox environment. Org standards must be enforced mechanically (rulesets, linters) rather than through code review — policy as code is more scalable than manual enforcement. For adoption measurement, look for leading indicators (training completion, PR template usage, commit message formatting) and lagging indicators (deployment frequency, MTTR, developer satisfaction). The ultimate goal is that Git conventions become invisible — developers follow them not because they are enforced but because they are the most natural and efficient way to work. Regular retrospectives on the development workflow itself (meta-retros) surface friction points. Invest in tooling that makes the right thing the easy thing: autocomplete for branch names, default PR templates, automated commit linting, and one-command deployment from a PR.</p>",
+  "tags": [
+    "staff+",
+    "leadership",
+    "culture",
+    "strategy"
+  ]
+}

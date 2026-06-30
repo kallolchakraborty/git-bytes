@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="git-bytes-logo">
+  <defs>
+    <linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF8A65" />
+      <stop offset="50%" stop-color="#E95420" />
+      <stop offset="100%" stop-color="#BF360C" />
+    </linearGradient>
+
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <style>
+    .branch-line {
+      stroke: #E95420;
+      stroke-width: 1.2;
+      stroke-linecap: round;
+      fill: none;
+      opacity: 0.2;
+    }
+    html.dark .branch-line {
+      opacity: 0.35;
+    }
+
+    @keyframes flow {
+      0% { stroke-dashoffset: 60; }
+      100% { stroke-dashoffset: 0; }
+    }
+
+    .signal {
+      stroke: #FF8A65;
+      stroke-width: 1.5;
+      fill: none;
+      stroke-dasharray: 3, 30;
+      animation: flow 1.6s linear infinite;
+      filter: url(#glow);
+      opacity: 0.9;
+    }
+
+    .signal-slow {
+      stroke: #E95420;
+      stroke-width: 1.2;
+      fill: none;
+      stroke-dasharray: 2, 40;
+      animation: flow 2.2s linear infinite;
+      filter: url(#glow);
+      opacity: 0.85;
+    }
+
+    @keyframes node-pulse {
+      0%, 100% { transform: scale(0.9); }
+      50% { transform: scale(1.15); }
+    }
+
+    .commit {
+      fill: url(#brand-grad);
+      animation: node-pulse 2.4s ease-in-out infinite;
+    }
+
+    .commit-inner {
+      fill: #FFFFFF;
+      opacity: 0.9;
+    }
+
+    @keyframes ripple {
+      0% { r: 2.5; opacity: 0.8; stroke-width: 1; }
+      100% { r: 10; opacity: 0; stroke-width: 0.3; }
+    }
+
+    .ripple {
+      fill: none;
+      stroke: #FF7A50;
+      animation: ripple 2.4s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+    }
+
+    .d1 { animation-delay: 0.0s; }
+    .d2 { animation-delay: 0.6s; }
+    .d3 { animation-delay: 1.2s; }
+    .d4 { animation-delay: 0.3s; }
+    .d5 { animation-delay: 0.9s; }
+
+    .p1 { animation-delay: 0.0s; transform-origin: 30px 75px; }
+    .p2 { animation-delay: 0.5s; transform-origin: 50px 53px; }
+    .p3 { animation-delay: 1.0s; transform-origin: 70px 30px; }
+    .p4 { animation-delay: 0.3s; transform-origin: 30px 53px; }
+    .p5 { animation-delay: 0.8s; transform-origin: 50px 30px; }
+  </style>
+
+  <!-- Branch lines -->
+  <path d="M30,85 L30,53 L70,30" class="branch-line" />
+  <path d="M30,53 L30,30 L50,30" class="branch-line" />
+  <path d="M50,53 L50,30" class="branch-line" />
+  <path d="M30,85 L30,53" class="branch-line" />
+
+  <!-- Animated signals -->
+  <path d="M30,85 L30,53 L50,53" class="signal" />
+  <path d="M50,53 L50,30" class="signal-slow" />
+  <path d="M30,53 L30,30" class="signal-slow" />
+
+  <!-- Ripples -->
+  <circle cx="30" cy="75" class="ripple d1" />
+  <circle cx="50" cy="53" class="ripple d2" />
+  <circle cx="70" cy="30" class="ripple d3" />
+  <circle cx="30" cy="53" class="ripple d4" />
+  <circle cx="50" cy="30" class="ripple d5" />
+
+  <!-- Commit nodes -->
+  <g class="commit p1"><circle cx="30" cy="75" r="4" /><circle cx="30" cy="75" r="1.5" class="commit-inner" /></g>
+  <g class="commit p2"><circle cx="50" cy="53" r="4" /><circle cx="50" cy="53" r="1.5" class="commit-inner" /></g>
+  <g class="commit p3"><circle cx="70" cy="30" r="4" /><circle cx="70" cy="30" r="1.5" class="commit-inner" /></g>
+  <g class="commit p4"><circle cx="30" cy="53" r="3.5" /><circle cx="30" cy="53" r="1.2" class="commit-inner" /></g>
+  <g class="commit p5"><circle cx="50" cy="30" r="3.5" /><circle cx="50" cy="30" r="1.2" class="commit-inner" /></g>
+</svg>
