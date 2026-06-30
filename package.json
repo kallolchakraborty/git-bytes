@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build:css": "npx tailwindcss -i ./css/tailwind-input.css -o ./css/tailwind.css --minify",
-    "build": "npm run build:css"
+    "generate:sitemap": "node scripts/generate-sitemap.js",
+    "generate:static": "node scripts/generate-static-pages.js",
+    "generate:categories": "node scripts/generate-category-pages.js",
+    "build": "npm run build:css && npm run generate:static && npm run generate:categories && npm run generate:sitemap"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>GitHub Copilot — git bytes</title>
+  <meta name="description" content="GitHub Copilot architecture, usage patterns, enterprise administration, and best practices. Understand how Copilot constructs context, ranks suggestions, and..." />
+  <meta property="og:title" content="GitHub Copilot — git bytes" />
+  <meta property="og:description" content="GitHub Copilot architecture, usage patterns, enterprise administration, and best practices. Understand how Copilot constructs context, ranks suggestions, and integrates into developer workflows. Co..." />
+  <meta property="og:image" content="assets/og-preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://kallolchakraborty.github.io/git-bytes/docs/copilot/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GitHub Copilot — git bytes" />
+  <meta name="twitter:description" content="GitHub Copilot architecture, usage patterns, enterprise administration, and best practices. Understand how Copilot constructs context, ranks suggestions, and integrates into developer workflows. Co..." />
+  <meta name="twitter:image" content="assets/og-preview.png" />
+  <meta name="twitter:image:alt" content="git bytes logo — Git branch visualization" />
+  <meta name="keywords" content="git bytes, Git, GitHub, FAANG interview prep, Staff+ engineer, Git internals, GitHub Actions, monorepo, CI/CD, GitOps" />
+  <meta name="author" content="Kallol Chakraborty" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:site_name" content="git bytes" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="theme-color" content="#E95420" />
+<meta name="theme-color" content="#F5A389" media="(prefers-color-scheme: dark)" />
+  <link rel="canonical" id="canonical-link" href="https://kallolchakraborty.github.io/git-bytes/docs/copilot/" />
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192x192.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preload" href="css/tailwind.css" as="style" />
+  <link rel="preload" href="css/main.css" as="style" />
+  <script src="js/theme.js"></script>
+  <link href="css/tailwind.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" /></noscript>
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","@id":"https://kallolchakraborty.github.io/git-bytes/docs/copilot/","headline":"GitHub Copilot","description":"GitHub Copilot architecture, usage patterns, enterprise administration, and best practices. Understand how Copilot constructs context, ranks suggestions, and...","proficiencyLevel":"Foundational","timeRequired":"3M","datePublished":"2026-06-30","dateModified":"2026-06-30","author":{"@id":"https://kallolchakraborty.github.io/git-bytes/#person"},"publisher":{"@type":"Person","name":"Kallol Chakraborty"},"mainEntityOfPage":"https://kallolchakraborty.github.io/git-bytes/docs/copilot/","about":[{"@type":"Thing","name":"devops"},{"@type":"Thing","name":"copilot"},{"@type":"Thing","name":"ai"}],"image":"https://kallolchakraborty.github.io/git-bytes/assets/og-preview.png"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://kallolchakraborty.github.io/git-bytes/"},{"@type":"ListItem","position":2,"name":"DevOps","item":"https://kallolchakraborty.github.io/git-bytes/docs/copilot/"},{"@type":"ListItem","position":3,"name":"GitHub Copilot"}]}]}</script></head>
+<body class="theme-bg theme-text font-sans min-h-screen flex flex-col transition-colors duration-200 overflow-y-auto">
+  <a href="/docs/docs-dynamic-content/" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-[#E95420] focus:border focus:border-[#E95420] focus:rounded-lg focus:shadow-lg focus:text-sm focus:font-semibold focus:outline-none focus:ring-2 focus:ring-[#E95420]">Skip to main content</a>
+  <div id="reading-progress-track" aria-hidden="true" style="position:fixed;top:0;left:0;right:0;height:3px;z-index:9999;background:transparent;pointer-events:none;">
+    <div id="reading-progress-bar" style="height:100%;transform:scaleX(0);background:linear-gradient(90deg,#E95420,#F5A389);transform-origin:left;transition:transform 80ms linear;"></div>
+  </div>
+  <header class="glass-nav sticky top-0 z-40 transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <button id="sidebar-toggle" class="lg:hidden text-slate-400 hover:text-brand-500 transition-all flex items-center justify-center" aria-label="Toggle navigation menu">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <a href="index.html" class="theme-text hover:text-brand-500 transition-all flex items-center gap-2.5">
+          <img src="assets/logo.svg" alt="git bytes" class="w-8 h-8" />
+          <span class="text-base font-semibold">git bytes</span>
+        </a>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2">
+          <button class="theme-toggle-btn text-slate-400 hover:text-brand-500 transition-all" aria-label="Toggle theme">
+            <span class="material-symbols-outlined text-[16px]">light_mode</span>
+          </button>
+          <button class="open-share-btn text-slate-400 hover:text-brand-500 transition-all" aria-label="Share this page">
+            <span class="material-symbols-outlined text-[16px]">share</span>
+          </button>
+          <button class="open-search-btn flex items-center gap-1.5 h-7 px-2.5 theme-bg-subtle rounded-lg text-slate-400 hover:text-brand-500 font-medium text-xs transition-all">
+            <span class="material-symbols-outlined text-[16px]">search</span>
+            <kbd class="hidden sm:inline-block font-mono theme-bg border theme-border px-1 rounded text-[9px] leading-none">Ctrl+K</kbd>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="max-w-7xl mx-auto px-6 w-full flex-grow flex flex-col lg:flex-row gap-8 py-8 relative">
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden" aria-hidden="true"></div>
+      <aside id="left-sidebar" class="lg:w-56 lg:sticky lg:top-24 lg:h-[calc(100vh-120px)] overflow-y-auto shrink-0 border-b lg:border-b-0 theme-border pb-4 lg:pb-0 pr-0 lg:pr-5 fixed inset-y-0 left-0 z-40 w-64 transform -translate-x-full transition-transform duration-200 lg:translate-x-0 lg:static lg:inset-auto lg:z-auto lg:w-56 lg:border-b-0 theme-bg">
+      <nav aria-label="Documentation navigation" class="sidebar-sections">
+        <div id="sidebar-progress-container" class="px-3 py-3.5 mb-2 border-b theme-border">
+          <div class="flex items-center justify-between text-xs font-bold theme-text mb-1.5">
+            <span>Study Progress</span>
+            <span id="sidebar-progress-text" class="text-brand-500">0%</span>
+          </div>
+          <div class="w-full rounded-full h-1.5 overflow-hidden" style="background-color: var(--border-default)">
+            <div id="sidebar-progress-bar" class="bg-brand-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div id="sidebar-progress-stats" class="text-[10px] theme-text-muted mt-1 font-medium">0 of 0 topics completed</div>
+        </div>
+        <div id="sidebar-bookmarks-container" class="hidden px-2 py-3 mb-2 border-b theme-border">
+          <div class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-2 flex items-center gap-1 select-none">
+            <span class="material-symbols-outlined text-[12px] text-amber-500">star</span> Pinned Guides
+          </div>
+          <div id="sidebar-bookmarks-list" class="flex flex-col gap-0.5"></div>
+        </div>
+        <!-- Phase 1: Git Fundamentals -->
+        <div class="px-2 py-3">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 1: Git Fundamentals</div>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Git Basics</h4>
+          <a href="/docs/git-basics/" class="sidebar-link">Git Basics — init, add, commit, log, diff</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Branching & Merging</h4>
+          <a href="/docs/branching-merging/" class="sidebar-link">Branching & Merging</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Remotes & Collaboration</h4>
+          <a href="/docs/remotes-collaboration/" class="sidebar-link">Remotes & Collaboration</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Rebasing & Advanced</h4>
+          <a href="/docs/rebasing-advanced/" class="sidebar-link">Rebasing & Advanced Git</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Git Internals</h4>
+          <a href="/docs/git-internals/" class="sidebar-link">Git Internals</a>
+        </div>
+        <!-- Phase 2: GitHub Platform -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 2: GitHub Platform</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Repos & Issues</h4>
+          <a href="/docs/repos-issues/" class="sidebar-link">Repositories &amp; Issues</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Pull Requests</h4>
+          <a href="/docs/pull-requests/" class="sidebar-link">Pull Requests &amp; Code Review</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GitHub Pages</h4>
+          <a href="/docs/github-pages/" class="sidebar-link">GitHub Pages</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Actions Fundamentals</h4>
+          <a href="/docs/actions-fundamentals/" class="sidebar-link">GitHub Actions Fundamentals</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Projects &amp; Wikis</h4>
+          <a href="/docs/projects-wikis/" class="sidebar-link">Projects, Wikis &amp; Discussions</a>
+        </div>
+        <!-- Phase 3: GitHub Advanced -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 3: GitHub Advanced</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">REST API</h4>
+          <a href="/docs/rest-api/" class="sidebar-link">GitHub REST API</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GraphQL API</h4>
+          <a href="/docs/graphql-api/" class="sidebar-link">GitHub GraphQL API</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GitHub CLI</h4>
+          <a href="/docs/github-cli/" class="sidebar-link">GitHub CLI (gh)</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Security</h4>
+          <a href="/docs/security-dependabot/" class="sidebar-link">Security &amp; Dependabot</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Packages</h4>
+          <a href="/docs/packages/" class="sidebar-link">Packages &amp; Registries</a>
+        </div>
+        <!-- Phase 4: Open Source & Collaboration -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 4: Open Source &amp; Collaboration</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Contribution</h4>
+          <a href="/docs/forking-workflow/" class="sidebar-link">Forking &amp; Contribution Workflow</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Community</h4>
+          <a href="/docs/community-management/" class="sidebar-link">Community Management</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Licensing</h4>
+          <a href="/docs/licensing-governance/" class="sidebar-link">Licensing &amp; Governance</a>
+        </div>
+        <!-- Phase 5: DevOps & Automation -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 5: DevOps &amp; Automation</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Actions Advanced</h4>
+          <a href="/docs/actions-advanced/" class="sidebar-link">GitHub Actions Advanced</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Runner Architecture</h4>
+          <a href="/docs/runner-architecture/" class="sidebar-link">Actions Runner Architecture</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Deploy Pipelines</h4>
+          <a href="/docs/deployment-pipelines/" class="sidebar-link">Deployment Pipelines</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Copilot</h4>
+          <a href="/docs/copilot/" class="sidebar-link">GitHub Copilot</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Cost Optimization</h4>
+          <a href="/docs/actions-cost-optimization/" class="sidebar-link">Actions Cost Optimization</a>
+        </div>
+        <!-- Phase 6: Career & Best Practices -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 6: Career &amp; Best Practices</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Best Practices</h4>
+          <a href="/docs/best-practices/" class="sidebar-link">Git Best Practices</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Portfolio Tips</h4>
+          <a href="/docs/portfolio-tips/" class="sidebar-link">GitHub Portfolio Tips</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Interview Q&amp;A</h4>
+          <a href="/docs/interview-qa/" class="sidebar-link">Git Interview Q&amp;A</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Patterns</h4>
+          <a href="/docs/patterns-antipatterns/" class="sidebar-link">Patterns &amp; Anti-Patterns</a>
+        </div>
+        <!-- Phase 7: Git at Scale (Staff+) -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 7: Git at Scale (Staff+)</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Monorepo Management</h4>
+          <a href="/docs/monorepo-management/" class="sidebar-link">Monorepo Management</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Internals Deep Dive</h4>
+          <a href="/docs/git-internals-deep/" class="sidebar-link">Git Internals Deep Dive</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Merge Queue</h4>
+          <a href="/docs/merge-queue/" class="sidebar-link">Advanced Merge Strategies</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Repo Strategies</h4>
+          <a href="/docs/trunk-vs-multi-repo/" class="sidebar-link">Trunk-based vs Multi-Repo</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Incidents</h4>
+          <a href="/docs/incident-debugging/" class="sidebar-link">Incident Debugging &amp; Rollbacks</a>
+        </div>
+        <!-- Phase 8: Enterprise & Supply Chain (Staff+) -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 8: Enterprise &amp; Supply Chain (Staff+)</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Enterprise Admin</h4>
+          <a href="/docs/enterprise-admin/" class="sidebar-link">GitHub Enterprise Admin</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Policy as Code</h4>
+          <a href="/docs/policy-as-code/" class="sidebar-link">Policy as Code</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">API Automation</h4>
+          <a href="/docs/api-automation/" class="sidebar-link">API Automation</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Supply Chain Security</h4>
+          <a href="/docs/supply-chain-security/" class="sidebar-link">Supply Chain Security</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GitOps</h4>
+          <a href="/docs/gitops/" class="sidebar-link">GitOps &amp; Deployments</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Audit Log</h4>
+          <a href="/docs/audit-log-streaming/" class="sidebar-link">Audit Log Streaming</a>
+        </div>
+        <!-- Phase 9: Staff+ Leadership -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 9: Staff+ Leadership &amp; DX</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">RFC &amp; ADR</h4>
+          <a href="/docs/rfc-adr/" class="sidebar-link">RFC &amp; ADR Processes</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Release Engineering</h4>
+          <a href="/docs/release-engineering/" class="sidebar-link">Release Engineering</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">DX Engineering</h4>
+          <a href="/docs/dx-engineering/" class="sidebar-link">Developer Experience Engineering</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Staff+ Interview</h4>
+          <a href="/docs/staff-interview-questions/" class="sidebar-link">Staff+ Interview Questions</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Git Culture</h4>
+          <a href="/docs/git-culture-strategy/" class="sidebar-link">Git Culture &amp; CI/CD Strategy</a>
+        </div>
+      </nav>
+    </aside>
+    <main id="docs-dynamic-content" class="flex-grow max-w-3xl flex flex-col gap-12 min-w-0 overflow-y-auto" aria-live="polite"><article class="flex flex-col gap-5 docs-section" role="region" aria-label="GitHub Copilot"><div class="flex flex-col gap-3"><div class="flex items-center justify-between gap-4 flex-wrap select-none"><nav class="flex items-center gap-1.5 text-[10px] font-bold theme-text-muted uppercase tracking-wider"><span>DevOps</span><span class="material-symbols-outlined text-[12px] theme-text-muted">chevron_right</span><span class="text-brand-500">AI</span></nav><div class="flex items-center gap-2" id="article-actions-toolbar"><button onclick="toggleBookmark('#copilot')" id="btn-bookmark" class="w-8 h-8 rounded-lg border theme-border text-slate-400 hover:text-amber-500 hover:border-amber-500/30 flex items-center justify-center transition-all theme-bg" aria-label="Pin this guide"><span class="material-symbols-outlined text-[18px]">star_border</span></button><button onclick="toggleProgress('#copilot')" id="btn-progress" class="h-8 px-3 rounded-lg border theme-border text-slate-500 hover:text-emerald-500 hover:border-emerald-500/30 flex items-center gap-1.5 text-[11px] font-semibold transition-all theme-bg"><span class="material-symbols-outlined text-[16px] text-slate-400">circle</span><span class="progress-btn-text">Mark as Done</span></button><button onclick="window.print()" class="w-8 h-8 rounded-lg border theme-border text-slate-400 hover:text-brand-500 hover:border-brand-500/30 flex items-center justify-center transition-all theme-bg" aria-label="Print"><span class="material-symbols-outlined text-[18px]">print</span></button></div></div><h1 class="text-3xl sm:text-4xl font-bold theme-text tracking-tight">GitHub Copilot</h1><div class="flex flex-wrap items-center gap-3 text-xs theme-text-muted select-none"><span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span><span>3 min read</span></span><span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wider text-emerald-500 border-emerald-500/20 bg-emerald-550/5"><span class="material-symbols-outlined text-[12px]">signal_cellular_1_bar</span><span>Foundational</span></span></div><div class="flex flex-wrap gap-1.5 mt-0.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="devops">devops</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="copilot">copilot</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="ai">ai</span></div></div><p class="theme-text-muted leading-relaxed text-base"><p>GitHub Copilot architecture, usage patterns, enterprise administration, and best practices. Understand how Copilot constructs context, ranks suggestions, and integrates into developer workflows.</p><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 220'><rect width='800' height='220' fill='var(--bg-secondary)' rx='8'/><text x='400' y='25' text-anchor='middle' fill='#E95420' font-size='13' font-weight='bold'>Copilot Context Window Architecture</text><rect x='20' y='50' width='120' height='55' rx='6' fill='#C34113' opacity='0.9'/><text x='80' y='72' text-anchor='middle' fill='#fff' font-size='10' font-weight='bold'>Cursor Context</text><text x='80' y='90' text-anchor='middle' fill='var(--text-primary)' font-size='8'>file + line + col</text><text x='80' y='102' text-anchor='middle' fill='var(--text-secondary)' font-size='7'>prefix &amp; suffix</text><line x1='140' y1='77' x2='180' y2='77' stroke='#E95420' stroke-width='2'/><polygon points='180,72 190,77 180,82' fill='#E95420'/><rect x='190' y='50' width='120' height='55' rx='6' fill='var(--bg-secondary)' stroke='#C34113' stroke-width='1.5'/><text x='250' y='72' text-anchor='middle' fill='#E95420' font-size='10' font-weight='bold'>Surrounding</text><text x='250' y='90' text-anchor='middle' fill='var(--text-primary)' font-size='8'>Code</text><text x='250' y='102' text-anchor='middle' fill='var(--text-secondary)' font-size='7'>~50 lines above</text><line x1='310' y1='77' x2='350' y2='77' stroke='#E95420' stroke-width='2'/><polygon points='350,72 360,77 350,82' fill='#E95420'/><rect x='360' y='50' width='120' height='55' rx='6' fill='var(--bg-secondary)' stroke='#C34113' stroke-width='1.5'/><text x='420' y='72' text-anchor='middle' fill='#E95420' font-size='10' font-weight='bold'>Imports &amp;</text><text x='420' y='90' text-anchor='middle' fill='var(--text-primary)' font-size='8'>References</text><text x='420' y='102' text-anchor='middle' fill='var(--text-secondary)' font-size='7'>dependency graph</text><line x1='480' y1='77' x2='520' y2='77' stroke='#E95420' stroke-width='2'/><polygon points='520,72 530,77 520,82' fill='#E95420'/><rect x='530' y='50' width='120' height='55' rx='6' fill='var(--bg-secondary)' stroke='#C34113' stroke-width='1.5'/><text x='590' y='72' text-anchor='middle' fill='#E95420' font-size='10' font-weight='bold'>Similar</text><text x='590' y='90' text-anchor='middle' fill='var(--text-primary)' font-size='8'>Snippets</text><text x='590' y='102' text-anchor='middle' fill='var(--text-secondary)' font-size='7'>neighbors + LSH</text><line x1='650' y1='77' x2='690' y2='77' stroke='#E95420' stroke-width='2'/><polygon points='690,72 700,77 690,82' fill='#E95420'/><rect x='690' y='45' width='90' height='65' rx='6' fill='#C34113' opacity='0.8'/><text x='735' y='67' text-anchor='middle' fill='#fff' font-size='10' font-weight='bold'>Completion</text><text x='735' y='85' text-anchor='middle' fill='var(--text-primary)' font-size='8'>Generation</text><text x='735' y='100' text-anchor='middle' fill='var(--text-secondary)' font-size='7'>transformer</text><rect x='20' y='130' width='760' height='70' rx='6' fill='#C34113' opacity='0.05' stroke='#C34113' stroke-width='1' stroke-dasharray='4,2'/><text x='400' y='155' text-anchor='middle' fill='#E95420' font-size='11' font-weight='bold'>Context Assembly Pipeline</text><text x='400' y='175' text-anchor='middle' fill='var(--text-secondary)' font-size='9'>1. Read cursor position and file prefix/suffix → 2. Extract surrounding function/class boundary → 3. Resolve import AST for referenced types</text><text x='400' y='192' text-anchor='middle' fill='var(--text-secondary)' font-size='9'>4. LSH indexing finds syntactically similar snippets from open-source corpus → 5. Concatenate into prompt window (max ~2048 tokens) → 6. Rank via fill-in-the-middle model</text></svg><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 160'><rect width='800' height='160' fill='var(--bg-secondary)' rx='8'/><text x='400' y='25' text-anchor='middle' fill='#E95420' font-size='13' font-weight='bold'>Suggestion Ranking &amp; Filtering Pipeline</text><rect x='20' y='50' width='140' height='50' rx='6' fill='var(--bg-secondary)' stroke='var(--border-default)'/><text x='90' y='72' text-anchor='middle' fill='var(--text-primary)' font-size='10'>Raw Model</text><text x='90' y='88' text-anchor='middle' fill='var(--text-secondary)' font-size='8'>10 candidates</text><line x1='160' y1='75' x2='190' y2='75' stroke='#E95420' stroke-width='2'/><polygon points='190,70 200,75 190,80' fill='#E95420'/><rect x='200' y='50' width='140' height='50' rx='6' fill='var(--bg-secondary)' stroke='var(--border-default)'/><text x='270' y='68' text-anchor='middle' fill='var(--text-primary)' font-size='10'>Deduplication</text><text x='270' y='88' text-anchor='middle' fill='var(--text-secondary)' font-size='8'>edit distance &gt; threshold</text><line x1='340' y1='75' x2='370' y2='75' stroke='#E95420' stroke-width='2'/><polygon points='370,70 380,75 370,80' fill='#E95420'/><rect x='380' y='50' width='140' height='50' rx='6' fill='var(--bg-secondary)' stroke='var(--border-default)'/><text x='450' y='68' text-anchor='middle' fill='var(--text-primary)' font-size='10'>Syntactic Filter</text><text x='450' y='88' text-anchor='middle' fill='var(--text-secondary)' font-size='8'>valid AST parse</text><line x1='520' y1='75' x2='550' y2='75' stroke='#E95420' stroke-width='2'/><polygon points='550,70 560,75 550,80' fill='#E95420'/><rect x='560' y='50' width='140' height='50' rx='6' fill='var(--bg-secondary)' stroke='var(--border-default)'/><text x='630' y='68' text-anchor='middle' fill='var(--text-primary)' font-size='10'>Relevance Rank</text><text x='630' y='88' text-anchor='middle' fill='var(--text-secondary)' font-size='8'>perplexity score</text><line x1='700' y1='75' x2='730' y2='75' stroke='#E95420' stroke-width='2'/><polygon points='730,70 740,75 730,80' fill='#E95420'/><rect x='740' y='50' width='50' height='50' rx='6' fill='#C34113' opacity='0.9'/><text x='765' y='72' text-anchor='middle' fill='#fff' font-size='8'>Top</text><text x='765' y='88' text-anchor='middle' fill='#fff' font-size='8'>1-3</text><line x1='160' y1='85' x2='90' y2='85' stroke='var(--border-default)' stroke-width='1' stroke-dasharray='3,2'/><text x='125' y='110' text-anchor='middle' fill='var(--text-secondary)' font-size='8'>rejection sampling</text><line x1='340' y1='85' x2='270' y2='85' stroke='var(--border-default)' stroke-width='1' stroke-dasharray='3,2'/><line x1='520' y1='85' x2='450' y2='85' stroke='var(--border-default)' stroke-width='1' stroke-dasharray='3,2'/><rect x='20' y='120' width='770' height='30' rx='4' fill='#C34113' opacity='0.06'/><text x='405' y='138' text-anchor='middle' fill='var(--text-secondary)' font-size='9'>Rejection sampling loops back from each stage — low-confidence completions are discarded; only syntactically valid, context-relevant, non-duplicate suggestions reach the editor</text></svg></p></p><details class="cheat-sheet mt-6"><summary><span class="material-symbols-outlined text-[16px]" aria-hidden="true">quick_reference</span> Staff+ Cheat Sheet<span class="material-symbols-outlined text-[16px] ml-auto">expand_more</span></summary><div class="cheat-sheet-body"><h4>Core Commands</h4><ul><li><code>Tab</code> — accept suggestion.</li><li><code>Ctrl+Enter</code> — open completions panel (show 10 alternatives).</li><li><code>Cmd+Shift+I</code> — inline chat (VS Code).</li><li><code>gh copilot suggest &quot;explain this&quot;</code> — CLI copilot.</li></ul><h4>Staff+ Patterns</h4><ul><li>Write clear function names and type hints — Copilot generates better suggestions when the context (signatures, comments, surrounding code) is explicit.</li><li>Use Copilot Chat for refactoring: &quot;Convert this class to use dependency injection&quot; — it understands the full file context.</li></ul><h4>Watch Outs</h4><ul><li>Copilot suggestions may contain security vulnerabilities (SQL injection, hardcoded keys) or license-matched code. Always review.</li><li>Over-reliance on Copilot atrophies code reading skills. Use it for boilerplate, not for business logic.</li></ul><h4>Interview Angle</h4><p>Emerging topic. The Staff+ perspective is: Copilot changes the economics of software development — juniors become mid-level faster, but architectural thinking (which Copilot can't do) becomes more valuable. Discuss how you'd measure productivity gain and manage IP risk.</p></div></details><div class="flex flex-col gap-8"><div id="section-copilot-0" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Getting Started</h3><div class="theme-text-muted text-sm leading-relaxed"><p>Install the Copilot extension in VS Code, JetBrains, or Neovim. Authenticate with your GitHub account. Start typing and receive inline suggestions from the Copilot model trained on public code.</p></div><div class="border theme-border theme-bg rounded-xl overflow-hidden text-sm leading-relaxed code-block-wrapper"><div class="code-block-header flex items-center justify-between px-4 py-2 border-b theme-border"><span class="code-lang-label text-xs font-medium uppercase tracking-wider">language-text</span><button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 text-xs transition-colors"><span class="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span> Copy</button></div><pre class="p-4 m-0 overflow-x-auto language-language-text"><code class="language-language-text"># Installation commands
+# VS Code:
+ext install github.copilot
+ext install github.copilot-chat
+
+# Neovim (lazy.nvim):
+{
+  &quot;github/copilot.vim&quot;,
+  event = &quot;InsertEnter&quot;,
+  config = function()
+    vim.keymap.set(&#039;i&#039;, &#039;&lt;C-J&gt;&#039;, &#039;copilot#Accept(&quot;&lt;CR&gt;&quot;)&#039;, { expr = true })
+  end
+}
+
+# JetBrains:
+# Settings → Plugins → Marketplace → search &quot;GitHub Copilot&quot;
+
+# Keyboard shortcuts:
+# Tab: accept suggestion
+# Alt/Option + ]: next suggestion
+# Alt/Option + [: previous suggestion
+# Ctrl + Enter: open suggestions panel</code></pre></div></div>
+<div id="section-copilot-1" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Usage Patterns</h3><div class="theme-text-muted text-sm leading-relaxed"><p>Copilot works best with clear intent signals: descriptive function names, type annotations, docstrings, and well-structured imports. It excels at boilerplate, tests, and algorithmic code.</p></div><div class="border theme-border theme-bg rounded-xl overflow-hidden text-sm leading-relaxed code-block-wrapper"><div class="code-block-header flex items-center justify-between px-4 py-2 border-b theme-border"><span class="code-lang-label text-xs font-medium uppercase tracking-wider">language-text</span><button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 text-xs transition-colors"><span class="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span> Copy</button></div><pre class="p-4 m-0 overflow-x-auto language-language-text"><code class="language-language-text"># Example patterns where Copilot excels
+
+# 1. Descriptive function name + JSDoc
+/** Filters active users from a user array */
+async function getActiveUsers(
+  users: User[],
+  options?: { includeAdmin?: boolean }
+): Promise&lt;User[]&gt; {
+  // Copilot generates the body
+}
+
+# 2. Test generation
+describe(&#039;getActiveUsers&#039;, () =&gt; {
+  it(&#039;should filter inactive users&#039;, () =&gt; {
+    // Copilot suggests test cases
+  })
+})
+
+# 3. Code from comment description
+# parse ISO 8601 duration string to milliseconds
+def parse_duration(duration_str: str) -&gt; int:
+    # Copilot fills implementation</code></pre></div></div>
+<div id="section-copilot-2" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Enterprise Admin</h3><div class="theme-text-muted text-sm leading-relaxed"><p>Enterprise administrators manage Copilot via the GitHub Enterprise settings. Assign seats, configure telemetry, manage content exclusions, and review usage metrics through the admin dashboard.</p></div><div class="border theme-border theme-bg rounded-xl overflow-hidden text-sm leading-relaxed code-block-wrapper"><div class="code-block-header flex items-center justify-between px-4 py-2 border-b theme-border"><span class="code-lang-label text-xs font-medium uppercase tracking-wider">language-text</span><button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 text-xs transition-colors"><span class="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span> Copy</button></div><pre class="p-4 m-0 overflow-x-auto language-language-text"><code class="language-language-text"># Enterprise setup checklist
+# 1. Enable Copilot in Enterprise settings
+# Settings → Enterprise → Policies → Copilot
+#
+# 2. Content exclusions (public code matches):
+# Settings → Copilot → Content exclusions
+# Add repos whose code should not suggest
+#
+# 3. Seat assignment:
+gh api \
+  /enterprises/{enterprise}/copilot/billing/seats \
+  --method POST \
+  --field selected_usernames=&#039;[&quot;user1&quot;,&quot;user2&quot;]&#039;
+#
+# 4. Audit log:
+# Settings → Enterprise → Audit log
+# Filter: copilot._
+#
+# 5. Telemetry:
+# Copilot chat history (opt-in)
+# Code suggestion acceptance rate
+# Language breakdown reports</code></pre></div></div>
+<div id="section-copilot-3" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Best Practices</h3><div class="theme-text-muted text-sm leading-relaxed"><p>Write clear function signatures, keep functions focused, provide type annotations, and use meaningful names. Review every suggestion — Copilot can produce plausible but incorrect code.</p></div><div class="border theme-border theme-bg rounded-xl overflow-hidden text-sm leading-relaxed code-block-wrapper"><div class="code-block-header flex items-center justify-between px-4 py-2 border-b theme-border"><span class="code-lang-label text-xs font-medium uppercase tracking-wider">language-text</span><button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 text-xs transition-colors"><span class="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span> Copy</button></div><pre class="p-4 m-0 overflow-x-auto language-language-text"><code class="language-language-text"># DO: be explicit
+async function calculateInvoiceTotal(
+  items: LineItem[],
+  taxRate: number,
+  discount?: Coupon
+): Promise&lt;Money&gt; {
+  // Copilot generates accurate implementation
+}
+
+# DON&#039;T: vague names
+async function doThing(a: any, b: any): Promise&lt;any&gt;
+
+# Prompt engineering tips:
+# - Write the function signature first
+# - Add type annotations (TypeScript, Python types)
+# - Write a comment describing the next few lines
+# - Use well-named variables in scope
+# - Check suggestions for security (SQL injection, etc.)
+#
+# /fix in Copilot Chat: ask to fix issues
+# /explain: understand generated code
+# /tests: generate test cases</code></pre></div></div>
+<div id="section-copilot-4" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Limitations &amp; Tips</h3><div class="theme-text-muted text-sm leading-relaxed"><p>Copilot has a limited context window (~2-4K tokens), cannot execute code, may produce insecure patterns, and performs poorly on niche or internal APIs. It's a productivity accelerator, not a replacement for code review.</p></div><div class="border theme-border theme-bg rounded-xl overflow-hidden text-sm leading-relaxed code-block-wrapper"><div class="code-block-header flex items-center justify-between px-4 py-2 border-b theme-border"><span class="code-lang-label text-xs font-medium uppercase tracking-wider">language-text</span><button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 text-xs transition-colors"><span class="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span> Copy</button></div><pre class="p-4 m-0 overflow-x-auto language-language-text"><code class="language-language-text"># Known limitations
+# - Context window: ~2048 tokens (file prefix + suffix + imports + similar snippets)
+# - No awareness of project-wide architecture
+# - May suggest deprecated or insecure APIs
+# - Struggles with:
+#   * Internal/private package APIs
+#   * Domain-specific algorithms
+#   * Very long files (&gt;500 lines)
+#   * Cross-file refactoring
+#
+# Mitigation strategies:
+# 1. Break large files into focused modules
+# 2. Keep related code close together
+# 3. Add JSDoc/docstrings for public APIs
+# 4. Use Copilot Chat for multi-file changes
+# 5. Always review for security: injection, auth, secrets
+#
+# Prompting Copilot Chat:
+# @workspace /explain &quot;How does auth work?&quot;
+# /fix &quot;This doesn&#039;t handle edge cases&quot;
+# /tests &quot;Generate unit tests for this function&quot;</code></pre></div></div></div><div id="section-dive" class="scroll-mt-24"><details class="group border theme-border theme-bg-subtle rounded-xl overflow-hidden transition-all duration-300"><summary class="flex items-center justify-between p-4 font-bold text-sm theme-text cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-brand-500">lightbulb</span><span>Deep Dive &amp; Key Takeaways</span></span><span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-open:rotate-180 text-slate-400">expand_more</span></summary><div class="px-5 pb-5 pt-2 theme-text-muted text-sm leading-relaxed border-t theme-border font-sans"><p>GitHub Copilot is powered by OpenAI Codex, a transformer model fine-tuned on natural language and public code. On each keystroke, the Copilot extension assembles a context window containing the current file prefix (code before cursor), suffix (code after cursor), surrounding function or class boundary, imports and resolved types, and nearest-neighbor snippets found via locality-sensitive hashing (LSH) over the open-source training corpus. The model generates up to 10 candidate completions. These pass through a multi-stage filter: deduplication via edit distance thresholds, syntactic validity via AST parsing, and relevance ranking by perplexity score. The top 1-3 suggestions are presented inline. Enterprise administrators control seat assignment, content exclusions (repos whose code should not appear in suggestions), and telemetry collection. Copilot Chat extends this with conversational context, enabling <code>/fix</code>, <code>/explain</code>, <code>/tests</code>, and <code>@workspace</code> commands for multi-file reasoning.</p></div></details></div><div class="mt-8 pt-6 flex items-center justify-between gap-4 border-t theme-border"><a href="/docs/deployment-pipelines/" class="flex items-center gap-2 text-sm theme-text-muted hover:text-brand-500 transition-colors group"><span class="material-symbols-outlined text-sm transition-transform group-hover:-translate-x-0.5">arrow_back</span><span class="truncate max-w-[200px]">Deployment Pipelines</span></a><a href="/docs/actions-cost-optimization/" class="flex items-center gap-2 text-sm theme-text-muted hover:text-brand-500 transition-colors group text-right"><span class="truncate max-w-[200px]">Actions Cost Optimization</span><span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-0.5">arrow_forward</span></a></div></article></main>
+    <aside class="hidden xl:block w-48 sticky top-24 h-[calc(100vh-120px)] overflow-y-auto shrink-0 border-l theme-border pl-6">
+      <h4 class="sidebar-label !text-[10px] !pt-0 !pb-0 mb-3">On this page</h4>
+      <nav id="docs-right-outline" class="space-y-3 text-xs theme-text-muted" aria-label="Page sections"></nav>
+    </aside>
+  </div>
+  <footer class="border-t theme-border py-8 theme-bg">
+    <div class="max-w-7xl mx-auto px-6 flex justify-center items-center text-sm theme-text-muted">
+      <span>Made with ❤️ by <a href="https://www.linkedin.com/in/kallol-chakraborty-9728a699/" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:text-brand-600 transition-colors font-semibold">Kallol Chakraborty</a></span>
+    </div>
+  </footer>
+  <noscript>
+    <div class="max-w-5xl mx-auto px-6 py-8">
+      <div class="flex items-center gap-2.5 mb-6">
+        <img src="assets/logo.svg" alt="git bytes" class="w-8 h-8" />
+        <span class="text-base font-semibold">git bytes</span>
+      </div>
+      <h1 class="text-3xl font-bold mb-2">Study Guides</h1>
+      <p class="text-sm theme-text-muted mb-8">This site requires JavaScript for the full interactive experience. Below is a complete index of all available guides.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Git Fundamentals</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/git-basics/" class="text-brand-500 hover:text-brand-600">Git Basics — init, add, commit, log, diff</a></li>
+            <li><a href="/docs/branching-merging/" class="text-brand-500 hover:text-brand-600">Branching &amp; Merging</a></li>
+            <li><a href="/docs/remotes-collaboration/" class="text-brand-500 hover:text-brand-600">Remotes &amp; Collaboration</a></li>
+            <li><a href="/docs/rebasing-advanced/" class="text-brand-500 hover:text-brand-600">Rebasing &amp; Advanced Git</a></li>
+            <li><a href="/docs/git-internals/" class="text-brand-500 hover:text-brand-600">Git Internals</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">GitHub Platform</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/repos-issues/" class="text-brand-500 hover:text-brand-600">Repositories &amp; Issues</a></li>
+            <li><a href="/docs/pull-requests/" class="text-brand-500 hover:text-brand-600">Pull Requests &amp; Code Review</a></li>
+            <li><a href="/docs/github-pages/" class="text-brand-500 hover:text-brand-600">GitHub Pages</a></li>
+            <li><a href="/docs/actions-fundamentals/" class="text-brand-500 hover:text-brand-600">GitHub Actions Fundamentals</a></li>
+            <li><a href="/docs/projects-wikis/" class="text-brand-500 hover:text-brand-600">Projects, Wikis &amp; Discussions</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">GitHub Advanced</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/rest-api/" class="text-brand-500 hover:text-brand-600">GitHub REST API</a></li>
+            <li><a href="/docs/graphql-api/" class="text-brand-500 hover:text-brand-600">GitHub GraphQL API</a></li>
+            <li><a href="/docs/github-cli/" class="text-brand-500 hover:text-brand-600">GitHub CLI (gh)</a></li>
+            <li><a href="/docs/security-dependabot/" class="text-brand-500 hover:text-brand-600">Security &amp; Dependabot</a></li>
+            <li><a href="/docs/packages/" class="text-brand-500 hover:text-brand-600">Packages &amp; Registries</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Open Source &amp; Collaboration</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/forking-workflow/" class="text-brand-500 hover:text-brand-600">Forking &amp; Contribution Workflow</a></li>
+            <li><a href="/docs/community-management/" class="text-brand-500 hover:text-brand-600">Community Management</a></li>
+            <li><a href="/docs/licensing-governance/" class="text-brand-500 hover:text-brand-600">Licensing &amp; Governance</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">DevOps &amp; Automation</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/actions-advanced/" class="text-brand-500 hover:text-brand-600">GitHub Actions Advanced</a></li>
+            <li><a href="/docs/runner-architecture/" class="text-brand-500 hover:text-brand-600">Actions Runner Architecture</a></li>
+            <li><a href="/docs/deployment-pipelines/" class="text-brand-500 hover:text-brand-600">Deployment Pipelines</a></li>
+            <li><a href="/docs/copilot/" class="text-brand-500 hover:text-brand-600">GitHub Copilot</a></li>
+            <li><a href="/docs/actions-cost-optimization/" class="text-brand-500 hover:text-brand-600">Actions Cost Optimization</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">Career &amp; Best Practices</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/best-practices/" class="text-brand-500 hover:text-brand-600">Git Best Practices</a></li>
+            <li><a href="/docs/portfolio-tips/" class="text-brand-500 hover:text-brand-600">GitHub Portfolio Tips</a></li>
+            <li><a href="/docs/interview-qa/" class="text-brand-500 hover:text-brand-600">Git Interview Q&amp;A</a></li>
+            <li><a href="/docs/patterns-antipatterns/" class="text-brand-500 hover:text-brand-600">Patterns &amp; Anti-Patterns</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Git at Scale (Staff+)</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/monorepo-management/" class="text-brand-500 hover:text-brand-600">Monorepo Management</a></li>
+            <li><a href="/docs/git-internals-deep/" class="text-brand-500 hover:text-brand-600">Git Internals Deep Dive</a></li>
+            <li><a href="/docs/merge-queue/" class="text-brand-500 hover:text-brand-600">Advanced Merge Strategies</a></li>
+            <li><a href="/docs/trunk-vs-multi-repo/" class="text-brand-500 hover:text-brand-600">Trunk-based vs Multi-Repo</a></li>
+            <li><a href="/docs/incident-debugging/" class="text-brand-500 hover:text-brand-600">Incident Debugging &amp; Rollbacks</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Enterprise &amp; Supply Chain (Staff+)</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/enterprise-admin/" class="text-brand-500 hover:text-brand-600">GitHub Enterprise Admin</a></li>
+            <li><a href="/docs/policy-as-code/" class="text-brand-500 hover:text-brand-600">Policy as Code</a></li>
+            <li><a href="/docs/api-automation/" class="text-brand-500 hover:text-brand-600">API Automation</a></li>
+            <li><a href="/docs/supply-chain-security/" class="text-brand-500 hover:text-brand-600">Supply Chain Security</a></li>
+            <li><a href="/docs/gitops/" class="text-brand-500 hover:text-brand-600">GitOps &amp; Deployments</a></li>
+            <li><a href="/docs/audit-log-streaming/" class="text-brand-500 hover:text-brand-600">Audit Log Streaming</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Staff+ Leadership &amp; DX</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/rfc-adr/" class="text-brand-500 hover:text-brand-600">RFC &amp; ADR Processes</a></li>
+            <li><a href="/docs/release-engineering/" class="text-brand-500 hover:text-brand-600">Release Engineering</a></li>
+            <li><a href="/docs/dx-engineering/" class="text-brand-500 hover:text-brand-600">Developer Experience Engineering</a></li>
+            <li><a href="/docs/staff-interview-questions/" class="text-brand-500 hover:text-brand-600">Staff+ Interview Questions</a></li>
+            <li><a href="/docs/git-culture-strategy/" class="text-brand-500 hover:text-brand-600">Git Culture &amp; CI/CD Strategy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t theme-border text-sm theme-text-muted">
+        <a href="index.html" class="text-brand-500 hover:text-brand-600 font-semibold">&larr; Back to Home</a>
+      </div>
+    </div>
+  </noscript>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/headroom.js@0.12.0/dist/headroom.min.js"></script>
+  <script src="js/generated.js" defer></script>
+  <script src="js/modals.js" defer></script>
+  <script src="js/loader.js" defer></script>
+  <script>
+    var header = document.querySelector('header');
+    if (header) { new Headroom(header).init(); }
+  </script>
+  <script>
+    (function() {
+      var sidebar = document.getElementById('left-sidebar');
+      var backdrop = document.getElementById('sidebar-backdrop');
+      var toggle = document.getElementById('sidebar-toggle');
+      if (!sidebar || !backdrop || !toggle) return;
+      function openSidebar() { sidebar.classList.remove('-translate-x-full'); backdrop.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+      function closeSidebar() { sidebar.classList.add('-translate-x-full'); backdrop.classList.add('hidden'); document.body.style.overflow = ''; }
+      toggle.addEventListener('click', function() { sidebar.classList.contains('-translate-x-full') ? openSidebar() : closeSidebar(); });
+      backdrop.addEventListener('click', closeSidebar);
+      sidebar.querySelectorAll('.sidebar-link').forEach(function(link) {
+        link.addEventListener('click', function() { if (window.innerWidth < 1024) closeSidebar(); });
+      });
+      window.addEventListener('resize', function() { if (window.innerWidth >= 1024) { backdrop.classList.add('hidden'); document.body.style.overflow = ''; } });
+    })();
+  </script>
+</body>
+</html>

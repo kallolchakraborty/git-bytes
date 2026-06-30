@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Git Internals Deep Dive — git bytes</title>
+  <meta name="description" content="Explore Git&#039;s internal data structures — commit-graph, reachability bitmaps, and MIDX files — that power efficient operations at scale, and learn the same de..." />
+  <meta property="og:title" content="Git Internals Deep Dive — git bytes" />
+  <meta property="og:description" content="Explore Git&#039;s internal data structures — commit-graph, reachability bitmaps, and MIDX files — that power efficient operations at scale, and learn the same debugging techniques used by Git core cont..." />
+  <meta property="og:image" content="assets/og-preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://kallolchakraborty.github.io/git-bytes/docs/git-internals-deep/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Git Internals Deep Dive — git bytes" />
+  <meta name="twitter:description" content="Explore Git&#039;s internal data structures — commit-graph, reachability bitmaps, and MIDX files — that power efficient operations at scale, and learn the same debugging techniques used by Git core cont..." />
+  <meta name="twitter:image" content="assets/og-preview.png" />
+  <meta name="twitter:image:alt" content="git bytes logo — Git branch visualization" />
+  <meta name="keywords" content="git bytes, Git, GitHub, FAANG interview prep, Staff+ engineer, Git internals, GitHub Actions, monorepo, CI/CD, GitOps" />
+  <meta name="author" content="Kallol Chakraborty" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:site_name" content="git bytes" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="theme-color" content="#E95420" />
+<meta name="theme-color" content="#F5A389" media="(prefers-color-scheme: dark)" />
+  <link rel="canonical" id="canonical-link" href="https://kallolchakraborty.github.io/git-bytes/docs/git-internals-deep/" />
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192x192.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preload" href="css/tailwind.css" as="style" />
+  <link rel="preload" href="css/main.css" as="style" />
+  <script src="js/theme.js"></script>
+  <link href="css/tailwind.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" /></noscript>
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","@id":"https://kallolchakraborty.github.io/git-bytes/docs/git-internals-deep/","headline":"Git Internals Deep Dive","description":"Explore Git's internal data structures — commit-graph, reachability bitmaps, and MIDX files — that power efficient operations at scale, and learn the same de...","proficiencyLevel":"Advanced / Staff+","timeRequired":"3M","datePublished":"2026-06-30","dateModified":"2026-06-30","author":{"@id":"https://kallolchakraborty.github.io/git-bytes/#person"},"publisher":{"@type":"Person","name":"Kallol Chakraborty"},"mainEntityOfPage":"https://kallolchakraborty.github.io/git-bytes/docs/git-internals-deep/","about":[{"@type":"Thing","name":"staff+"},{"@type":"Thing","name":"git"},{"@type":"Thing","name":"internals"},{"@type":"Thing","name":"performance"}],"image":"https://kallolchakraborty.github.io/git-bytes/assets/og-preview.png"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://kallolchakraborty.github.io/git-bytes/"},{"@type":"ListItem","position":2,"name":"Git at Scale","item":"https://kallolchakraborty.github.io/git-bytes/docs/git-internals-deep/"},{"@type":"ListItem","position":3,"name":"Git Internals Deep Dive"}]}]}</script></head>
+<body class="theme-bg theme-text font-sans min-h-screen flex flex-col transition-colors duration-200 overflow-y-auto">
+  <a href="/docs/docs-dynamic-content/" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-[#E95420] focus:border focus:border-[#E95420] focus:rounded-lg focus:shadow-lg focus:text-sm focus:font-semibold focus:outline-none focus:ring-2 focus:ring-[#E95420]">Skip to main content</a>
+  <div id="reading-progress-track" aria-hidden="true" style="position:fixed;top:0;left:0;right:0;height:3px;z-index:9999;background:transparent;pointer-events:none;">
+    <div id="reading-progress-bar" style="height:100%;transform:scaleX(0);background:linear-gradient(90deg,#E95420,#F5A389);transform-origin:left;transition:transform 80ms linear;"></div>
+  </div>
+  <header class="glass-nav sticky top-0 z-40 transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <button id="sidebar-toggle" class="lg:hidden text-slate-400 hover:text-brand-500 transition-all flex items-center justify-center" aria-label="Toggle navigation menu">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <a href="index.html" class="theme-text hover:text-brand-500 transition-all flex items-center gap-2.5">
+          <img src="assets/logo.svg" alt="git bytes" class="w-8 h-8" />
+          <span class="text-base font-semibold">git bytes</span>
+        </a>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2">
+          <button class="theme-toggle-btn text-slate-400 hover:text-brand-500 transition-all" aria-label="Toggle theme">
+            <span class="material-symbols-outlined text-[16px]">light_mode</span>
+          </button>
+          <button class="open-share-btn text-slate-400 hover:text-brand-500 transition-all" aria-label="Share this page">
+            <span class="material-symbols-outlined text-[16px]">share</span>
+          </button>
+          <button class="open-search-btn flex items-center gap-1.5 h-7 px-2.5 theme-bg-subtle rounded-lg text-slate-400 hover:text-brand-500 font-medium text-xs transition-all">
+            <span class="material-symbols-outlined text-[16px]">search</span>
+            <kbd class="hidden sm:inline-block font-mono theme-bg border theme-border px-1 rounded text-[9px] leading-none">Ctrl+K</kbd>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="max-w-7xl mx-auto px-6 w-full flex-grow flex flex-col lg:flex-row gap-8 py-8 relative">
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden" aria-hidden="true"></div>
+      <aside id="left-sidebar" class="lg:w-56 lg:sticky lg:top-24 lg:h-[calc(100vh-120px)] overflow-y-auto shrink-0 border-b lg:border-b-0 theme-border pb-4 lg:pb-0 pr-0 lg:pr-5 fixed inset-y-0 left-0 z-40 w-64 transform -translate-x-full transition-transform duration-200 lg:translate-x-0 lg:static lg:inset-auto lg:z-auto lg:w-56 lg:border-b-0 theme-bg">
+      <nav aria-label="Documentation navigation" class="sidebar-sections">
+        <div id="sidebar-progress-container" class="px-3 py-3.5 mb-2 border-b theme-border">
+          <div class="flex items-center justify-between text-xs font-bold theme-text mb-1.5">
+            <span>Study Progress</span>
+            <span id="sidebar-progress-text" class="text-brand-500">0%</span>
+          </div>
+          <div class="w-full rounded-full h-1.5 overflow-hidden" style="background-color: var(--border-default)">
+            <div id="sidebar-progress-bar" class="bg-brand-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div id="sidebar-progress-stats" class="text-[10px] theme-text-muted mt-1 font-medium">0 of 0 topics completed</div>
+        </div>
+        <div id="sidebar-bookmarks-container" class="hidden px-2 py-3 mb-2 border-b theme-border">
+          <div class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-2 flex items-center gap-1 select-none">
+            <span class="material-symbols-outlined text-[12px] text-amber-500">star</span> Pinned Guides
+          </div>
+          <div id="sidebar-bookmarks-list" class="flex flex-col gap-0.5"></div>
+        </div>
+        <!-- Phase 1: Git Fundamentals -->
+        <div class="px-2 py-3">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 1: Git Fundamentals</div>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Git Basics</h4>
+          <a href="/docs/git-basics/" class="sidebar-link">Git Basics — init, add, commit, log, diff</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Branching & Merging</h4>
+          <a href="/docs/branching-merging/" class="sidebar-link">Branching & Merging</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Remotes & Collaboration</h4>
+          <a href="/docs/remotes-collaboration/" class="sidebar-link">Remotes & Collaboration</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Rebasing & Advanced</h4>
+          <a href="/docs/rebasing-advanced/" class="sidebar-link">Rebasing & Advanced Git</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Git Internals</h4>
+          <a href="/docs/git-internals/" class="sidebar-link">Git Internals</a>
+        </div>
+        <!-- Phase 2: GitHub Platform -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 2: GitHub Platform</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Repos & Issues</h4>
+          <a href="/docs/repos-issues/" class="sidebar-link">Repositories &amp; Issues</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Pull Requests</h4>
+          <a href="/docs/pull-requests/" class="sidebar-link">Pull Requests &amp; Code Review</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GitHub Pages</h4>
+          <a href="/docs/github-pages/" class="sidebar-link">GitHub Pages</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Actions Fundamentals</h4>
+          <a href="/docs/actions-fundamentals/" class="sidebar-link">GitHub Actions Fundamentals</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Projects &amp; Wikis</h4>
+          <a href="/docs/projects-wikis/" class="sidebar-link">Projects, Wikis &amp; Discussions</a>
+        </div>
+        <!-- Phase 3: GitHub Advanced -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 3: GitHub Advanced</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">REST API</h4>
+          <a href="/docs/rest-api/" class="sidebar-link">GitHub REST API</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GraphQL API</h4>
+          <a href="/docs/graphql-api/" class="sidebar-link">GitHub GraphQL API</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GitHub CLI</h4>
+          <a href="/docs/github-cli/" class="sidebar-link">GitHub CLI (gh)</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Security</h4>
+          <a href="/docs/security-dependabot/" class="sidebar-link">Security &amp; Dependabot</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Packages</h4>
+          <a href="/docs/packages/" class="sidebar-link">Packages &amp; Registries</a>
+        </div>
+        <!-- Phase 4: Open Source & Collaboration -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 4: Open Source &amp; Collaboration</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Contribution</h4>
+          <a href="/docs/forking-workflow/" class="sidebar-link">Forking &amp; Contribution Workflow</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Community</h4>
+          <a href="/docs/community-management/" class="sidebar-link">Community Management</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Licensing</h4>
+          <a href="/docs/licensing-governance/" class="sidebar-link">Licensing &amp; Governance</a>
+        </div>
+        <!-- Phase 5: DevOps & Automation -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 5: DevOps &amp; Automation</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Actions Advanced</h4>
+          <a href="/docs/actions-advanced/" class="sidebar-link">GitHub Actions Advanced</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Runner Architecture</h4>
+          <a href="/docs/runner-architecture/" class="sidebar-link">Actions Runner Architecture</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Deploy Pipelines</h4>
+          <a href="/docs/deployment-pipelines/" class="sidebar-link">Deployment Pipelines</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Copilot</h4>
+          <a href="/docs/copilot/" class="sidebar-link">GitHub Copilot</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Cost Optimization</h4>
+          <a href="/docs/actions-cost-optimization/" class="sidebar-link">Actions Cost Optimization</a>
+        </div>
+        <!-- Phase 6: Career & Best Practices -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 6: Career &amp; Best Practices</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Best Practices</h4>
+          <a href="/docs/best-practices/" class="sidebar-link">Git Best Practices</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Portfolio Tips</h4>
+          <a href="/docs/portfolio-tips/" class="sidebar-link">GitHub Portfolio Tips</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Interview Q&amp;A</h4>
+          <a href="/docs/interview-qa/" class="sidebar-link">Git Interview Q&amp;A</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Patterns</h4>
+          <a href="/docs/patterns-antipatterns/" class="sidebar-link">Patterns &amp; Anti-Patterns</a>
+        </div>
+        <!-- Phase 7: Git at Scale (Staff+) -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 7: Git at Scale (Staff+)</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Monorepo Management</h4>
+          <a href="/docs/monorepo-management/" class="sidebar-link">Monorepo Management</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Internals Deep Dive</h4>
+          <a href="/docs/git-internals-deep/" class="sidebar-link">Git Internals Deep Dive</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Merge Queue</h4>
+          <a href="/docs/merge-queue/" class="sidebar-link">Advanced Merge Strategies</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Repo Strategies</h4>
+          <a href="/docs/trunk-vs-multi-repo/" class="sidebar-link">Trunk-based vs Multi-Repo</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Incidents</h4>
+          <a href="/docs/incident-debugging/" class="sidebar-link">Incident Debugging &amp; Rollbacks</a>
+        </div>
+        <!-- Phase 8: Enterprise & Supply Chain (Staff+) -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 8: Enterprise &amp; Supply Chain (Staff+)</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Enterprise Admin</h4>
+          <a href="/docs/enterprise-admin/" class="sidebar-link">GitHub Enterprise Admin</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Policy as Code</h4>
+          <a href="/docs/policy-as-code/" class="sidebar-link">Policy as Code</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">API Automation</h4>
+          <a href="/docs/api-automation/" class="sidebar-link">API Automation</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Supply Chain Security</h4>
+          <a href="/docs/supply-chain-security/" class="sidebar-link">Supply Chain Security</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GitOps</h4>
+          <a href="/docs/gitops/" class="sidebar-link">GitOps &amp; Deployments</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Audit Log</h4>
+          <a href="/docs/audit-log-streaming/" class="sidebar-link">Audit Log Streaming</a>
+        </div>
+        <!-- Phase 9: Staff+ Leadership -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 9: Staff+ Leadership &amp; DX</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">RFC &amp; ADR</h4>
+          <a href="/docs/rfc-adr/" class="sidebar-link">RFC &amp; ADR Processes</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Release Engineering</h4>
+          <a href="/docs/release-engineering/" class="sidebar-link">Release Engineering</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">DX Engineering</h4>
+          <a href="/docs/dx-engineering/" class="sidebar-link">Developer Experience Engineering</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Staff+ Interview</h4>
+          <a href="/docs/staff-interview-questions/" class="sidebar-link">Staff+ Interview Questions</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Git Culture</h4>
+          <a href="/docs/git-culture-strategy/" class="sidebar-link">Git Culture &amp; CI/CD Strategy</a>
+        </div>
+      </nav>
+    </aside>
+    <main id="docs-dynamic-content" class="flex-grow max-w-3xl flex flex-col gap-12 min-w-0 overflow-y-auto" aria-live="polite"><article class="flex flex-col gap-5 docs-section" role="region" aria-label="Git Internals Deep Dive"><div class="flex flex-col gap-3"><div class="flex items-center justify-between gap-4 flex-wrap select-none"><nav class="flex items-center gap-1.5 text-[10px] font-bold theme-text-muted uppercase tracking-wider"><span>Git at Scale</span><span class="material-symbols-outlined text-[12px] theme-text-muted">chevron_right</span><span class="text-brand-500">Internals</span></nav><div class="flex items-center gap-2" id="article-actions-toolbar"><button onclick="toggleBookmark('#git-internals-deep')" id="btn-bookmark" class="w-8 h-8 rounded-lg border theme-border text-slate-400 hover:text-amber-500 hover:border-amber-500/30 flex items-center justify-center transition-all theme-bg" aria-label="Pin this guide"><span class="material-symbols-outlined text-[18px]">star_border</span></button><button onclick="toggleProgress('#git-internals-deep')" id="btn-progress" class="h-8 px-3 rounded-lg border theme-border text-slate-500 hover:text-emerald-500 hover:border-emerald-500/30 flex items-center gap-1.5 text-[11px] font-semibold transition-all theme-bg"><span class="material-symbols-outlined text-[16px] text-slate-400">circle</span><span class="progress-btn-text">Mark as Done</span></button><button onclick="window.print()" class="w-8 h-8 rounded-lg border theme-border text-slate-400 hover:text-brand-500 hover:border-brand-500/30 flex items-center justify-center transition-all theme-bg" aria-label="Print"><span class="material-symbols-outlined text-[18px]">print</span></button></div></div><h1 class="text-3xl sm:text-4xl font-bold theme-text tracking-tight">Git Internals Deep Dive</h1><div class="flex flex-wrap items-center gap-3 text-xs theme-text-muted select-none"><span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span><span>3 min read</span></span><span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wider text-purple-500 border-purple-500/20 bg-purple-550/5"><span class="material-symbols-outlined text-[12px]">signal_cellular_4_bar</span><span>Advanced / Staff+</span></span></div><div class="flex flex-wrap gap-1.5 mt-0.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="staff+">staff+</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="git">git</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="internals">internals</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="performance">performance</span></div></div><p class="theme-text-muted leading-relaxed text-base"><p>Explore Git's internal data structures — commit-graph, reachability bitmaps, and MIDX files — that power efficient operations at scale, and learn the same debugging techniques used by Git core contributors.</p><svg viewBox='0 0 800 260' xmlns='http://www.w3.org/2000/svg' style='max-width:100%;height:auto;display:block;margin:2rem 0'><defs><marker id='gi-blue' markerWidth='10' markerHeight='7' refX='9' refY='3.5' orient='auto'><polygon points='0 0, 10 3.5, 0 7' fill='#C34113'/></marker><marker id='gi-bright' markerWidth='10' markerHeight='7' refX='9' refY='3.5' orient='auto'><polygon points='0 0, 10 3.5, 0 7' fill='#E95420'/></marker></defs><rect x='10' y='10' width='780' height='230' rx='8' fill='var(--bg-secondary)' stroke='var(--border-default)' stroke-width='1'/><text x='400' y='36' text-anchor='middle' fill='#fff' font-size='14' font-weight='bold'>Commit-Graph Reachability Explorer</text><line x1='30' y1='46' x2='770' y2='46' stroke='var(--border-default)' stroke-width='1'/><text x='400' y='66' text-anchor='middle' fill='#E95420' font-size='12' font-weight='bold'>How Git finds merge bases efficiently using commit-graph</text><circle cx='120' cy='110' r='20' fill='#C34113'/><text x='120' y='115' text-anchor='middle' fill='#fff' font-size='11' font-weight='bold'>C1</text><circle cx='220' cy='90' r='20' fill='#E95420'/><text x='220' y='95' text-anchor='middle' fill='#fff' font-size='11' font-weight='bold'>C2</text><circle cx='320' cy='70' r='20' fill='#C34113'/><text x='320' y='75' text-anchor='middle' fill='#fff' font-size='11' font-weight='bold'>C3</text><circle cx='420' cy='120' r='20' fill='#E95420'/><text x='420' y='125' text-anchor='middle' fill='#fff' font-size='11' font-weight='bold'>C4</text><circle cx='520' cy='100' r='20' fill='#C34113'/><text x='520' y='105' text-anchor='middle' fill='#fff' font-size='11' font-weight='bold'>C5</text><circle cx='620' cy='140' r='20' fill='#E95420'/><text x='620' y='145' text-anchor='middle' fill='#fff' font-size='11' font-weight='bold'>C6</text><circle cx='700' cy='110' r='20' fill='#C34113'/><text x='700' y='115' text-anchor='middle' fill='#fff' font-size='11' font-weight='bold'>C7</text><path d='M140 110 L200 90' stroke='#C34113' stroke-width='2' marker-end='url(#gi-blue)'/><path d='M240 90 L300 70' stroke='#E95420' stroke-width='2' marker-end='url(#gi-bright)'/><path d='M340 70 L400 118' stroke='#C34113' stroke-width='2' marker-end='url(#gi-blue)'/><path d='M320 90 L500 96' stroke='#E95420' stroke-width='2' marker-end='url(#gi-bright)' stroke-dasharray='4 2'/><path d='M440 120 L500 104' stroke='#C34113' stroke-width='2' marker-end='url(#gi-blue)' stroke-dasharray='4 2'/><path d='M520 120 L600 136' stroke='#E95420' stroke-width='2' marker-end='url(#gi-bright)'/><path d='M540 100 L680 106' stroke='#C34113' stroke-width='2' marker-end='url(#gi-blue)'/><path d='M640 140 L680 114' stroke='#E95420' stroke-width='2' marker-end='url(#gi-bright)'/><text x='400' y='180' text-anchor='middle' fill='rgba(136,145,164,0.9)' font-size='11'>Commit-graph stores generation numbers (GENERATION_NUMBER_MAX for each commit)</text><text x='400' y='200' text-anchor='middle' fill='#E95420' font-size='12' font-weight='bold'>Merge base of C6 and C7: walk backwards using generation numbers — skip non-candidates</text><text x='400' y='225' text-anchor='middle' fill='rgba(136,145,164,0.8)' font-size='11'>Without commit-graph: O(N) walk. With commit-graph: walks only commits in intersection, skipping ahead by generation</text></svg><svg viewBox='0 0 800 220' xmlns='http://www.w3.org/2000/svg' style='max-width:100%;height:auto;display:block;margin:2rem 0'><rect x='10' y='10' width='780' height='190' rx='8' fill='var(--bg-secondary)' stroke='var(--border-default)' stroke-width='1'/><text x='400' y='36' text-anchor='middle' fill='#fff' font-size='14' font-weight='bold'>Bitmap Index Structure for Efficient Clone/Fetch</text><line x1='30' y1='46' x2='770' y2='46' stroke='var(--border-default)' stroke-width='1'/><rect x='80' y='60' width='180' height='36' rx='4' fill='#C34113'/><text x='170' y='83' text-anchor='middle' fill='#fff' font-size='12' font-weight='bold'>Packfile (.pack)</text><rect x='540' y='60' width='180' height='36' rx='4' fill='#E95420'/><text x='630' y='83' text-anchor='middle' fill='#fff' font-size='12' font-weight='bold'>Bitmap (.bitmap)</text><line x1='260' y1='78' x2='530' y2='78' stroke='#E95420' stroke-width='2' stroke-dasharray='5 3'/><text x='400' y='78' text-anchor='middle' fill='rgba(136,145,164,0.7)' font-size='10'>index by object</text><rect x='80' y='110' width='200' height='70' rx='4' fill='var(--bg-secondary)' stroke='var(--border-default)' stroke-width='1'/><text x='180' y='132' text-anchor='middle' fill='rgba(255,255,255,0.8)' font-size='11'>Packfile objects</text><text x='180' y='150' text-anchor='middle' fill='rgba(255,255,255,0.6)' font-size='10'>Commit 1, Tree A, Blob X</text><text x='180' y='166' text-anchor='middle' fill='rgba(255,255,255,0.6)' font-size='10'>Commit 2, Tree B, Blob Y</text><rect x='520' y='110' width='220' height='70' rx='4' fill='var(--bg-secondary)' stroke='#E95420' stroke-width='1'/><text x='630' y='132' text-anchor='middle' fill='#E95420' font-size='11'>Bitmap: [1 1 0 1 0 0 1 1 ...]</text><text x='630' y='150' text-anchor='middle' fill='rgba(255,255,255,0.6)' font-size='10'>Bit position = object index in pack</text><text x='630' y='166' text-anchor='middle' fill='rgba(255,255,255,0.6)' font-size='10'>EOR walk to compute reachability</text><text x='400' y='210' text-anchor='middle' fill='rgba(136,145,164,0.8)' font-size='11'>Bitmaps enable O(1) reachability checks — essential for large clone/fetch, replaces O(N) object enumeration</text></svg></p><details class="cheat-sheet mt-6"><summary><span class="material-symbols-outlined text-[16px]" aria-hidden="true">quick_reference</span> Staff+ Cheat Sheet<span class="material-symbols-outlined text-[16px] ml-auto">expand_more</span></summary><div class="cheat-sheet-body"><h4>Core Commands</h4><ul><li><code>git cat-file --batch</code> — bulk object inspection. Pipe object SHAs for efficient scanning.</li><li><code>git verify-pack .git/objects/pack/*.idx</code> — validate packfile integrity.</li><li><code>git rev-list --objects --all</code> — list all objects in the repo.</li><li><code>git gc --auto</code> — auto-garbage-collect. Prefer over <code>--aggressive</code>.</li></ul><h4>Staff+ Patterns</h4><ul><li>Use <code>git cat-file --batch-check</code> in scripts to identify large objects: pipe <code>git rev-list --objects --all | awk '{print $1}'</code> to batch-check with object sizes.</li><li>Monitor <code>git count-objects -v</code> for loose object count. High loose count = GC needed. Automate GC in cron.</li></ul><h4>Watch Outs</h4><ul><li><code>git gc --aggressive</code> can take hours on large repos and provides marginal benefit over <code>git gc --auto</code>.</li><li>Delta compression in packfiles is a read-time trade-off: deeper delta chains = smaller packs but slower object access.</li></ul><h4>Interview Angle</h4><p>Google L6 asks about Git hosting design. Understanding the object model and Merkle DAG is essential. Know that the SHA-1 hash is computed as <code>sha1(type + ' ' + size + '\0' + content)</code> and that identical files always produce the same blob hash (automatic dedup).</p></div></details><div class="flex flex-col gap-8"><div id="section-git-internals-deep-0" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Commit-Graph</h3><div class="theme-text-muted text-sm leading-relaxed"><p>The commit-graph file (<code>.git/objects/info/commit-graph</code>) stores commit metadata — parent IDs, generation numbers, commit timestamps — in a compressed binary format. It speeds up <code>git log --graph</code>, merge-base computation, and reachability queries by 10-100x. Enable via <code>git commit-graph write</code>. Git 2.18+ writes it automatically during <code>git gc</code>.</p></div><div class="border theme-border theme-bg rounded-xl overflow-hidden text-sm leading-relaxed code-block-wrapper"><div class="code-block-header flex items-center justify-between px-4 py-2 border-b theme-border"><span class="code-lang-label text-xs font-medium uppercase tracking-wider">language-bash</span><button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 text-xs transition-colors"><span class="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span> Copy</button></div><pre class="p-4 m-0 overflow-x-auto language-language-bash"><code class="language-language-bash"># Write commit-graph for reachability speedup
+git commit-graph write --reachable
+# Writes .git/objects/info/commit-graph
+
+# Write commit-graph for all refs
+git commit-graph write --stdin-commits &lt; &lt;(git rev-list --all)
+
+# Verify commit-graph integrity
+git commit-graph verify
+
+# Check commit-graph stats
+git commit-graph read --show-format
+
+# Enable commit-graph auto-writes
+git config core.commitGraph true
+git config gc.writeCommitGraph true
+
+# Performance comparison
+time git merge-base feature main
+# Without commit-graph: ~12s for 500K commits
+# With commit-graph: ~0.08s</code></pre></div></div>
+<div id="section-git-internals-deep-1" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Reachability Bitmaps</h3><div class="theme-text-muted text-sm leading-relaxed"><p>Bitmaps (<code>.bitmap</code> files paired with packfiles) track which objects are reachable from each ref using a bit array. One bit per object per ref. Git uses EWAH (Enhanced Word-Aligned Hybrid) compression for sparse bitmaps. Clone/fetch performance: instead of walking the entire DAG to enumerate objects, Git ORs bitmaps for the requested refs — O(1) object enumeration.</p></div><div class="border theme-border theme-bg rounded-xl overflow-hidden text-sm leading-relaxed code-block-wrapper"><div class="code-block-header flex items-center justify-between px-4 py-2 border-b theme-border"><span class="code-lang-label text-xs font-medium uppercase tracking-wider">language-bash</span><button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 text-xs transition-colors"><span class="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span> Copy</button></div><pre class="p-4 m-0 overflow-x-auto language-language-bash"><code class="language-language-bash"># Bitmap index files (auto-generated during repack)
+git repack -adb  # creates bitmap index
+# Generates: .git/objects/pack/pack-&lt;hash&gt;.bitmap
+
+# Check if bitmap exists
+ls .git/objects/pack/*.bitmap
+
+# Inspect pack with bitmap
+git verify-pack -v .git/objects/pack/pack-*.idx | head -20
+
+# Count bitmap-reachable objects
+git rev-list --count --objects --all --use-bitmap-index
+# vs without:
+git rev-list --count --objects --all  # slower, no bitmap
+
+# Force bitmap creation
+git config pack.writeBitmapHashCache true
+git config pack.writeReverseIndex true</code></pre></div></div>
+<div id="section-git-internals-deep-2" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">MIDX Files</h3><div class="theme-text-muted text-sm leading-relaxed"><p>Multi-pack index (MIDX) files enable Git to query across multiple packfiles efficiently. Without MIDX, Git opens each idx file sequentially. MIDX creates a unified index (<code>.git/objects/pack/multi-pack-index</code>) that maps object IDs to packfile + offset. Essential for repositories with many small packfiles (frequent fetches, incremental repacks).</p></div><div class="border theme-border theme-bg rounded-xl overflow-hidden text-sm leading-relaxed code-block-wrapper"><div class="code-block-header flex items-center justify-between px-4 py-2 border-b theme-border"><span class="code-lang-label text-xs font-medium uppercase tracking-wider">language-bash</span><button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 text-xs transition-colors"><span class="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span> Copy</button></div><pre class="p-4 m-0 overflow-x-auto language-language-bash"><code class="language-language-bash"># Create multi-pack index
+git multi-pack-index write
+
+# Verify MIDX integrity
+git multi-pack-index verify
+
+# Expire old packfiles (remove unreachable objects)
+git multi-pack-index expire
+
+# Repack using MIDX (consolidate packfiles)
+git multi-pack-index repack --batch-size=2G
+
+# MIDX + bitmap integration
+git repack --write-midx --write-bitmap-index -d
+
+# Check MIDX stats
+git multi-pack-index --object-dir=.git/objects verify 2&gt;&amp;1
+
+# Performance: query across packfiles
+git cat-file --batch-check --batch-all-objects
+# With MIDX: 2x faster than scanning all idx files</code></pre></div></div>
+<div id="section-git-internals-deep-3" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Performance Tuning</h3><div class="theme-text-muted text-sm leading-relaxed"><p>Key Git configs for large repositories: <code>core.preloadIndex=true</code> (parallel index loading), <code>core.fsmonitor</code> (watchman for file system changes), <code>core.untrackedCache=true</code> (cache untracked file scan), <code>core.commitGraph=true</code>, <code>feature.manyFiles=true</code> (enables all large-repo optimizations), <code>protocol.version=2</code> (faster negotiation). Use Scalar for Microsoft's enhanced Git client.</p></div><div class="border theme-border theme-bg rounded-xl overflow-hidden text-sm leading-relaxed code-block-wrapper"><div class="code-block-header flex items-center justify-between px-4 py-2 border-b theme-border"><span class="code-lang-label text-xs font-medium uppercase tracking-wider">language-bash</span><button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 text-xs transition-colors"><span class="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span> Copy</button></div><pre class="p-4 m-0 overflow-x-auto language-language-bash"><code class="language-language-bash"># Performance tuning for large repos
+git config feature.manyFiles true
+# Enables: commitGraph, fsmonitor, indexVersion &gt;= 4, untrackedCache
+
+# Enable protocol v2 for faster fetch negotiation
+git config protocol.version 2
+
+# Preload index for faster status
+git config core.preloadIndex true
+
+# Use file system monitor (watchman required)
+git config core.fsmonitor true
+# Falls back to: git config core.fsmonitor none
+
+# Set delta cache size
+git config core.deltaBaseCacheLimit 2g
+
+# Enable sparse index
+git sparse-checkout init --cone --sparse-index
+
+# Install Scalar (Microsoft)
+# brew install microsoft/git/scalar
+scalar register
+scalar clone &lt;url&gt; --single-branch</code></pre></div></div>
+<div id="section-git-internals-deep-4" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Debugging Tools</h3><div class="theme-text-muted text-sm leading-relaxed"><p>Git's internal debugging tools: <code>GIT_TRACE=1</code> (trace git commands), <code>GIT_TRACE_PACKET=1</code> (trace network protocol), <code>GIT_TRACE_PERFORMANCE=1</code> (timing data), <code>GIT_TRACE_SETUP=1</code> (path resolution). Use <code>git rev-list --debug</code> for walk details, <code>git pack-objects --debug</code> for packing decisions, and <code>git fsck --strict</code> for repo health.</p></div><div class="border theme-border theme-bg rounded-xl overflow-hidden text-sm leading-relaxed code-block-wrapper"><div class="code-block-header flex items-center justify-between px-4 py-2 border-b theme-border"><span class="code-lang-label text-xs font-medium uppercase tracking-wider">language-bash</span><button onclick="copyCode(this)" class="copy-btn flex items-center gap-1.5 text-xs transition-colors"><span class="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span> Copy</button></div><pre class="p-4 m-0 overflow-x-auto language-language-bash"><code class="language-language-bash"># Trace environment variables
+export GIT_TRACE=1
+export GIT_TRACE_PERFORMANCE=1
+export GIT_TRACE_PACKET=1
+export GIT_TRACE_SETUP=1
+
+# Profile specific commands
+GIT_TRACE_PERFORMANCE=2 git status
+
+# Debug object lookup
+git rev-list --debug --all --max-count=10
+
+# Debug pack file contents
+git verify-pack -v .git/objects/pack/pack-*.idx | grep -E &quot;commit|blob|tree&quot;
+
+# Debug reachability
+git rev-list --objects --all --use-bitmap-index --count
+
+# Debug protocol negotiation
+git -c protocol.version=2 fetch --verbose origin
+
+# Analyze repository
+git filter-repo --analyze
+
+# Count objects by type
+git cat-file --batch-check --batch-all-objects | awk &#039;{print $2}&#039; | sort | uniq -c | sort -rn</code></pre></div></div></div><div id="section-dive" class="scroll-mt-24"><details class="group border theme-border theme-bg-subtle rounded-xl overflow-hidden transition-all duration-300"><summary class="flex items-center justify-between p-4 font-bold text-sm theme-text cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-brand-500">lightbulb</span><span>Deep Dive &amp; Key Takeaways</span></span><span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-open:rotate-180 text-slate-400">expand_more</span></summary><div class="px-5 pb-5 pt-2 theme-text-muted text-sm leading-relaxed border-t theme-border font-sans"><p>Understanding Git internals is essential for Staff+ engineers debugging performance issues or customizing Git for organizational needs. The commit-graph binary format stores: OID, parent offsets, root tree OID, generation number, commit timestamp. Generation numbers are the key innovation — they enable topological sorting without graph traversal and allow pruning during merge-base computation. Bitmaps use a two-level structure: a commit bitmap (one per ref) and a type bitmap (commits/trees/blobs/tags). MIDX files solve the 'many packfiles' problem — repos with 100+ packfiles see 5-10x query slowdown without MIDX. Microsoft's Scalar adds prefetch, background maintenance, and GVFS protocol for Windows. For deep debugging, build Git from source with <code>DEVELOPER=1</code> for extra assertions and <code>gdb</code> breakpoints.</p></div></details></div><div class="mt-8 pt-6 flex items-center justify-between gap-4 border-t theme-border"><a href="/docs/monorepo-management/" class="flex items-center gap-2 text-sm theme-text-muted hover:text-brand-500 transition-colors group"><span class="material-symbols-outlined text-sm transition-transform group-hover:-translate-x-0.5">arrow_back</span><span class="truncate max-w-[200px]">Monorepo Management</span></a><a href="/docs/merge-queue/" class="flex items-center gap-2 text-sm theme-text-muted hover:text-brand-500 transition-colors group text-right"><span class="truncate max-w-[200px]">Advanced Merge Strategies</span><span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-0.5">arrow_forward</span></a></div></article></main>
+    <aside class="hidden xl:block w-48 sticky top-24 h-[calc(100vh-120px)] overflow-y-auto shrink-0 border-l theme-border pl-6">
+      <h4 class="sidebar-label !text-[10px] !pt-0 !pb-0 mb-3">On this page</h4>
+      <nav id="docs-right-outline" class="space-y-3 text-xs theme-text-muted" aria-label="Page sections"></nav>
+    </aside>
+  </div>
+  <footer class="border-t theme-border py-8 theme-bg">
+    <div class="max-w-7xl mx-auto px-6 flex justify-center items-center text-sm theme-text-muted">
+      <span>Made with ❤️ by <a href="https://www.linkedin.com/in/kallol-chakraborty-9728a699/" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:text-brand-600 transition-colors font-semibold">Kallol Chakraborty</a></span>
+    </div>
+  </footer>
+  <noscript>
+    <div class="max-w-5xl mx-auto px-6 py-8">
+      <div class="flex items-center gap-2.5 mb-6">
+        <img src="assets/logo.svg" alt="git bytes" class="w-8 h-8" />
+        <span class="text-base font-semibold">git bytes</span>
+      </div>
+      <h1 class="text-3xl font-bold mb-2">Study Guides</h1>
+      <p class="text-sm theme-text-muted mb-8">This site requires JavaScript for the full interactive experience. Below is a complete index of all available guides.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Git Fundamentals</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/git-basics/" class="text-brand-500 hover:text-brand-600">Git Basics — init, add, commit, log, diff</a></li>
+            <li><a href="/docs/branching-merging/" class="text-brand-500 hover:text-brand-600">Branching &amp; Merging</a></li>
+            <li><a href="/docs/remotes-collaboration/" class="text-brand-500 hover:text-brand-600">Remotes &amp; Collaboration</a></li>
+            <li><a href="/docs/rebasing-advanced/" class="text-brand-500 hover:text-brand-600">Rebasing &amp; Advanced Git</a></li>
+            <li><a href="/docs/git-internals/" class="text-brand-500 hover:text-brand-600">Git Internals</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">GitHub Platform</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/repos-issues/" class="text-brand-500 hover:text-brand-600">Repositories &amp; Issues</a></li>
+            <li><a href="/docs/pull-requests/" class="text-brand-500 hover:text-brand-600">Pull Requests &amp; Code Review</a></li>
+            <li><a href="/docs/github-pages/" class="text-brand-500 hover:text-brand-600">GitHub Pages</a></li>
+            <li><a href="/docs/actions-fundamentals/" class="text-brand-500 hover:text-brand-600">GitHub Actions Fundamentals</a></li>
+            <li><a href="/docs/projects-wikis/" class="text-brand-500 hover:text-brand-600">Projects, Wikis &amp; Discussions</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">GitHub Advanced</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/rest-api/" class="text-brand-500 hover:text-brand-600">GitHub REST API</a></li>
+            <li><a href="/docs/graphql-api/" class="text-brand-500 hover:text-brand-600">GitHub GraphQL API</a></li>
+            <li><a href="/docs/github-cli/" class="text-brand-500 hover:text-brand-600">GitHub CLI (gh)</a></li>
+            <li><a href="/docs/security-dependabot/" class="text-brand-500 hover:text-brand-600">Security &amp; Dependabot</a></li>
+            <li><a href="/docs/packages/" class="text-brand-500 hover:text-brand-600">Packages &amp; Registries</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Open Source &amp; Collaboration</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/forking-workflow/" class="text-brand-500 hover:text-brand-600">Forking &amp; Contribution Workflow</a></li>
+            <li><a href="/docs/community-management/" class="text-brand-500 hover:text-brand-600">Community Management</a></li>
+            <li><a href="/docs/licensing-governance/" class="text-brand-500 hover:text-brand-600">Licensing &amp; Governance</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">DevOps &amp; Automation</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/actions-advanced/" class="text-brand-500 hover:text-brand-600">GitHub Actions Advanced</a></li>
+            <li><a href="/docs/runner-architecture/" class="text-brand-500 hover:text-brand-600">Actions Runner Architecture</a></li>
+            <li><a href="/docs/deployment-pipelines/" class="text-brand-500 hover:text-brand-600">Deployment Pipelines</a></li>
+            <li><a href="/docs/copilot/" class="text-brand-500 hover:text-brand-600">GitHub Copilot</a></li>
+            <li><a href="/docs/actions-cost-optimization/" class="text-brand-500 hover:text-brand-600">Actions Cost Optimization</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">Career &amp; Best Practices</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/best-practices/" class="text-brand-500 hover:text-brand-600">Git Best Practices</a></li>
+            <li><a href="/docs/portfolio-tips/" class="text-brand-500 hover:text-brand-600">GitHub Portfolio Tips</a></li>
+            <li><a href="/docs/interview-qa/" class="text-brand-500 hover:text-brand-600">Git Interview Q&amp;A</a></li>
+            <li><a href="/docs/patterns-antipatterns/" class="text-brand-500 hover:text-brand-600">Patterns &amp; Anti-Patterns</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Git at Scale (Staff+)</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/monorepo-management/" class="text-brand-500 hover:text-brand-600">Monorepo Management</a></li>
+            <li><a href="/docs/git-internals-deep/" class="text-brand-500 hover:text-brand-600">Git Internals Deep Dive</a></li>
+            <li><a href="/docs/merge-queue/" class="text-brand-500 hover:text-brand-600">Advanced Merge Strategies</a></li>
+            <li><a href="/docs/trunk-vs-multi-repo/" class="text-brand-500 hover:text-brand-600">Trunk-based vs Multi-Repo</a></li>
+            <li><a href="/docs/incident-debugging/" class="text-brand-500 hover:text-brand-600">Incident Debugging &amp; Rollbacks</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Enterprise &amp; Supply Chain (Staff+)</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/enterprise-admin/" class="text-brand-500 hover:text-brand-600">GitHub Enterprise Admin</a></li>
+            <li><a href="/docs/policy-as-code/" class="text-brand-500 hover:text-brand-600">Policy as Code</a></li>
+            <li><a href="/docs/api-automation/" class="text-brand-500 hover:text-brand-600">API Automation</a></li>
+            <li><a href="/docs/supply-chain-security/" class="text-brand-500 hover:text-brand-600">Supply Chain Security</a></li>
+            <li><a href="/docs/gitops/" class="text-brand-500 hover:text-brand-600">GitOps &amp; Deployments</a></li>
+            <li><a href="/docs/audit-log-streaming/" class="text-brand-500 hover:text-brand-600">Audit Log Streaming</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Staff+ Leadership &amp; DX</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/rfc-adr/" class="text-brand-500 hover:text-brand-600">RFC &amp; ADR Processes</a></li>
+            <li><a href="/docs/release-engineering/" class="text-brand-500 hover:text-brand-600">Release Engineering</a></li>
+            <li><a href="/docs/dx-engineering/" class="text-brand-500 hover:text-brand-600">Developer Experience Engineering</a></li>
+            <li><a href="/docs/staff-interview-questions/" class="text-brand-500 hover:text-brand-600">Staff+ Interview Questions</a></li>
+            <li><a href="/docs/git-culture-strategy/" class="text-brand-500 hover:text-brand-600">Git Culture &amp; CI/CD Strategy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t theme-border text-sm theme-text-muted">
+        <a href="index.html" class="text-brand-500 hover:text-brand-600 font-semibold">&larr; Back to Home</a>
+      </div>
+    </div>
+  </noscript>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/headroom.js@0.12.0/dist/headroom.min.js"></script>
+  <script src="js/generated.js" defer></script>
+  <script src="js/modals.js" defer></script>
+  <script src="js/loader.js" defer></script>
+  <script>
+    var header = document.querySelector('header');
+    if (header) { new Headroom(header).init(); }
+  </script>
+  <script>
+    (function() {
+      var sidebar = document.getElementById('left-sidebar');
+      var backdrop = document.getElementById('sidebar-backdrop');
+      var toggle = document.getElementById('sidebar-toggle');
+      if (!sidebar || !backdrop || !toggle) return;
+      function openSidebar() { sidebar.classList.remove('-translate-x-full'); backdrop.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+      function closeSidebar() { sidebar.classList.add('-translate-x-full'); backdrop.classList.add('hidden'); document.body.style.overflow = ''; }
+      toggle.addEventListener('click', function() { sidebar.classList.contains('-translate-x-full') ? openSidebar() : closeSidebar(); });
+      backdrop.addEventListener('click', closeSidebar);
+      sidebar.querySelectorAll('.sidebar-link').forEach(function(link) {
+        link.addEventListener('click', function() { if (window.innerWidth < 1024) closeSidebar(); });
+      });
+      window.addEventListener('resize', function() { if (window.innerWidth >= 1024) { backdrop.classList.add('hidden'); document.body.style.overflow = ''; } });
+    })();
+  </script>
+</body>
+</html>

@@ -6,7 +6,84 @@
 
 var scrollSpyCleanup = null;          /* dispose fn for scroll-spy listener */
 var _routeMap = window.__ROUTE_MAP || {};
+var _routeOrder = _routeMap ? Object.keys(_routeMap) : [];
 var _currentAbort = null;            /* AbortController for in-flight fetch */
+
+/* ── SEO helpers ── */
+function setMeta(nameAttr, nameVal, content) {
+  if (content === undefined) { content = nameVal; nameVal = 'name'; }
+  var el = document.querySelector('meta[' + nameAttr + '="' + nameVal + '"]');
+  if (!el) { el = document.createElement('meta'); el.setAttribute(nameAttr, nameVal); document.head.appendChild(el); }
+  el.setAttribute('content', content);
+}
+
+function setCanonical(href) {
+  var el = document.getElementById('canonical-link');
+  if (el) el.setAttribute('href', href);
+}
+
+function stripHtml(str) {
+  return str ? str.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : '';
+}
+
+function getAdjacentGuides(hash) {
+  var idx = _routeOrder.indexOf(hash);
+  var findEntry = function(h) { return (window.__SEARCH_INDEX || []).find(function(e) { return e.url === 'docs.html' + h; }); };
+  return {
+    prev: idx > 0 ? { hash: _routeOrder[idx - 1], title: (findEntry(_routeOrder[idx - 1]) || {}).title } : null,
+    next: idx < _routeOrder.length - 1 ? { hash: _routeOrder[idx + 1], title: (findEntry(_routeOrder[idx + 1]) || {}).title } : null
+  };
+}
+
+var _prevJsonLd = null;
+function injectJsonLd(data, description, url) {
+  if (_prevJsonLd) { _prevJsonLd.remove(); _prevJsonLd = null; }
+  var ld = document.createElement('script');
+  ld.type = 'application/ld+json';
+  ld.textContent = JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "@id": url,
+        "headline": data.title,
+        "description": description,
+        "proficiencyLevel": calcMeta(data).difficulty,
+        "timeRequired": calcMeta(data).time + 'M',
+        "datePublished": (data.datePublished || window.__BUILD_TIMESTAMP || '2026-01-01').split('T')[0],
+        "dateModified": (data.lastModified || data.datePublished || window.__BUILD_TIMESTAMP || '2026-06-30').split('T')[0],
+        "author": { "@id": "https://kallolchakraborty.github.io/git-bytes/#person" },
+        "publisher": { "@type": "Person", "name": "Kallol Chakraborty" },
+        "mainEntityOfPage": url,
+        "about": (data.tags || []).map(function(t) { return { "@type": "Thing", "name": t }; }),
+        "image": "https://kallolchakraborty.github.io/git-bytes/assets/og-preview.png"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kallolchakraborty.github.io/git-bytes/" },
+          { "@type": "ListItem", "position": 2, "name": data.category, "item": "https://kallolchakraborty.github.io/git-bytes/docs.html" },
+          { "@type": "ListItem", "position": 3, "name": data.title }
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://kallolchakraborty.github.io/git-bytes/#website",
+        "url": "https://kallolchakraborty.github.io/git-bytes/",
+        "name": "git bytes",
+        "description": "Modern, search-first documentation portal for Git and GitHub study notes.",
+        "publisher": { "@id": "https://kallolchakraborty.github.io/git-bytes/#person" },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": { "@type": "EntryPoint", "urlTemplate": "https://kallolchakraborty.github.io/git-bytes/docs.html#{search_term_string}" },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    ]
+  });
+  document.head.appendChild(ld);
+  _prevJsonLd = ld;
+}
 
 /* ── Tag badge colour palette (brand and neutral tones) ── */
 var _TAG_COLORS = [
@@ -602,6 +679,42 @@ async function loadContent(hash) {
     var meta = calcMeta(data);
     var relatedHtml = renderRelated(hash, data.tags, data.category);
 
+    /* ── SEO: dynamic meta, canonical, JSON-LD ── */
+    var pageUrl = 'https://kallolchakraborty.github.io/git-bytes/docs.html' + hash;
+    var cleanDesc = stripHtml(data.description);
+    var desc180 = cleanDesc.length > 180 ? cleanDesc.slice(0, 177) + '...' : cleanDesc;
+    var desc160 = cleanDesc.length > 160 ? cleanDesc.slice(0, 157) + '...' : cleanDesc;
+    document.title = data.title + ' — git bytes';
+    setMeta('name', 'description', desc160);
+    setMeta('property', 'og:title', data.title + ' — git bytes');
+    setMeta('property', 'og:description', desc180);
+    setMeta('property', 'og:url', pageUrl);
+    setMeta('name', 'twitter:title', data.title + ' — git bytes');
+    setMeta('name', 'twitter:description', desc180);
+    setCanonical(pageUrl);
+    injectJsonLd(data, desc160, pageUrl);
+
+    /* ── "On this page" email subject/social share title ── */
+    var shareMeta = document.querySelector('.open-share-btn');
+    if (shareMeta) shareMeta.setAttribute('data-title', data.title);
+
+    /* ── Prev / Next navigation ── */
+    var adj = getAdjacentGuides(hash);
+    var prevNextHtml = adj.prev || adj.next
+      ? '<div class="mt-8 pt-6 flex items-center justify-between gap-4 border-t theme-border">' +
+        (adj.prev
+          ? '<a href="' + adj.prev.hash + '" class="flex items-center gap-2 text-sm theme-text-muted hover:text-brand-500 transition-colors group">' +
+            '<span class="material-symbols-outlined text-sm transition-transform group-hover:-translate-x-0.5">arrow_back</span>' +
+            '<span class="truncate max-w-[200px]">' + (adj.prev.title || 'Previous Guide') + '</span></a>'
+          : '<div></div>') +
+        (adj.next
+          ? '<a href="' + adj.next.hash + '" class="flex items-center gap-2 text-sm theme-text-muted hover:text-brand-500 transition-colors group text-right">' +
+            '<span class="truncate max-w-[200px]">' + (adj.next.title || 'Next Guide') + '</span>' +
+            '<span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-0.5">arrow_forward</span></a>'
+          : '<div></div>') +
+        '</div>'
+      : '';
+
     /* ── Render the full article ── */
     contentArea.innerHTML =
       '<article class="flex flex-col gap-5 docs-section" role="region" aria-label="' + (data.title || '') + '">' +
@@ -651,6 +764,7 @@ async function loadContent(hash) {
             '</details></div>'
           : '') +
         relatedHtml +
+        prevNextHtml +
       '</article>';
 
     /* ── Update bookmark / progress UI ── */
@@ -734,6 +848,12 @@ async function loadContent(hash) {
         }
       });
     });
+
+    /* ── Focus management for a11y ── */
+    if (contentArea && !contentArea.contains(document.activeElement)) {
+      contentArea.setAttribute('tabindex', '-1');
+      contentArea.focus({ preventScroll: true });
+    }
   } catch (error) {
     contentArea.innerHTML =
       '<div class="p-6 border-2 border-red-200 bg-red-50 rounded-xl text-red-600 text-sm">' +

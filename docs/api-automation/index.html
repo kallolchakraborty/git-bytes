@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>API Automation — git bytes</title>
+  <meta name="description" content="Automating GitHub at scale requires understanding authentication flows, webhook delivery guarantees, and the right API surface for each use case. GitHub App ..." />
+  <meta property="og:title" content="API Automation — git bytes" />
+  <meta property="og:description" content="Automating GitHub at scale requires understanding authentication flows, webhook delivery guarantees, and the right API surface for each use case. GitHub App Private Key JWT Token RS256 Signed Insta..." />
+  <meta property="og:image" content="assets/og-preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://kallolchakraborty.github.io/git-bytes/docs/api-automation/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="API Automation — git bytes" />
+  <meta name="twitter:description" content="Automating GitHub at scale requires understanding authentication flows, webhook delivery guarantees, and the right API surface for each use case. GitHub App Private Key JWT Token RS256 Signed Insta..." />
+  <meta name="twitter:image" content="assets/og-preview.png" />
+  <meta name="twitter:image:alt" content="git bytes logo — Git branch visualization" />
+  <meta name="keywords" content="git bytes, Git, GitHub, FAANG interview prep, Staff+ engineer, Git internals, GitHub Actions, monorepo, CI/CD, GitOps" />
+  <meta name="author" content="Kallol Chakraborty" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:site_name" content="git bytes" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="theme-color" content="#E95420" />
+<meta name="theme-color" content="#F5A389" media="(prefers-color-scheme: dark)" />
+  <link rel="canonical" id="canonical-link" href="https://kallolchakraborty.github.io/git-bytes/docs/api-automation/" />
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192x192.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preload" href="css/tailwind.css" as="style" />
+  <link rel="preload" href="css/main.css" as="style" />
+  <script src="js/theme.js"></script>
+  <link href="css/tailwind.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" /></noscript>
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","@id":"https://kallolchakraborty.github.io/git-bytes/docs/api-automation/","headline":"API Automation","description":"Automating GitHub at scale requires understanding authentication flows, webhook delivery guarantees, and the right API surface for each use case. GitHub App ...","proficiencyLevel":"Advanced / Staff+","timeRequired":"1M","datePublished":"2026-06-30","dateModified":"2026-06-30","author":{"@id":"https://kallolchakraborty.github.io/git-bytes/#person"},"publisher":{"@type":"Person","name":"Kallol Chakraborty"},"mainEntityOfPage":"https://kallolchakraborty.github.io/git-bytes/docs/api-automation/","about":[{"@type":"Thing","name":"staff+"},{"@type":"Thing","name":"enterprise"},{"@type":"Thing","name":"api"},{"@type":"Thing","name":"automation"}],"image":"https://kallolchakraborty.github.io/git-bytes/assets/og-preview.png"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://kallolchakraborty.github.io/git-bytes/"},{"@type":"ListItem","position":2,"name":"Enterprise","item":"https://kallolchakraborty.github.io/git-bytes/docs/api-automation/"},{"@type":"ListItem","position":3,"name":"API Automation"}]}]}</script></head>
+<body class="theme-bg theme-text font-sans min-h-screen flex flex-col transition-colors duration-200 overflow-y-auto">
+  <a href="/docs/docs-dynamic-content/" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-[#E95420] focus:border focus:border-[#E95420] focus:rounded-lg focus:shadow-lg focus:text-sm focus:font-semibold focus:outline-none focus:ring-2 focus:ring-[#E95420]">Skip to main content</a>
+  <div id="reading-progress-track" aria-hidden="true" style="position:fixed;top:0;left:0;right:0;height:3px;z-index:9999;background:transparent;pointer-events:none;">
+    <div id="reading-progress-bar" style="height:100%;transform:scaleX(0);background:linear-gradient(90deg,#E95420,#F5A389);transform-origin:left;transition:transform 80ms linear;"></div>
+  </div>
+  <header class="glass-nav sticky top-0 z-40 transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <button id="sidebar-toggle" class="lg:hidden text-slate-400 hover:text-brand-500 transition-all flex items-center justify-center" aria-label="Toggle navigation menu">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <a href="index.html" class="theme-text hover:text-brand-500 transition-all flex items-center gap-2.5">
+          <img src="assets/logo.svg" alt="git bytes" class="w-8 h-8" />
+          <span class="text-base font-semibold">git bytes</span>
+        </a>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2">
+          <button class="theme-toggle-btn text-slate-400 hover:text-brand-500 transition-all" aria-label="Toggle theme">
+            <span class="material-symbols-outlined text-[16px]">light_mode</span>
+          </button>
+          <button class="open-share-btn text-slate-400 hover:text-brand-500 transition-all" aria-label="Share this page">
+            <span class="material-symbols-outlined text-[16px]">share</span>
+          </button>
+          <button class="open-search-btn flex items-center gap-1.5 h-7 px-2.5 theme-bg-subtle rounded-lg text-slate-400 hover:text-brand-500 font-medium text-xs transition-all">
+            <span class="material-symbols-outlined text-[16px]">search</span>
+            <kbd class="hidden sm:inline-block font-mono theme-bg border theme-border px-1 rounded text-[9px] leading-none">Ctrl+K</kbd>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="max-w-7xl mx-auto px-6 w-full flex-grow flex flex-col lg:flex-row gap-8 py-8 relative">
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden" aria-hidden="true"></div>
+      <aside id="left-sidebar" class="lg:w-56 lg:sticky lg:top-24 lg:h-[calc(100vh-120px)] overflow-y-auto shrink-0 border-b lg:border-b-0 theme-border pb-4 lg:pb-0 pr-0 lg:pr-5 fixed inset-y-0 left-0 z-40 w-64 transform -translate-x-full transition-transform duration-200 lg:translate-x-0 lg:static lg:inset-auto lg:z-auto lg:w-56 lg:border-b-0 theme-bg">
+      <nav aria-label="Documentation navigation" class="sidebar-sections">
+        <div id="sidebar-progress-container" class="px-3 py-3.5 mb-2 border-b theme-border">
+          <div class="flex items-center justify-between text-xs font-bold theme-text mb-1.5">
+            <span>Study Progress</span>
+            <span id="sidebar-progress-text" class="text-brand-500">0%</span>
+          </div>
+          <div class="w-full rounded-full h-1.5 overflow-hidden" style="background-color: var(--border-default)">
+            <div id="sidebar-progress-bar" class="bg-brand-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div id="sidebar-progress-stats" class="text-[10px] theme-text-muted mt-1 font-medium">0 of 0 topics completed</div>
+        </div>
+        <div id="sidebar-bookmarks-container" class="hidden px-2 py-3 mb-2 border-b theme-border">
+          <div class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-2 flex items-center gap-1 select-none">
+            <span class="material-symbols-outlined text-[12px] text-amber-500">star</span> Pinned Guides
+          </div>
+          <div id="sidebar-bookmarks-list" class="flex flex-col gap-0.5"></div>
+        </div>
+        <!-- Phase 1: Git Fundamentals -->
+        <div class="px-2 py-3">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 1: Git Fundamentals</div>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Git Basics</h4>
+          <a href="/docs/git-basics/" class="sidebar-link">Git Basics — init, add, commit, log, diff</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Branching & Merging</h4>
+          <a href="/docs/branching-merging/" class="sidebar-link">Branching & Merging</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Remotes & Collaboration</h4>
+          <a href="/docs/remotes-collaboration/" class="sidebar-link">Remotes & Collaboration</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Rebasing & Advanced</h4>
+          <a href="/docs/rebasing-advanced/" class="sidebar-link">Rebasing & Advanced Git</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Git Internals</h4>
+          <a href="/docs/git-internals/" class="sidebar-link">Git Internals</a>
+        </div>
+        <!-- Phase 2: GitHub Platform -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 2: GitHub Platform</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Repos & Issues</h4>
+          <a href="/docs/repos-issues/" class="sidebar-link">Repositories &amp; Issues</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Pull Requests</h4>
+          <a href="/docs/pull-requests/" class="sidebar-link">Pull Requests &amp; Code Review</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GitHub Pages</h4>
+          <a href="/docs/github-pages/" class="sidebar-link">GitHub Pages</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Actions Fundamentals</h4>
+          <a href="/docs/actions-fundamentals/" class="sidebar-link">GitHub Actions Fundamentals</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Projects &amp; Wikis</h4>
+          <a href="/docs/projects-wikis/" class="sidebar-link">Projects, Wikis &amp; Discussions</a>
+        </div>
+        <!-- Phase 3: GitHub Advanced -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 3: GitHub Advanced</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">REST API</h4>
+          <a href="/docs/rest-api/" class="sidebar-link">GitHub REST API</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GraphQL API</h4>
+          <a href="/docs/graphql-api/" class="sidebar-link">GitHub GraphQL API</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GitHub CLI</h4>
+          <a href="/docs/github-cli/" class="sidebar-link">GitHub CLI (gh)</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Security</h4>
+          <a href="/docs/security-dependabot/" class="sidebar-link">Security &amp; Dependabot</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Packages</h4>
+          <a href="/docs/packages/" class="sidebar-link">Packages &amp; Registries</a>
+        </div>
+        <!-- Phase 4: Open Source & Collaboration -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 4: Open Source &amp; Collaboration</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Contribution</h4>
+          <a href="/docs/forking-workflow/" class="sidebar-link">Forking &amp; Contribution Workflow</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Community</h4>
+          <a href="/docs/community-management/" class="sidebar-link">Community Management</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Licensing</h4>
+          <a href="/docs/licensing-governance/" class="sidebar-link">Licensing &amp; Governance</a>
+        </div>
+        <!-- Phase 5: DevOps & Automation -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 5: DevOps &amp; Automation</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Actions Advanced</h4>
+          <a href="/docs/actions-advanced/" class="sidebar-link">GitHub Actions Advanced</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Runner Architecture</h4>
+          <a href="/docs/runner-architecture/" class="sidebar-link">Actions Runner Architecture</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Deploy Pipelines</h4>
+          <a href="/docs/deployment-pipelines/" class="sidebar-link">Deployment Pipelines</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Copilot</h4>
+          <a href="/docs/copilot/" class="sidebar-link">GitHub Copilot</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Cost Optimization</h4>
+          <a href="/docs/actions-cost-optimization/" class="sidebar-link">Actions Cost Optimization</a>
+        </div>
+        <!-- Phase 6: Career & Best Practices -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 6: Career &amp; Best Practices</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Best Practices</h4>
+          <a href="/docs/best-practices/" class="sidebar-link">Git Best Practices</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Portfolio Tips</h4>
+          <a href="/docs/portfolio-tips/" class="sidebar-link">GitHub Portfolio Tips</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Interview Q&amp;A</h4>
+          <a href="/docs/interview-qa/" class="sidebar-link">Git Interview Q&amp;A</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Patterns</h4>
+          <a href="/docs/patterns-antipatterns/" class="sidebar-link">Patterns &amp; Anti-Patterns</a>
+        </div>
+        <!-- Phase 7: Git at Scale (Staff+) -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 7: Git at Scale (Staff+)</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Monorepo Management</h4>
+          <a href="/docs/monorepo-management/" class="sidebar-link">Monorepo Management</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Internals Deep Dive</h4>
+          <a href="/docs/git-internals-deep/" class="sidebar-link">Git Internals Deep Dive</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Merge Queue</h4>
+          <a href="/docs/merge-queue/" class="sidebar-link">Advanced Merge Strategies</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Repo Strategies</h4>
+          <a href="/docs/trunk-vs-multi-repo/" class="sidebar-link">Trunk-based vs Multi-Repo</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Incidents</h4>
+          <a href="/docs/incident-debugging/" class="sidebar-link">Incident Debugging &amp; Rollbacks</a>
+        </div>
+        <!-- Phase 8: Enterprise & Supply Chain (Staff+) -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 8: Enterprise &amp; Supply Chain (Staff+)</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Enterprise Admin</h4>
+          <a href="/docs/enterprise-admin/" class="sidebar-link">GitHub Enterprise Admin</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Policy as Code</h4>
+          <a href="/docs/policy-as-code/" class="sidebar-link">Policy as Code</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">API Automation</h4>
+          <a href="/docs/api-automation/" class="sidebar-link">API Automation</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Supply Chain Security</h4>
+          <a href="/docs/supply-chain-security/" class="sidebar-link">Supply Chain Security</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GitOps</h4>
+          <a href="/docs/gitops/" class="sidebar-link">GitOps &amp; Deployments</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Audit Log</h4>
+          <a href="/docs/audit-log-streaming/" class="sidebar-link">Audit Log Streaming</a>
+        </div>
+        <!-- Phase 9: Staff+ Leadership -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 9: Staff+ Leadership &amp; DX</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">RFC &amp; ADR</h4>
+          <a href="/docs/rfc-adr/" class="sidebar-link">RFC &amp; ADR Processes</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Release Engineering</h4>
+          <a href="/docs/release-engineering/" class="sidebar-link">Release Engineering</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">DX Engineering</h4>
+          <a href="/docs/dx-engineering/" class="sidebar-link">Developer Experience Engineering</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Staff+ Interview</h4>
+          <a href="/docs/staff-interview-questions/" class="sidebar-link">Staff+ Interview Questions</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Git Culture</h4>
+          <a href="/docs/git-culture-strategy/" class="sidebar-link">Git Culture &amp; CI/CD Strategy</a>
+        </div>
+      </nav>
+    </aside>
+    <main id="docs-dynamic-content" class="flex-grow max-w-3xl flex flex-col gap-12 min-w-0 overflow-y-auto" aria-live="polite"><article class="flex flex-col gap-5 docs-section" role="region" aria-label="API Automation"><div class="flex flex-col gap-3"><div class="flex items-center justify-between gap-4 flex-wrap select-none"><nav class="flex items-center gap-1.5 text-[10px] font-bold theme-text-muted uppercase tracking-wider"><span>Enterprise</span><span class="material-symbols-outlined text-[12px] theme-text-muted">chevron_right</span><span class="text-brand-500">Automation</span></nav><div class="flex items-center gap-2" id="article-actions-toolbar"><button onclick="toggleBookmark('#api-automation')" id="btn-bookmark" class="w-8 h-8 rounded-lg border theme-border text-slate-400 hover:text-amber-500 hover:border-amber-500/30 flex items-center justify-center transition-all theme-bg" aria-label="Pin this guide"><span class="material-symbols-outlined text-[18px]">star_border</span></button><button onclick="toggleProgress('#api-automation')" id="btn-progress" class="h-8 px-3 rounded-lg border theme-border text-slate-500 hover:text-emerald-500 hover:border-emerald-500/30 flex items-center gap-1.5 text-[11px] font-semibold transition-all theme-bg"><span class="material-symbols-outlined text-[16px] text-slate-400">circle</span><span class="progress-btn-text">Mark as Done</span></button><button onclick="window.print()" class="w-8 h-8 rounded-lg border theme-border text-slate-400 hover:text-brand-500 hover:border-brand-500/30 flex items-center justify-center transition-all theme-bg" aria-label="Print"><span class="material-symbols-outlined text-[18px]">print</span></button></div></div><h1 class="text-3xl sm:text-4xl font-bold theme-text tracking-tight">API Automation</h1><div class="flex flex-wrap items-center gap-3 text-xs theme-text-muted select-none"><span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span><span>1 min read</span></span><span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wider text-purple-500 border-purple-500/20 bg-purple-550/5"><span class="material-symbols-outlined text-[12px]">signal_cellular_4_bar</span><span>Advanced / Staff+</span></span></div><div class="flex flex-wrap gap-1.5 mt-0.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="staff+">staff+</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="enterprise">enterprise</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="api">api</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="automation">automation</span></div></div><p class="theme-text-muted leading-relaxed text-base"><p>Automating GitHub at scale requires understanding authentication flows, webhook delivery guarantees, and the right API surface for each use case.</p><svg viewBox='0 0 800 190' xmlns='http://www.w3.org/2000/svg' style='max-width:100%;height:auto;display:block;margin:2rem 0'><defs><marker id='ag-blue' markerWidth='10' markerHeight='7' refX='9' refY='3.5' orient='auto'><polygon points='0 0, 10 3.5, 0 7' fill='#C34113'/></marker><marker id='ag-bright' markerWidth='10' markerHeight='7' refX='9' refY='3.5' orient='auto'><polygon points='0 0, 10 3.5, 0 7' fill='#E95420'/></marker></defs><rect x='5' y='5' width='130' height='55' rx='8' fill='#C34113'/><text x='70' y='28' text-anchor='middle' fill='#fff' font-size='12' font-weight='bold'>GitHub App</text><text x='70' y='45' text-anchor='middle' fill='rgba(255,255,255,0.8)' font-size='10'>Private Key</text><path d='M135 32 L175 32' stroke='#C34113' stroke-width='2' marker-end='url(#ag-blue)'/><rect x='185' y='5' width='130' height='55' rx='8' fill='#E95420'/><text x='250' y='28' text-anchor='middle' fill='#fff' font-size='12' font-weight='bold'>JWT Token</text><text x='250' y='45' text-anchor='middle' fill='rgba(255,255,255,0.8)' font-size='10'>RS256 Signed</text><path d='M315 32 L355 32' stroke='#C34113' stroke-width='2' marker-end='url(#ag-blue)'/><rect x='365' y='5' width='130' height='55' rx='8' fill='#E95420'/><text x='430' y='28' text-anchor='middle' fill='#fff' font-size='12' font-weight='bold'>Install Token</text><text x='430' y='45' text-anchor='middle' fill='rgba(255,255,255,0.8)' font-size='10'>Expires 1h</text><path d='M495 32 L535 32' stroke='#E95420' stroke-width='2' marker-end='url(#ag-bright)'/><rect x='545' y='5' width='155' height='55' rx='8' fill='var(--bg-secondary)' stroke='#E95420' stroke-width='2'/><text x='622' y='28' text-anchor='middle' fill='#E95420' font-size='12' font-weight='bold'>GitHub API</text><text x='622' y='45' text-anchor='middle' fill='rgba(233,84,32,0.8)' font-size='10'>REST + GraphQL</text><path d='M250 60 L250 95 L70 95 L70 115' stroke='#E95420' stroke-width='1.5' stroke-dasharray='4,3' marker-end='url(#ag-bright)'/><rect x='5' y='120' width='130' height='55' rx='8' fill='var(--bg-secondary)' stroke='#C34113' stroke-width='2'/><text x='70' y='147' text-anchor='middle' fill='#E95420' font-size='12' font-weight='bold'>Refresh Token</text><path d='M135 147 L250 147' stroke='#C34113' stroke-width='2' marker-end='url(#ag-blue)'/></svg><svg viewBox='0 0 800 150' xmlns='http://www.w3.org/2000/svg' style='max-width:100%;height:auto;display:block;margin:2rem 0'><defs><marker id='ag-blue2' markerWidth='10' markerHeight='7' refX='9' refY='3.5' orient='auto'><polygon points='0 0, 10 3.5, 0 7' fill='#C34113'/></marker><marker id='ag-bright2' markerWidth='10' markerHeight='7' refX='9' refY='3.5' orient='auto'><polygon points='0 0, 10 3.5, 0 7' fill='#E95420'/></marker></defs><rect x='10' y='10' width='120' height='40' rx='6' fill='#C34113'/><text x='70' y='35' text-anchor='middle' fill='#fff' font-size='12' font-weight='bold'>Event</text><path d='M130 30 L170 30' stroke='#C34113' stroke-width='2' marker-end='url(#ag-blue2)'/><rect x='180' y='10' width='120' height='40' rx='6' fill='#E95420'/><text x='240' y='35' text-anchor='middle' fill='#fff' font-size='12' font-weight='bold'>Webhook</text><path d='M300 30 L340 30' stroke='#C34113' stroke-width='2' marker-end='url(#ag-blue2)'/><rect x='350' y='10' width='120' height='40' rx='6' fill='#E95420'/><text x='410' y='35' text-anchor='middle' fill='#fff' font-size='12' font-weight='bold'>Retry 1</text><path d='M470 30 L510 30' stroke='#C34113' stroke-width='2' marker-end='url(#ag-blue2)'/><rect x='520' y='10' width='120' height='40' rx='6' fill='#E95420'/><text x='580' y='35' text-anchor='middle' fill='#fff' font-size='12' font-weight='bold'>Retry 2</text><path d='M640 30 L680 30' stroke='#E95420' stroke-width='2' marker-end='url(#ag-bright2)'/><rect x='690' y='10' width='90' height='40' rx='6' fill='var(--bg-secondary)' stroke='#E95420' stroke-width='2'/><text x='735' y='35' text-anchor='middle' fill='#E95420' font-size='12' font-weight='bold'>Drop</text><line x1='410' y1='60' x2='410' y2='110' stroke='#E95420' stroke-width='1.5' stroke-dasharray='4,3'/><rect x='320' y='100' width='180' height='35' rx='6' fill='var(--bg-secondary)' stroke='#C34113' stroke-width='1.5'/><text x='410' y='123' text-anchor='middle' fill='#E95420' font-size='11'>~30s intervals, max 3 retries</text></svg></p><details class="cheat-sheet mt-6"><summary><span class="material-symbols-outlined text-[16px]" aria-hidden="true">quick_reference</span> Staff+ Cheat Sheet<span class="material-symbols-outlined text-[16px] ml-auto">expand_more</span></summary><div class="cheat-sheet-body"><h4>Core Commands</h4><ul><li><code>gh api /repos/{owner}/{repo}/check-runs</code> — create check runs with file-level annotations.</li><li><code>gh api --paginate /orgs/{org}/repos --jq '.[].name'</code> — list all repos with pagination.</li><li><code>gh api /repos/{owner}/{repo}/git/refs</code> — interact with Git refs directly.</li></ul><h4>Staff+ Patterns</h4><ul><li>Prefer GitHub Apps over OAuth Apps for automation — granular permissions, installation scoping, dedicated rate limits.</li><li>Use GraphQL for bulk queries — a single <code>repositories</code> query with 100 nodes replaces 100 REST calls.</li><li>Webhook verification: validate <code>x-hub-signature-256</code> HMAC before processing payloads.</li></ul><h4>Watch Outs</h4><ul><li>GitHub App installation tokens expire after 1 hour — regenerate via JWT re-authentication.</li><li>REST API pagination (page/per_page) is O(n) for deep pages. GraphQL cursor pagination is O(1).</li><li>Rate limits: REST 5000/hr per user, GitHub App 5000/hr per installation. GraphQL uses point-based costing.</li></ul><h4>Interview Angle</h4><p>GitHub L6: "Design a CI bridge using the Checks API." Key: each pipeline step maps to a check run with annotations pointing to the exact file + line of failure. Use <code>POST /repos/{owner}/{repo}/check-runs</code> with <code>output.annotations</code> for rich inline feedback in the PR.</p></div></details><div class="flex flex-col gap-8"><div id="section-api-automation-0" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">GitHub Apps vs OAuth Apps</h3><div class="theme-text-muted text-sm leading-relaxed"><p>GitHub Apps are first-class actors with granular permissions, installation scoping, and rate limit isolation. OAuth Apps act on behalf of a user with a single token. Prefer GitHub Apps for automation: they authenticate via JWT (RS256 signed with app private key), exchange for an installation access token (1h expiry), and scope requests to specific repositories.</p><pre><code># Generate JWT
+payload = {
+  iat: now - 60, exp: now + 600, iss: app_id
+}
+token = jwt.encode(payload, private_key, algorithm="RS256")
+# Exchange for install token
+curl -X POST /app/installations/{id}/access_tokens \
+  -H "Authorization: Bearer $jwt"</code></pre></div></div>
+<div id="section-api-automation-1" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Checks API</h3><div class="theme-text-muted text-sm leading-relaxed"><p>The Checks API lets CI systems create check runs and suites that appear directly in pull requests. Each check run has a name, status (queued/in_progress/completed), conclusion (success/failure/neutral/cancelled), and annotations at the file+line level. Use <code>POST /repos/{owner}/{repo}/check-runs</code> with <code>output.summary</code> and <code>output.annotations</code> for rich feedback.</p><pre><code>curl -X POST /repos/org/repo/check-runs \
+  -H "Accept: application/vnd.github+json" \
+  -d '{"name":"lint","head_sha":"$SHA","status":"completed","conclusion":"success","output":{"title":"ESLint","summary":"0 errors"}}'</code></pre></div></div>
+<div id="section-api-automation-2" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Webhook Delivery</h3><div class="theme-text-muted text-sm leading-relaxed"><p>Webhooks deliver event payloads to configurable URLs with a retry mechanism. Upon delivery failure (non-2xx), GitHub retries up to 3 times with exponential backoff (~30s, ~2min, ~5min). Each delivery includes a unique <code>x-github-delivery</code> ID and the <code>x-hub-signature-256</code> HMAC for verification. Set up a dead letter queue for hardened delivery guarantees.</p><pre><code># Verify payload signature
+const sig = crypto
+  .createHmac('sha256', secret)
+  .update(payload)
+  .digest('hex')
+assert(sig === header)</code></pre></div></div>
+<div id="section-api-automation-3" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Batch GraphQL</h3><div class="theme-text-muted text-sm leading-relaxed"><p>GraphQL enables batched queries that replace multiple REST calls. Use aliases, fragments, and pagination via <code>first</code>/<code>after</code> cursors. The <code>nodes</code> pattern is efficient for bulk operations. Rate limit is based on node count (5000 points per hour, query cost = <code>cost</code> field in response).</p><pre><code>query repos($org: String!) {
+  organization(login: $org) {
+    repositories(first: 100) {
+      nodes { name defaultBranchRef { name } }
+      pageInfo { hasNextPage endCursor }
+    }
+  }
+}</code></pre></div></div>
+<div id="section-api-automation-4" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Internal Tooling</h3><div class="theme-text-muted text-sm leading-relaxed"><p>Build internal developer tooling with GitHub's API surface. Patterns include: <code>gh api</code> in shell scripts, Octokit SDK wrappers, and custom Actions. Use conditional requests with <code>If-None-Match</code> / <code>ETag</code> to reduce bandwidth. Cache API responses with TTLs respecting <code>x-ratelimit-remaining</code> headers.</p><pre><code>gh api repos/org/repo --jq '.default_branch'
+gh api --paginate /orgs/org/repos --jq '.[].name'</code></pre></div></div></div><div id="section-dive" class="scroll-mt-24"><details class="group border theme-border theme-bg-subtle rounded-xl overflow-hidden transition-all duration-300"><summary class="flex items-center justify-between p-4 font-bold text-sm theme-text cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-brand-500">lightbulb</span><span>Deep Dive &amp; Key Takeaways</span></span><span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-open:rotate-180 text-slate-400">expand_more</span></summary><div class="px-5 pb-5 pt-2 theme-text-muted text-sm leading-relaxed border-t theme-border font-sans"><p>API automation at scale demands careful authentication strategy. GitHub Apps are the gold standard for automation — they authenticate as a bot, scope to installations, and have dedicated rate limits (5000/hour per app, not per user). The JWT flow: generate a JWT signed with your app's private key (RS256, 10 minute max expiry), POST to <code>/app/installations/{id}/access_tokens</code>, and use the returned token for API calls. Tokens expire after 1 hour; re-authenticate by generating a new JWT. For webhook reliability, configure a webhook with a secret, verify HMAC signatures, and respond with 200 within 10 seconds to avoid timeouts. Use the <code>/app/hook/deliveries</code> endpoint to inspect recent deliveries and replay failed ones. GraphQL is preferable for bulk queries — a single <code>repositories</code> query with 100 nodes costs 1 point (plus 1 per node). Always handle pagination with cursors — REST returns <code>Link</code> headers, GraphQL uses <code>pageInfo</code>. For internal tooling, the <code>gh</code> CLI's <code>--paginate</code> flag auto-fetches all pages. Build a CI/CD bridge using the Checks API: each pipeline step maps to a check run with annotations pointing to the exact line of failure.</p></div></details></div><div class="mt-8 pt-6 flex items-center justify-between gap-4 border-t theme-border"><a href="/docs/policy-as-code/" class="flex items-center gap-2 text-sm theme-text-muted hover:text-brand-500 transition-colors group"><span class="material-symbols-outlined text-sm transition-transform group-hover:-translate-x-0.5">arrow_back</span><span class="truncate max-w-[200px]">Policy as Code</span></a><a href="/docs/supply-chain-security/" class="flex items-center gap-2 text-sm theme-text-muted hover:text-brand-500 transition-colors group text-right"><span class="truncate max-w-[200px]">Supply Chain Security</span><span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-0.5">arrow_forward</span></a></div></article></main>
+    <aside class="hidden xl:block w-48 sticky top-24 h-[calc(100vh-120px)] overflow-y-auto shrink-0 border-l theme-border pl-6">
+      <h4 class="sidebar-label !text-[10px] !pt-0 !pb-0 mb-3">On this page</h4>
+      <nav id="docs-right-outline" class="space-y-3 text-xs theme-text-muted" aria-label="Page sections"></nav>
+    </aside>
+  </div>
+  <footer class="border-t theme-border py-8 theme-bg">
+    <div class="max-w-7xl mx-auto px-6 flex justify-center items-center text-sm theme-text-muted">
+      <span>Made with ❤️ by <a href="https://www.linkedin.com/in/kallol-chakraborty-9728a699/" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:text-brand-600 transition-colors font-semibold">Kallol Chakraborty</a></span>
+    </div>
+  </footer>
+  <noscript>
+    <div class="max-w-5xl mx-auto px-6 py-8">
+      <div class="flex items-center gap-2.5 mb-6">
+        <img src="assets/logo.svg" alt="git bytes" class="w-8 h-8" />
+        <span class="text-base font-semibold">git bytes</span>
+      </div>
+      <h1 class="text-3xl font-bold mb-2">Study Guides</h1>
+      <p class="text-sm theme-text-muted mb-8">This site requires JavaScript for the full interactive experience. Below is a complete index of all available guides.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Git Fundamentals</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/git-basics/" class="text-brand-500 hover:text-brand-600">Git Basics — init, add, commit, log, diff</a></li>
+            <li><a href="/docs/branching-merging/" class="text-brand-500 hover:text-brand-600">Branching &amp; Merging</a></li>
+            <li><a href="/docs/remotes-collaboration/" class="text-brand-500 hover:text-brand-600">Remotes &amp; Collaboration</a></li>
+            <li><a href="/docs/rebasing-advanced/" class="text-brand-500 hover:text-brand-600">Rebasing &amp; Advanced Git</a></li>
+            <li><a href="/docs/git-internals/" class="text-brand-500 hover:text-brand-600">Git Internals</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">GitHub Platform</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/repos-issues/" class="text-brand-500 hover:text-brand-600">Repositories &amp; Issues</a></li>
+            <li><a href="/docs/pull-requests/" class="text-brand-500 hover:text-brand-600">Pull Requests &amp; Code Review</a></li>
+            <li><a href="/docs/github-pages/" class="text-brand-500 hover:text-brand-600">GitHub Pages</a></li>
+            <li><a href="/docs/actions-fundamentals/" class="text-brand-500 hover:text-brand-600">GitHub Actions Fundamentals</a></li>
+            <li><a href="/docs/projects-wikis/" class="text-brand-500 hover:text-brand-600">Projects, Wikis &amp; Discussions</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">GitHub Advanced</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/rest-api/" class="text-brand-500 hover:text-brand-600">GitHub REST API</a></li>
+            <li><a href="/docs/graphql-api/" class="text-brand-500 hover:text-brand-600">GitHub GraphQL API</a></li>
+            <li><a href="/docs/github-cli/" class="text-brand-500 hover:text-brand-600">GitHub CLI (gh)</a></li>
+            <li><a href="/docs/security-dependabot/" class="text-brand-500 hover:text-brand-600">Security &amp; Dependabot</a></li>
+            <li><a href="/docs/packages/" class="text-brand-500 hover:text-brand-600">Packages &amp; Registries</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Open Source &amp; Collaboration</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/forking-workflow/" class="text-brand-500 hover:text-brand-600">Forking &amp; Contribution Workflow</a></li>
+            <li><a href="/docs/community-management/" class="text-brand-500 hover:text-brand-600">Community Management</a></li>
+            <li><a href="/docs/licensing-governance/" class="text-brand-500 hover:text-brand-600">Licensing &amp; Governance</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">DevOps &amp; Automation</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/actions-advanced/" class="text-brand-500 hover:text-brand-600">GitHub Actions Advanced</a></li>
+            <li><a href="/docs/runner-architecture/" class="text-brand-500 hover:text-brand-600">Actions Runner Architecture</a></li>
+            <li><a href="/docs/deployment-pipelines/" class="text-brand-500 hover:text-brand-600">Deployment Pipelines</a></li>
+            <li><a href="/docs/copilot/" class="text-brand-500 hover:text-brand-600">GitHub Copilot</a></li>
+            <li><a href="/docs/actions-cost-optimization/" class="text-brand-500 hover:text-brand-600">Actions Cost Optimization</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">Career &amp; Best Practices</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/best-practices/" class="text-brand-500 hover:text-brand-600">Git Best Practices</a></li>
+            <li><a href="/docs/portfolio-tips/" class="text-brand-500 hover:text-brand-600">GitHub Portfolio Tips</a></li>
+            <li><a href="/docs/interview-qa/" class="text-brand-500 hover:text-brand-600">Git Interview Q&amp;A</a></li>
+            <li><a href="/docs/patterns-antipatterns/" class="text-brand-500 hover:text-brand-600">Patterns &amp; Anti-Patterns</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Git at Scale (Staff+)</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/monorepo-management/" class="text-brand-500 hover:text-brand-600">Monorepo Management</a></li>
+            <li><a href="/docs/git-internals-deep/" class="text-brand-500 hover:text-brand-600">Git Internals Deep Dive</a></li>
+            <li><a href="/docs/merge-queue/" class="text-brand-500 hover:text-brand-600">Advanced Merge Strategies</a></li>
+            <li><a href="/docs/trunk-vs-multi-repo/" class="text-brand-500 hover:text-brand-600">Trunk-based vs Multi-Repo</a></li>
+            <li><a href="/docs/incident-debugging/" class="text-brand-500 hover:text-brand-600">Incident Debugging &amp; Rollbacks</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Enterprise &amp; Supply Chain (Staff+)</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/enterprise-admin/" class="text-brand-500 hover:text-brand-600">GitHub Enterprise Admin</a></li>
+            <li><a href="/docs/policy-as-code/" class="text-brand-500 hover:text-brand-600">Policy as Code</a></li>
+            <li><a href="/docs/api-automation/" class="text-brand-500 hover:text-brand-600">API Automation</a></li>
+            <li><a href="/docs/supply-chain-security/" class="text-brand-500 hover:text-brand-600">Supply Chain Security</a></li>
+            <li><a href="/docs/gitops/" class="text-brand-500 hover:text-brand-600">GitOps &amp; Deployments</a></li>
+            <li><a href="/docs/audit-log-streaming/" class="text-brand-500 hover:text-brand-600">Audit Log Streaming</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Staff+ Leadership &amp; DX</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/rfc-adr/" class="text-brand-500 hover:text-brand-600">RFC &amp; ADR Processes</a></li>
+            <li><a href="/docs/release-engineering/" class="text-brand-500 hover:text-brand-600">Release Engineering</a></li>
+            <li><a href="/docs/dx-engineering/" class="text-brand-500 hover:text-brand-600">Developer Experience Engineering</a></li>
+            <li><a href="/docs/staff-interview-questions/" class="text-brand-500 hover:text-brand-600">Staff+ Interview Questions</a></li>
+            <li><a href="/docs/git-culture-strategy/" class="text-brand-500 hover:text-brand-600">Git Culture &amp; CI/CD Strategy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t theme-border text-sm theme-text-muted">
+        <a href="index.html" class="text-brand-500 hover:text-brand-600 font-semibold">&larr; Back to Home</a>
+      </div>
+    </div>
+  </noscript>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/headroom.js@0.12.0/dist/headroom.min.js"></script>
+  <script src="js/generated.js" defer></script>
+  <script src="js/modals.js" defer></script>
+  <script src="js/loader.js" defer></script>
+  <script>
+    var header = document.querySelector('header');
+    if (header) { new Headroom(header).init(); }
+  </script>
+  <script>
+    (function() {
+      var sidebar = document.getElementById('left-sidebar');
+      var backdrop = document.getElementById('sidebar-backdrop');
+      var toggle = document.getElementById('sidebar-toggle');
+      if (!sidebar || !backdrop || !toggle) return;
+      function openSidebar() { sidebar.classList.remove('-translate-x-full'); backdrop.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+      function closeSidebar() { sidebar.classList.add('-translate-x-full'); backdrop.classList.add('hidden'); document.body.style.overflow = ''; }
+      toggle.addEventListener('click', function() { sidebar.classList.contains('-translate-x-full') ? openSidebar() : closeSidebar(); });
+      backdrop.addEventListener('click', closeSidebar);
+      sidebar.querySelectorAll('.sidebar-link').forEach(function(link) {
+        link.addEventListener('click', function() { if (window.innerWidth < 1024) closeSidebar(); });
+      });
+      window.addEventListener('resize', function() { if (window.innerWidth >= 1024) { backdrop.classList.add('hidden'); document.body.style.overflow = ''; } });
+    })();
+  </script>
+</body>
+</html>

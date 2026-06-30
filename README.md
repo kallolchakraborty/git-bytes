@@ -13,37 +13,56 @@ A modern, search-first documentation portal for Git, GitHub, DevOps, and enginee
 - **Reading progress bar** — tracks scroll position per guide
 - **Code blocks** — syntax-highlighted (Prism.js) with copy-to-clipboard
 - **Related topics** — contextual recommendations between guides
+- **Pre-rendered static pages** — all 43 guides available as standalone HTML for SEO and JS-free browsing
+- **Category hub pages** — topic cluster landing pages for each phase
+- **Structured data** — TechArticle + BreadcrumbList JSON-LD per guide for rich search results
 
 ## Site Structure
 
 ```
 github-bytes/
-├── index.html          # Landing page
-├── docs.html           # Documentation portal (3-column layout)
+├── index.html              # Landing page
+├── docs.html               # Documentation portal (SPA, 3-column layout)
+├── docs/                   # Pre-rendered static pages (generated at build time)
+│   ├── git-basics/
+│   ├── branching-merging/
+│   │   ...
+│   ├── git/                # Category hub: Phase 1
+│   ├── github/             # Category hub: Phase 2
+│   │   ...
+│   └── leadership/         # Category hub: Phase 9
+├── sitemap.xml             # Auto-generated (53 URLs)
+├── robots.txt
 ├── css/
-│   ├── main.css        # Custom styles (theme utilities, code blocks, cheat sheets)
-│   ├── tailwind.css    # Locally purged Tailwind build (23 KB)
+│   ├── main.css            # Custom styles (theme utilities, code blocks, cheat sheets)
+│   ├── tailwind.css        # Locally purged Tailwind build (23 KB)
 │   └── tailwind-input.css
 ├── js/
-│   ├── theme.js        # Dark/light theme toggle
-│   ├── modals.js       # Share & search modals
-│   ├── loader.js       # Dynamic content loader + cheat sheet rendering
-│   └── generated.js    # Route map + search index (auto-generated)
+│   ├── theme.js            # Dark/light theme toggle
+│   ├── modals.js           # Share & search modals
+│   ├── loader.js           # Dynamic content loader + SEO updates
+│   └── generated.js        # Route map + search index (auto-generated)
 ├── content/
-│   ├── git/            # Phase 1: Git Fundamentals (5 guides)
-│   ├── github/         # Phase 2: GitHub Platform (5 guides)
-│   ├── github-advanced/# Phase 3: GitHub Advanced (5 guides)
-│   ├── opensource/     # Phase 4: Open Source (3 guides)
-│   ├── devops/         # Phase 5: DevOps & Automation (5 guides)
-│   ├── career/         # Phase 6: Career & Best Practices (4 guides)
-│   ├── git-scale/      # Phase 7: Git at Scale, Staff+ (5 guides)
-│   ├── enterprise/     # Phase 8: Enterprise & Supply Chain (6 guides)
-│   └── leadership/     # Phase 9: Staff+ Leadership (5 guides)
+│   ├── git/                # Phase 1: Git Fundamentals (5 guides)
+│   ├── github/             # Phase 2: GitHub Platform (5 guides)
+│   ├── github-advanced/    # Phase 3: GitHub Advanced (5 guides)
+│   ├── opensource/         # Phase 4: Open Source (3 guides)
+│   ├── devops/             # Phase 5: DevOps & Automation (5 guides)
+│   ├── career/             # Phase 6: Career & Best Practices (4 guides)
+│   ├── git-scale/          # Phase 7: Git at Scale, Staff+ (5 guides)
+│   ├── enterprise/         # Phase 8: Enterprise & Supply Chain (6 guides)
+│   └── leadership/         # Phase 9: Staff+ Leadership (5 guides)
+├── scripts/
+│   ├── generate-static-pages.js    # Pre-renders 43 guide HTML files
+│   ├── generate-category-pages.js  # Generates 8 category hub pages
+│   ├── generate-sitemap.js         # Builds sitemap.xml
+│   └── add-date-fields.js          # Adds datePublished/lastModified to JSON
 ├── assets/
-│   └── logo.svg        # Animated neural network logo (orange)
-├── package.json        # `npm run build:css` for Tailwind rebuild
+│   └── logo.svg
+├── package.json             # `npm run build` for full build pipeline
+├── .nojekyll                # GitHub Pages compatibility
 ├── tailwind.config.js
-├── LICENSE             # MIT
+├── LICENSE                  # MIT
 └── README.md
 ```
 
@@ -74,7 +93,7 @@ github-bytes/
 
 ## Usage
 
-Open `index.html` in any modern browser. All content loads dynamically from JSON files — no build step required.
+Open `index.html` in any modern browser. All content loads dynamically from JSON files — no build step required for basic usage.
 
 ### Quick start
 - Press `Ctrl+K` to search all guides (including cheat sheet content)
@@ -82,6 +101,7 @@ Open `index.html` in any modern browser. All content loads dynamically from JSON
 - Bookmark guides and track progress (persisted in localStorage)
 - Click **"Staff+ Cheat Sheet"** on any core page for an expert quick-reference
 - Use `cat:` or `tag:` filter syntax in search (e.g., `cat:git tag:staff+`)
+- Guides are accessible at `/docs/<guide-id>/` (pre-rendered, JS not required)
 
 ## Development
 
@@ -89,11 +109,41 @@ Open `index.html` in any modern browser. All content loads dynamically from JSON
 # Install dependencies (requires Node.js 20+)
 npm install
 
-# Rebuild Tailwind CSS after adding new utility classes
-npm run build:css
+# Full build: CSS → static pages → category hubs → sitemap
+npm run build
+
+# Or run steps individually:
+npm run build:css           # Rebuild Tailwind CSS
+npm run generate:static     # Pre-render 43 guide pages
+npm run generate:categories # Generate category hub pages
+npm run generate:sitemap    # Build sitemap.xml
 
 # Serve locally
 python3 -m http.server 8080
+```
+
+## SEO Architecture
+
+All guides are pre-rendered as static HTML at build time, making them fully indexable by search engines without JavaScript. The pre-rendered structure also serves as a JS-free fallback.
+
+| Feature | Implementation |
+|---------|---------------|
+| **Static pages** | 43 guides at `/docs/<id>/index.html` with full content, meta tags, and structured data |
+| **Category hubs** | 8 pillar pages at `/docs/<category>/` linking to all guides in each phase |
+| **Canonical URLs** | Set per page; SPA dynamically updates on hash navigation |
+| **JSON-LD** | `TechArticle` + `BreadcrumbList` + `WebSite` schema per guide (injected dynamically in SPA, inline in static pages) |
+| **Meta tags** | Dynamic `<title>`, `<meta name="description">`, OG/Twitter tags per guide |
+| **Sitemap** | 53 URLs (home, docs, 8 categories, 43 guides) — `sitemap.xml` |
+| **Robots** | `robots.txt` with sitemap reference |
+| **Prev/Next** | Sequential navigation links at the bottom of each article for link equity flow |
+| **Noscript** | Complete guide index rendered when JS is disabled |
+| **Resource hints** | Preconnect + dns-prefetch + preload for fonts, CDN, and critical CSS |
+| **Dates** | `datePublished` and `lastModified` on all content for freshness signals |
+
+### Search Console
+Add the following `<meta>` to both `index.html` and `docs.html` after verifying your site:
+```html
+<meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" />
 ```
 
 ## Built With

@@ -24,13 +24,17 @@
   <meta property="og:locale" content="en_US" />
   <meta name="theme-color" content="#E95420" />
 <meta name="theme-color" content="#F5A389" media="(prefers-color-scheme: dark)" />
-  <link rel="canonical" href="https://kallolchakraborty.github.io/git-bytes/docs.html" />
+  <link rel="canonical" id="canonical-link" href="https://kallolchakraborty.github.io/git-bytes/docs.html" />
   <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192x192.png" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preload" href="css/tailwind.css" as="style" />
+  <link rel="preload" href="css/main.css" as="style" />
   <script src="js/theme.js"></script>
   <link href="css/tailwind.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/main.css" />
@@ -313,6 +317,103 @@
       <span>Made with ❤️ by <a href="https://www.linkedin.com/in/kallol-chakraborty-9728a699/" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:text-brand-600 transition-colors font-semibold">Kallol Chakraborty</a></span>
     </div>
   </footer>
+  <noscript>
+    <div class="max-w-5xl mx-auto px-6 py-8">
+      <div class="flex items-center gap-2.5 mb-6">
+        <img src="assets/logo.svg" alt="git bytes" class="w-8 h-8" />
+        <span class="text-base font-semibold">git bytes</span>
+      </div>
+      <h1 class="text-3xl font-bold mb-2">Study Guides</h1>
+      <p class="text-sm theme-text-muted mb-8">This site requires JavaScript for the full interactive experience. Below is a complete index of all available guides.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Git Fundamentals</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#git-basics" class="text-brand-500 hover:text-brand-600">Git Basics — init, add, commit, log, diff</a></li>
+            <li><a href="#branching-merging" class="text-brand-500 hover:text-brand-600">Branching &amp; Merging</a></li>
+            <li><a href="#remotes-collaboration" class="text-brand-500 hover:text-brand-600">Remotes &amp; Collaboration</a></li>
+            <li><a href="#rebasing-advanced" class="text-brand-500 hover:text-brand-600">Rebasing &amp; Advanced Git</a></li>
+            <li><a href="#git-internals" class="text-brand-500 hover:text-brand-600">Git Internals</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">GitHub Platform</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#repos-issues" class="text-brand-500 hover:text-brand-600">Repositories &amp; Issues</a></li>
+            <li><a href="#pull-requests" class="text-brand-500 hover:text-brand-600">Pull Requests &amp; Code Review</a></li>
+            <li><a href="#github-pages" class="text-brand-500 hover:text-brand-600">GitHub Pages</a></li>
+            <li><a href="#actions-fundamentals" class="text-brand-500 hover:text-brand-600">GitHub Actions Fundamentals</a></li>
+            <li><a href="#projects-wikis" class="text-brand-500 hover:text-brand-600">Projects, Wikis &amp; Discussions</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">GitHub Advanced</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#rest-api" class="text-brand-500 hover:text-brand-600">GitHub REST API</a></li>
+            <li><a href="#graphql-api" class="text-brand-500 hover:text-brand-600">GitHub GraphQL API</a></li>
+            <li><a href="#github-cli" class="text-brand-500 hover:text-brand-600">GitHub CLI (gh)</a></li>
+            <li><a href="#security-dependabot" class="text-brand-500 hover:text-brand-600">Security &amp; Dependabot</a></li>
+            <li><a href="#packages" class="text-brand-500 hover:text-brand-600">Packages &amp; Registries</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Open Source &amp; Collaboration</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#forking-workflow" class="text-brand-500 hover:text-brand-600">Forking &amp; Contribution Workflow</a></li>
+            <li><a href="#community-management" class="text-brand-500 hover:text-brand-600">Community Management</a></li>
+            <li><a href="#licensing-governance" class="text-brand-500 hover:text-brand-600">Licensing &amp; Governance</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">DevOps &amp; Automation</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#actions-advanced" class="text-brand-500 hover:text-brand-600">GitHub Actions Advanced</a></li>
+            <li><a href="#runner-architecture" class="text-brand-500 hover:text-brand-600">Actions Runner Architecture</a></li>
+            <li><a href="#deployment-pipelines" class="text-brand-500 hover:text-brand-600">Deployment Pipelines</a></li>
+            <li><a href="#copilot" class="text-brand-500 hover:text-brand-600">GitHub Copilot</a></li>
+            <li><a href="#actions-cost-optimization" class="text-brand-500 hover:text-brand-600">Actions Cost Optimization</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">Career &amp; Best Practices</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#best-practices" class="text-brand-500 hover:text-brand-600">Git Best Practices</a></li>
+            <li><a href="#portfolio-tips" class="text-brand-500 hover:text-brand-600">GitHub Portfolio Tips</a></li>
+            <li><a href="#interview-qa" class="text-brand-500 hover:text-brand-600">Git Interview Q&amp;A</a></li>
+            <li><a href="#patterns-antipatterns" class="text-brand-500 hover:text-brand-600">Patterns &amp; Anti-Patterns</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Git at Scale (Staff+)</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#monorepo-management" class="text-brand-500 hover:text-brand-600">Monorepo Management</a></li>
+            <li><a href="#git-internals-deep" class="text-brand-500 hover:text-brand-600">Git Internals Deep Dive</a></li>
+            <li><a href="#merge-queue" class="text-brand-500 hover:text-brand-600">Advanced Merge Strategies</a></li>
+            <li><a href="#trunk-vs-multi-repo" class="text-brand-500 hover:text-brand-600">Trunk-based vs Multi-Repo</a></li>
+            <li><a href="#incident-debugging" class="text-brand-500 hover:text-brand-600">Incident Debugging &amp; Rollbacks</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Enterprise &amp; Supply Chain (Staff+)</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#enterprise-admin" class="text-brand-500 hover:text-brand-600">GitHub Enterprise Admin</a></li>
+            <li><a href="#policy-as-code" class="text-brand-500 hover:text-brand-600">Policy as Code</a></li>
+            <li><a href="#api-automation" class="text-brand-500 hover:text-brand-600">API Automation</a></li>
+            <li><a href="#supply-chain-security" class="text-brand-500 hover:text-brand-600">Supply Chain Security</a></li>
+            <li><a href="#gitops" class="text-brand-500 hover:text-brand-600">GitOps &amp; Deployments</a></li>
+            <li><a href="#audit-log-streaming" class="text-brand-500 hover:text-brand-600">Audit Log Streaming</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Staff+ Leadership &amp; DX</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#rfc-adr" class="text-brand-500 hover:text-brand-600">RFC &amp; ADR Processes</a></li>
+            <li><a href="#release-engineering" class="text-brand-500 hover:text-brand-600">Release Engineering</a></li>
+            <li><a href="#dx-engineering" class="text-brand-500 hover:text-brand-600">Developer Experience Engineering</a></li>
+            <li><a href="#staff-interview-questions" class="text-brand-500 hover:text-brand-600">Staff+ Interview Questions</a></li>
+            <li><a href="#git-culture-strategy" class="text-brand-500 hover:text-brand-600">Git Culture &amp; CI/CD Strategy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t theme-border text-sm theme-text-muted">
+        <a href="index.html" class="text-brand-500 hover:text-brand-600 font-semibold">&larr; Back to Home</a>
+      </div>
+    </div>
+  </noscript>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>

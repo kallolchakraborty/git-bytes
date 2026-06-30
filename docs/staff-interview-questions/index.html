@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Staff+ Interview Questions — git bytes</title>
+  <meta name="description" content="Staff+ engineering interviews assess system design, architectural thinking, and organizational impact through open-ended problems drawn from Git and GitHub s..." />
+  <meta property="og:title" content="Staff+ Interview Questions — git bytes" />
+  <meta property="og:description" content="Staff+ engineering interviews assess system design, architectural thinking, and organizational impact through open-ended problems drawn from Git and GitHub scale challenges. Below are commonly aske..." />
+  <meta property="og:image" content="assets/og-preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://kallolchakraborty.github.io/git-bytes/docs/staff-interview-questions/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Staff+ Interview Questions — git bytes" />
+  <meta name="twitter:description" content="Staff+ engineering interviews assess system design, architectural thinking, and organizational impact through open-ended problems drawn from Git and GitHub scale challenges. Below are commonly aske..." />
+  <meta name="twitter:image" content="assets/og-preview.png" />
+  <meta name="twitter:image:alt" content="git bytes logo — Git branch visualization" />
+  <meta name="keywords" content="git bytes, Git, GitHub, FAANG interview prep, Staff+ engineer, Git internals, GitHub Actions, monorepo, CI/CD, GitOps" />
+  <meta name="author" content="Kallol Chakraborty" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:site_name" content="git bytes" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="theme-color" content="#E95420" />
+<meta name="theme-color" content="#F5A389" media="(prefers-color-scheme: dark)" />
+  <link rel="canonical" id="canonical-link" href="https://kallolchakraborty.github.io/git-bytes/docs/staff-interview-questions/" />
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192x192.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preload" href="css/tailwind.css" as="style" />
+  <link rel="preload" href="css/main.css" as="style" />
+  <script src="js/theme.js"></script>
+  <link href="css/tailwind.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" /></noscript>
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" rel="stylesheet" />
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","@id":"https://kallolchakraborty.github.io/git-bytes/docs/staff-interview-questions/","headline":"Staff+ Interview Questions","description":"Staff+ engineering interviews assess system design, architectural thinking, and organizational impact through open-ended problems drawn from Git and GitHub s...","proficiencyLevel":"Advanced / Staff+","timeRequired":"3M","datePublished":"2026-06-30","dateModified":"2026-06-30","author":{"@id":"https://kallolchakraborty.github.io/git-bytes/#person"},"publisher":{"@type":"Person","name":"Kallol Chakraborty"},"mainEntityOfPage":"https://kallolchakraborty.github.io/git-bytes/docs/staff-interview-questions/","about":[{"@type":"Thing","name":"staff+"},{"@type":"Thing","name":"interview"},{"@type":"Thing","name":"faang"},{"@type":"Thing","name":"system-design"},{"@type":"Thing","name":"behavioral"},{"@type":"Thing","name":"security"},{"@type":"Thing","name":"incident-response"},{"@type":"Thing","name":"dx"},{"@type":"Thing","name":"open-source"}],"image":"https://kallolchakraborty.github.io/git-bytes/assets/og-preview.png"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://kallolchakraborty.github.io/git-bytes/"},{"@type":"ListItem","position":2,"name":"Leadership","item":"https://kallolchakraborty.github.io/git-bytes/docs/staff-interview-questions/"},{"@type":"ListItem","position":3,"name":"Staff+ Interview Questions"}]}]}</script></head>
+<body class="theme-bg theme-text font-sans min-h-screen flex flex-col transition-colors duration-200 overflow-y-auto">
+  <a href="/docs/docs-dynamic-content/" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-[#E95420] focus:border focus:border-[#E95420] focus:rounded-lg focus:shadow-lg focus:text-sm focus:font-semibold focus:outline-none focus:ring-2 focus:ring-[#E95420]">Skip to main content</a>
+  <div id="reading-progress-track" aria-hidden="true" style="position:fixed;top:0;left:0;right:0;height:3px;z-index:9999;background:transparent;pointer-events:none;">
+    <div id="reading-progress-bar" style="height:100%;transform:scaleX(0);background:linear-gradient(90deg,#E95420,#F5A389);transform-origin:left;transition:transform 80ms linear;"></div>
+  </div>
+  <header class="glass-nav sticky top-0 z-40 transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <button id="sidebar-toggle" class="lg:hidden text-slate-400 hover:text-brand-500 transition-all flex items-center justify-center" aria-label="Toggle navigation menu">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <a href="index.html" class="theme-text hover:text-brand-500 transition-all flex items-center gap-2.5">
+          <img src="assets/logo.svg" alt="git bytes" class="w-8 h-8" />
+          <span class="text-base font-semibold">git bytes</span>
+        </a>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2">
+          <button class="theme-toggle-btn text-slate-400 hover:text-brand-500 transition-all" aria-label="Toggle theme">
+            <span class="material-symbols-outlined text-[16px]">light_mode</span>
+          </button>
+          <button class="open-share-btn text-slate-400 hover:text-brand-500 transition-all" aria-label="Share this page">
+            <span class="material-symbols-outlined text-[16px]">share</span>
+          </button>
+          <button class="open-search-btn flex items-center gap-1.5 h-7 px-2.5 theme-bg-subtle rounded-lg text-slate-400 hover:text-brand-500 font-medium text-xs transition-all">
+            <span class="material-symbols-outlined text-[16px]">search</span>
+            <kbd class="hidden sm:inline-block font-mono theme-bg border theme-border px-1 rounded text-[9px] leading-none">Ctrl+K</kbd>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="max-w-7xl mx-auto px-6 w-full flex-grow flex flex-col lg:flex-row gap-8 py-8 relative">
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden" aria-hidden="true"></div>
+      <aside id="left-sidebar" class="lg:w-56 lg:sticky lg:top-24 lg:h-[calc(100vh-120px)] overflow-y-auto shrink-0 border-b lg:border-b-0 theme-border pb-4 lg:pb-0 pr-0 lg:pr-5 fixed inset-y-0 left-0 z-40 w-64 transform -translate-x-full transition-transform duration-200 lg:translate-x-0 lg:static lg:inset-auto lg:z-auto lg:w-56 lg:border-b-0 theme-bg">
+      <nav aria-label="Documentation navigation" class="sidebar-sections">
+        <div id="sidebar-progress-container" class="px-3 py-3.5 mb-2 border-b theme-border">
+          <div class="flex items-center justify-between text-xs font-bold theme-text mb-1.5">
+            <span>Study Progress</span>
+            <span id="sidebar-progress-text" class="text-brand-500">0%</span>
+          </div>
+          <div class="w-full rounded-full h-1.5 overflow-hidden" style="background-color: var(--border-default)">
+            <div id="sidebar-progress-bar" class="bg-brand-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div id="sidebar-progress-stats" class="text-[10px] theme-text-muted mt-1 font-medium">0 of 0 topics completed</div>
+        </div>
+        <div id="sidebar-bookmarks-container" class="hidden px-2 py-3 mb-2 border-b theme-border">
+          <div class="text-[10px] font-bold theme-text-muted uppercase tracking-wider mb-2 flex items-center gap-1 select-none">
+            <span class="material-symbols-outlined text-[12px] text-amber-500">star</span> Pinned Guides
+          </div>
+          <div id="sidebar-bookmarks-list" class="flex flex-col gap-0.5"></div>
+        </div>
+        <!-- Phase 1: Git Fundamentals -->
+        <div class="px-2 py-3">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 1: Git Fundamentals</div>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Git Basics</h4>
+          <a href="/docs/git-basics/" class="sidebar-link">Git Basics — init, add, commit, log, diff</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Branching & Merging</h4>
+          <a href="/docs/branching-merging/" class="sidebar-link">Branching & Merging</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Remotes & Collaboration</h4>
+          <a href="/docs/remotes-collaboration/" class="sidebar-link">Remotes & Collaboration</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Rebasing & Advanced</h4>
+          <a href="/docs/rebasing-advanced/" class="sidebar-link">Rebasing & Advanced Git</a>
+        </div>
+        <div class="sidebar-section git-section">
+          <h4 class="sidebar-label">Git Internals</h4>
+          <a href="/docs/git-internals/" class="sidebar-link">Git Internals</a>
+        </div>
+        <!-- Phase 2: GitHub Platform -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 2: GitHub Platform</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Repos & Issues</h4>
+          <a href="/docs/repos-issues/" class="sidebar-link">Repositories &amp; Issues</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Pull Requests</h4>
+          <a href="/docs/pull-requests/" class="sidebar-link">Pull Requests &amp; Code Review</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GitHub Pages</h4>
+          <a href="/docs/github-pages/" class="sidebar-link">GitHub Pages</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Actions Fundamentals</h4>
+          <a href="/docs/actions-fundamentals/" class="sidebar-link">GitHub Actions Fundamentals</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Projects &amp; Wikis</h4>
+          <a href="/docs/projects-wikis/" class="sidebar-link">Projects, Wikis &amp; Discussions</a>
+        </div>
+        <!-- Phase 3: GitHub Advanced -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 3: GitHub Advanced</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">REST API</h4>
+          <a href="/docs/rest-api/" class="sidebar-link">GitHub REST API</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GraphQL API</h4>
+          <a href="/docs/graphql-api/" class="sidebar-link">GitHub GraphQL API</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GitHub CLI</h4>
+          <a href="/docs/github-cli/" class="sidebar-link">GitHub CLI (gh)</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Security</h4>
+          <a href="/docs/security-dependabot/" class="sidebar-link">Security &amp; Dependabot</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Packages</h4>
+          <a href="/docs/packages/" class="sidebar-link">Packages &amp; Registries</a>
+        </div>
+        <!-- Phase 4: Open Source & Collaboration -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 4: Open Source &amp; Collaboration</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Contribution</h4>
+          <a href="/docs/forking-workflow/" class="sidebar-link">Forking &amp; Contribution Workflow</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Community</h4>
+          <a href="/docs/community-management/" class="sidebar-link">Community Management</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Licensing</h4>
+          <a href="/docs/licensing-governance/" class="sidebar-link">Licensing &amp; Governance</a>
+        </div>
+        <!-- Phase 5: DevOps & Automation -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 5: DevOps &amp; Automation</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Actions Advanced</h4>
+          <a href="/docs/actions-advanced/" class="sidebar-link">GitHub Actions Advanced</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Runner Architecture</h4>
+          <a href="/docs/runner-architecture/" class="sidebar-link">Actions Runner Architecture</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Deploy Pipelines</h4>
+          <a href="/docs/deployment-pipelines/" class="sidebar-link">Deployment Pipelines</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Copilot</h4>
+          <a href="/docs/copilot/" class="sidebar-link">GitHub Copilot</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Cost Optimization</h4>
+          <a href="/docs/actions-cost-optimization/" class="sidebar-link">Actions Cost Optimization</a>
+        </div>
+        <!-- Phase 6: Career & Best Practices -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 6: Career &amp; Best Practices</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Best Practices</h4>
+          <a href="/docs/best-practices/" class="sidebar-link">Git Best Practices</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Portfolio Tips</h4>
+          <a href="/docs/portfolio-tips/" class="sidebar-link">GitHub Portfolio Tips</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Interview Q&amp;A</h4>
+          <a href="/docs/interview-qa/" class="sidebar-link">Git Interview Q&amp;A</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Patterns</h4>
+          <a href="/docs/patterns-antipatterns/" class="sidebar-link">Patterns &amp; Anti-Patterns</a>
+        </div>
+        <!-- Phase 7: Git at Scale (Staff+) -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 7: Git at Scale (Staff+)</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Monorepo Management</h4>
+          <a href="/docs/monorepo-management/" class="sidebar-link">Monorepo Management</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Internals Deep Dive</h4>
+          <a href="/docs/git-internals-deep/" class="sidebar-link">Git Internals Deep Dive</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Merge Queue</h4>
+          <a href="/docs/merge-queue/" class="sidebar-link">Advanced Merge Strategies</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Repo Strategies</h4>
+          <a href="/docs/trunk-vs-multi-repo/" class="sidebar-link">Trunk-based vs Multi-Repo</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Incidents</h4>
+          <a href="/docs/incident-debugging/" class="sidebar-link">Incident Debugging &amp; Rollbacks</a>
+        </div>
+        <!-- Phase 8: Enterprise & Supply Chain (Staff+) -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 8: Enterprise &amp; Supply Chain (Staff+)</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Enterprise Admin</h4>
+          <a href="/docs/enterprise-admin/" class="sidebar-link">GitHub Enterprise Admin</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Policy as Code</h4>
+          <a href="/docs/policy-as-code/" class="sidebar-link">Policy as Code</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">API Automation</h4>
+          <a href="/docs/api-automation/" class="sidebar-link">API Automation</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Supply Chain Security</h4>
+          <a href="/docs/supply-chain-security/" class="sidebar-link">Supply Chain Security</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">GitOps</h4>
+          <a href="/docs/gitops/" class="sidebar-link">GitOps &amp; Deployments</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Audit Log</h4>
+          <a href="/docs/audit-log-streaming/" class="sidebar-link">Audit Log Streaming</a>
+        </div>
+        <!-- Phase 9: Staff+ Leadership -->
+        <div class="px-2 py-3 border-t theme-border mt-2">
+          <div class="text-[10px] font-bold text-brand-500 uppercase tracking-wider mb-2">Phase 9: Staff+ Leadership &amp; DX</div>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">RFC &amp; ADR</h4>
+          <a href="/docs/rfc-adr/" class="sidebar-link">RFC &amp; ADR Processes</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Release Engineering</h4>
+          <a href="/docs/release-engineering/" class="sidebar-link">Release Engineering</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">DX Engineering</h4>
+          <a href="/docs/dx-engineering/" class="sidebar-link">Developer Experience Engineering</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Staff+ Interview</h4>
+          <a href="/docs/staff-interview-questions/" class="sidebar-link">Staff+ Interview Questions</a>
+        </div>
+        <div class="sidebar-section">
+          <h4 class="sidebar-label">Git Culture</h4>
+          <a href="/docs/git-culture-strategy/" class="sidebar-link">Git Culture &amp; CI/CD Strategy</a>
+        </div>
+      </nav>
+    </aside>
+    <main id="docs-dynamic-content" class="flex-grow max-w-3xl flex flex-col gap-12 min-w-0 overflow-y-auto" aria-live="polite"><article class="flex flex-col gap-5 docs-section" role="region" aria-label="Staff+ Interview Questions"><div class="flex flex-col gap-3"><div class="flex items-center justify-between gap-4 flex-wrap select-none"><nav class="flex items-center gap-1.5 text-[10px] font-bold theme-text-muted uppercase tracking-wider"><span>Leadership</span><span class="material-symbols-outlined text-[12px] theme-text-muted">chevron_right</span><span class="text-brand-500">Interview</span></nav><div class="flex items-center gap-2" id="article-actions-toolbar"><button onclick="toggleBookmark('#staff-interview-questions')" id="btn-bookmark" class="w-8 h-8 rounded-lg border theme-border text-slate-400 hover:text-amber-500 hover:border-amber-500/30 flex items-center justify-center transition-all theme-bg" aria-label="Pin this guide"><span class="material-symbols-outlined text-[18px]">star_border</span></button><button onclick="toggleProgress('#staff-interview-questions')" id="btn-progress" class="h-8 px-3 rounded-lg border theme-border text-slate-500 hover:text-emerald-500 hover:border-emerald-500/30 flex items-center gap-1.5 text-[11px] font-semibold transition-all theme-bg"><span class="material-symbols-outlined text-[16px] text-slate-400">circle</span><span class="progress-btn-text">Mark as Done</span></button><button onclick="window.print()" class="w-8 h-8 rounded-lg border theme-border text-slate-400 hover:text-brand-500 hover:border-brand-500/30 flex items-center justify-center transition-all theme-bg" aria-label="Print"><span class="material-symbols-outlined text-[18px]">print</span></button></div></div><h1 class="text-3xl sm:text-4xl font-bold theme-text tracking-tight">Staff+ Interview Questions</h1><div class="flex flex-wrap items-center gap-3 text-xs theme-text-muted select-none"><span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-slate-400">schedule</span><span>3 min read</span></span><span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wider text-purple-500 border-purple-500/20 bg-purple-550/5"><span class="material-symbols-outlined text-[12px]">signal_cellular_4_bar</span><span>Advanced / Staff+</span></span></div><div class="flex flex-wrap gap-1.5 mt-0.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="staff+">staff+</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="interview">interview</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="faang">faang</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="system-design">system-design</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="behavioral">behavioral</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="security">security</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="incident-response">incident-response</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="dx">dx</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider tag-badge cursor-default" data-tag="open-source">open-source</span></div></div><p class="theme-text-muted leading-relaxed text-base"><p>Staff+ engineering interviews assess system design, architectural thinking, and organizational impact through open-ended problems drawn from Git and GitHub scale challenges. Below are commonly asked questions at each FAANG+ company with the position level they target.</p></p><details class="cheat-sheet mt-6"><summary><span class="material-symbols-outlined text-[16px]" aria-hidden="true">quick_reference</span> Staff+ Cheat Sheet<span class="material-symbols-outlined text-[16px] ml-auto">expand_more</span></summary><div class="cheat-sheet-body"><h4>Core Frameworks</h4><ul><li><strong>STAR</strong> — Situation, Task, Action, Result. Structure for behavioral answers.</li><li><strong>System design dimensions</strong>: data partitioning, consistency vs availability, protocol design, performance at scale.</li><li><strong>Company-specific patterns</strong>: Google (distributed systems), Meta (performance, monorepo), Amazon (Dive Deep), Microsoft (Scalar/VFS), Netflix (CD/canary).</li></ul><h4>Staff+ Patterns</h4><ul><li>Staff+ answers demonstrate: org-wide scope, technical depth with trade-offs, influencing without authority, mentorship, and learning from failure.</li><li>For system design interviews: always discuss trade-offs (consistency vs availability, speed vs safety) and reference real systems (Google Piper, Meta Mononoke, Microsoft Scalar).</li><li>Draw the commit graph — visualize what happens during merge, rebase, cherry-pick. Shows deep understanding.</li></ul><h4>Watch Outs</h4><ul><li>Common L4/L5 mistakes: confusing <code>reset --soft/mixed/hard</code>, not knowing <code>git push</code> internals, unable to recover from force-push.</li><li>For Staff+: don't just describe, evaluate. "We chose X over Y because of Z trade-off."</li><li>Behavioral answers must show org-wide impact, not just team-level. Use the STAR format with metrics.</li></ul><h4>Interview Angle</h4><p>This whole guide is the interview angle. Key preparation: <code>git bisect run</code> scripting, <code>git filter-repo</code> for history rewriting, partial clone architecture, merge queue design, and familiarity with each FAANG company's specific Git infrastructure and interview themes.</p></div></details><div class="flex flex-col gap-8"><div id="section-staff-interview-questions-0" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Google L6: Git Hosting System Design</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Design a Git hosting service for 100M repositories serving 50M developers. Discuss data partitioning (repos across shards), Git protocol handling (SSH vs HTTP), object storage (content-addressable blobs in S3), reference resolution (refs in DB), and availability vs consistency trade-offs. Key considerations: pack file generation, delta compression, and garbage collection at scale.</p><p><strong>At Google:</strong> Interviewers look for familiarity with Piper's architecture. Key insight: separate control plane (auth, repo routing) from data plane (object storage). Google asks this as a general distributed systems question — you're expected to design from first principles. Mention: consistent hashing for repo sharding, packfile bitmaps for clone speed, and multi-tier cache (L1: Redis, L2: SSD, L3: S3).</p></div></div>
+<div id="section-staff-interview-questions-1" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Meta L6–L7: Monorepo Architecture for 10K Engineers</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Design a monorepo for 10K developers with 1M files. Discuss partial clone, sparse checkout, <code>git fsmonitor</code> (file system monitor), and shallow fetch strategies. How does <code>git clone --filter=blob:none</code> differ from <code>--depth 1</code>? Design the CI strategy: only build changed projects via dependency graph analysis. How do you scale <code>git status</code> performance?</p><p><strong>At Meta:</strong> Mononoke is Meta's Git-compatible server. They ask this to see if you understand why Mercurial was chosen over Git (better Python API for custom tooling). Key insight: Meta's <code>watchman</code> integration with <code>git fsmonitor</code> eliminates <code>lstat()</code> for status. Sparse checkout is essential — 90% of engineers only touch 10% of the codebase. For CI, Meta uses <code>hg sparse</code> equivalent to build only affected targets.</p></div></div>
+<div id="section-staff-interview-questions-2" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Amazon L6 (SDE III): Merge Algorithm Deep Dive</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Explain how Git's merge algorithm works. Walk through recursive merge strategy, merge base computation (lowest common ancestor), three-way merge, conflict detection with common ancestor, and rename detection (similarity index). Discuss alternatives: ours, theirs, octopus, and subtree merges. When does the recursive strategy fail, and how does the <code>ort</code> strategy improve it?</p><p><strong>At Amazon:</strong> This tests <strong>Dive Deep</strong> leadership principle. Amazon expects you to know the internals: <code>merge-recursive</code> uses a recursive LCA computation for criss-cross merges, while <code>merge-ort</code> (added in Git 2.34) does it in O(n) time with explicit conflict labels. Mention rename detection threshold (50% similarity by default), the <code>diff.renameLimit</code> config, and how <code>ort</code> avoids index file locking issues in large repos.</p></div></div>
+<div id="section-staff-interview-questions-3" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Microsoft L7: Scalar / VFS for Git Design</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Git operations on the Windows repository (300GB+, 3000+ engineers) take minutes. Design a solution that makes <code>git status</code>, <code>git checkout</code>, and <code>git fetch</code> complete in under 1 second. How does the Git Virtual File System (VFS) work? What does Scalar (successor to GVFS) do differently?</p><p><strong>At Microsoft:</strong> This is the defining question for the Azure DevOps / VFS team. Key components: (1) Virtual filesystem using projected filesystem (ProjFS on Windows, FUSE on Mac) — only materialize files on first access. (2) Background prefetch of packfiles. (3) Git protocol extension: <code>--filter=tree:0</code> to defer all blob fetching. (4) Multi-pack index (MIDX) for O(1) object lookups. (5) Scalar's improvements: no custom filesystem driver needed, uses <code>git sparse-checkout</code> and <code>git fsmonitor--daemon</code> instead. Mention the <code>git maintenance</code> background job and <code>prefetch</code> task.</p></div></div>
+<div id="section-staff-interview-questions-4" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Netflix L6: Actions Scale &amp; Deployment Pipeline</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> GitHub Actions processes 10M workflow runs per day. Design the architecture: webhook ingestion, workflow parsing, job scheduling on self-hosted/ephemeral runners, artifact storage, and log streaming. Discuss runner autoscaling, concurrency limits (<code>concurrency</code> key), caching (actions/cache), and the matrix strategy. How would you reduce queue time during peak hours?</p><p><strong>At Netflix:</strong> Focus on CD (continuous deployment) — every commit goes to production. Netflix asks: "How do you ensure Git tags are cryptographically signed before deploying?" "Design a canary pipeline where only 1% of traffic hits the new commit." Discuss: Spinnaker integration, manual approval gates, deployment strategies (rolling, blue/green). Key insight: Netflix's <code>concurrency</code> key on workflow level prevents overlapping deployments to the same environment. Mention <code>github.event.release</code> trigger for release-based pipelines.</p></div></div>
+<div id="section-staff-interview-questions-5" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Apple L7: Custom Merge Driver &amp; Xcode Integration</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> The Xcode project file (<code>.pbxproj</code>) is a plist with UUIDs that change on every file add/remove — causing constant merge conflicts. Design a custom merge driver and a workflow that minimizes developer friction.</p><p><strong>At Apple:</strong> This is asked verbatim by Xcode infrastructure teams. Requirements: (1) A merge driver that sorts UUIDs, de-duplicates entries, and handles parallel edits. (2) A hook that warns developers when they're about to commit a malformed project file. (3) A server-side check that rejects PRs breaking the project structure. Bonus: design a replacement format for <code>.pbxproj</code> that's merge-friendly (e.g., directory-based project format like Swift Package Manager). Apple also asks about <code>git worktree</code> for building multiple branches simultaneously (Intel + Apple Silicon builds).</p></div></div>
+<div id="section-staff-interview-questions-6" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Stripe L6: Server-Side Hook Architecture</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Design a system of server-side Git hooks that enforces compliance policies (commit message format, signed commits, file size limits, secret detection) across all repositories in an organization, without slowing down legitimate pushes.</p><p><strong>At Stripe:</strong> Reliability is paramount — hooks must not be a bottleneck. Design: (1) Pre-receive hook parses updated refs, runs lightweight checks synchronously. (2) Heavy checks (secret scanning, large file detection) run asynchronously via a job queue, with a status check API. (3) Use <code>git cat-file --batch</code> for efficient object scanning. (4) Caching: skip checks on commits already scanned. (5) If async check fails, create a check-run failure — don't block the push. Stripe's engineering culture values pragmatic trade-offs — discuss the latency vs safety trade-off of synchronous vs async checks.</p></div></div>
+<div id="section-staff-interview-questions-7" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Uber L6: Microservices Monorepo Tooling</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Design the Git tooling and workflow for a monorepo with 2000 microservices owned by 50+ teams. Each service has its own CI pipeline, deployment schedule, and ownership. How do you ensure teams can work independently without stepping on each other?</p><p><strong>At Uber:</strong> Key challenges: (1) CODEOWNERS at scale — per-service ownership with auto-requested reviews. (2) CI — build only services affected by a change (<code>git diff --name-only</code> + dependency graph). (3) Deployment — each service deploys independently via its own workflow file. (4) Pre-commit testing — run service-specific tests before merge. Uber's solution: <code>go/x</code> monorepo with <code>buf</code> for protos, <code>pants</code>/<code>bazel</code> for builds. Discuss <code>git sparse-checkout</code> cone mode so engineers only check out their service's code.</p></div></div>
+<div id="section-staff-interview-questions-8" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Snowflake L6: Perforce-to-Git Migration</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Migrate a 15-year-old Perforce depot with 100K changelists and complex branch mappings to Git while preserving all history, commit metadata, and branch relationships. The team is 500 engineers who must not lose productivity during the migration.</p><p><strong>At Snowflake:</strong> This is a real problem — Snowflake migrated from Perforce to Git. Key steps: (1) Map Perforce branches to Git branches using <code>git p4</code> with custom branch mappings. (2) Preserve commit timestamps, authors, and change list numbers as <code>git notes</code>. (3) Handle Perforce's <code>p4 move</code> semantics (Git auto-detects renames via similarity). (4) Migrate in phases: first 6 months in read-only Git + Perforce write, then full cutover. (5) Provide training and migration guides. Discuss: <code>git filter-repo</code> for splitting history, <code>git lfs</code> for large binaries, and rollback plan (keep Perforce archive for 1 year).</p></div></div>
+<div id="section-staff-interview-questions-9" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">GitHub L6: API &amp; GraphQL Design</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Design the GitHub REST API and GraphQL API for listing commits on a repository with 1M+ commits. How do you paginate efficiently? How do you support filtering by author, date range, and file path? How does the GraphQL API differ from REST in terms of performance and developer experience?</p><p><strong>At GitHub:</strong> The GitHub API team asks this. Key points: (1) REST pagination uses page-based (page/per_page) — efficient for random access but slow for deep pages. (2) GraphQL uses cursor-based pagination (first/after) — O(1) per page regardless of depth. (3) Commit listing uses <code>git rev-list</code> with <code>--skip</code> for page offset — but skip goes O(n). Better: use <code>--after</code> and <code>--before</code> with commit timestamps for cursor-based navigation. (4) For file-path filtering, <code>git rev-list -- <path></code> walks the commit graph. (5) For performance: commit-graph speeds up reachability; bitmap indexes speed up clone/fetch but not rev-list — a custom commit index is needed for fast pagination.</p></div></div>
+<div id="section-staff-interview-questions-10" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">LinkedIn L6: Code Review Infrastructure at Scale</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Design the code review infrastructure for 25M engineers across 200M repositories. How do you recommend reviewers, detect similar PRs, merge conflicting PRs in parallel, and provide meaningful review analytics? How does the merge queue work when 1000 PRs target the same branch?</p><p><strong>At LinkedIn:</strong> This question tests your understanding of code review as a distributed coordination problem. Key components: (1) Reviewer recommendation using collaborative filtering — if A and B reviewed the same files, recommend B when A is busy. (2) Merge queue with dependency tracking — PRs that touch disjoint files merge in parallel; PRs with overlapping files are serialized. (3) Review analytics: time-to-first-review, re-review rate, and reviewer workload balancing. LinkedIn uses <code>trrs</code> (turbo repo review system) internally. Discuss the trade-off between <strong>merge velocity</strong> (merge as fast as possible) and <strong>merge safety</strong> (never break main). Git's <code>merge-base</code> is computed per-PR — if another PR merged while yours was in review, the merge queue re-validates against the new base. Mention <code>git merge-tree</code> for previewing merge results without actually merging, and how GitHub's merge queue (since 2023) batches PRs and runs CI on the combined diff.</p></div></div>
+<div id="section-staff-interview-questions-11" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Airbnb L6: Service Extraction from a Monorepo</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Your monorepo has grown to 50 microservices. The payments team wants to extract their service into a separate repo so they can ship independently. Design the extraction: preserve full Git history for the payments directory, maintain backward compatibility for consumers, and set up cross-repo dependency management. How do you handle shared protobuf definitions and common libraries?</p><p><strong>At Airbnb:</strong> This is based on Airbnb's real migration from monorepo to polyrepo. Key steps: (1) Use <code>git filter-repo</code> with <code>--path payments/</code> to split history — this rewrites commits to only include the payments directory, preserving author, timestamps, and messages. (2) Subtree replacement: keep a <code>git subtree</code> in the monorepo pointing to the new repo for a transition period. (3) Shared protos go into a third <code>protos</code> repo consumed by both — versioned with tags like <code>protos/v1.2.3</code>. (4) Common libraries become internal packages published to a private registry. Key insight: Airbnb used a <strong>dual-write</strong> phase where both monorepo and polyrepo accepted changes for 3 months, with a bot that synced commits in both directions. Discuss the trade-off: monorepo gives atomic cross-service changes but requires tooling investment; polyrepo gives team autonomy but requires dependency versioning discipline. Mention tools like <code>git subtree split</code> and <code>git filter-repo --refs</code> for the extraction itself.</p></div></div>
+<div id="section-staff-interview-questions-12" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">DoorDash L6: Multi-Repo Dependency Management</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Your organization has 200 microservices across 200 repos. Service A depends on B v2.1, and B depends on C v3.0. When C releases v3.1, you need to update B then A. Design a system that tracks these dependencies, automates upgrade PRs, and notifies teams when they're blocking downstream consumers.</p><p><strong>At DoorDash:</strong> This tests your understanding of dependency management at scale. Key components: (1) A dependency graph stored as a DAG (directed acyclic graph) — each node is a repo, each edge is a version constraint. (2) Automated dependency update bot — when C publishes v3.1, the bot creates a PR in B to update the dependency, then after B's PR merges, creates a PR in A to update to B's new version. (3) Versioning convention: <code>semver</code> with strict breaking-change detection. (4) Integration testing on the combined upgrade before merging. DoorDash uses <code>Renovate</code> bot extensively. Discuss trade-offs: <strong>eager upgrades</strong> (always stay on latest — high merge overhead but low technical debt) vs <strong>lazy upgrades</strong> (only upgrade when needed — lower overhead but risk of cascading outdated dependencies). Mention <code>git submodule</code> (not recommended for this — too manual) vs package managers like <code>npm</code>, <code>go mod</code>, or <code>bazel</code> for automatic resolution. For zero-downtime dependency rollouts, use canary releases: upgrade staging first, run integration tests, then promote to production.</p></div></div>
+<div id="section-staff-interview-questions-13" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Twitter/X L6: Open Source Workflow on a Public Monorepo</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Your company is open-sourcing a large internal project. Design the contribution workflow: CLA (Contributor License Agreement) signing, automated triage of community PRs, CI for external contributors without exposing secrets, fork management, and maintaining a healthy open source community. How do you handle a PR that's been stale for 6 months?</p><p><strong>At Twitter/X:</strong> Twitter open-sourced Bootstrap, Finagle, Scalab — all from internal monorepos. Key design: (1) Bot-assisted triage — label PRs by area (bug, feature, docs), auto-respond to first-time contributors with onboarding links. (2) CLA bot — blocks merge until CLA is signed via GitHub check. (3) CI for forks — use <code>pull_request_target</code> event with safe checkout (no write tokens exposed to untrusted code). (4) Stale PR policy — after 30 days of inactivity, bot comments asking for update; after 60 days, closes with "please open a new PR if still relevant." (5) Maintainer rotation — ensure no single bus factor. Twitter's <code>twitter.github.io</code> used Jekyll with community PRs. Key insight: the <code>git</code> workflow for open source is different from internal — forks are shallow clones by default, so maintainers use <code>git fetch upstream pull/ID/head:pr-branch</code> to test PRs locally. Discuss <code>git rebase</code> vs <code>git merge</code> for community PRs: Twitter prefers merge commits to preserve contribution attribution. For internal-to-open-source migration, use <code>git filter-repo --strip-custom-commits</code> to remove internal references before publishing.</p></div></div>
+<div id="section-staff-interview-questions-14" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Multi-Company L6+: Git Security &amp; Supply Chain</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Design a Git security strategy for a large organization. Cover: signed commits (GPG), signed tags, commit verification badges on GitHub, secret scanning (pre-commit hooks + server-side scanning), branch protection rules, and SBOM generation from Git history. How do you prevent a compromised laptop from pushing malicious code?</p><p><strong>At Google/Meta/Microsoft:</strong> Supply chain security is a Staff+ topic. Key components: (1) GPG signed commits — enforce with a pre-receive hook that rejects unsigned commits from non-CI users. GitHub shows a verified badge for GPG-signed commits. (2) SSH keys with hardware-backed keys (YubiKey) — integrate with corporate PKI. (3) Secret scanning — <code>truffleHog</code> or <code>git-secrets</code> as a pre-commit hook, plus GitHub's push protection API that scans every push. (4) Branch protection — require signed commits, status checks, linear history, and no force pushes on <code>main</code>. (5) SBOM — <code>git log --format='%H %s' --since=1year</code> to generate a list of dependency changes; combine with <code>syft</code> or <code>trivy</code> for vulnerability scanning. (6) Incident response — <code>git revert</code> a malicious commit atomically across all branches, rotate all secrets in the affected commit using <code>git log --all --diff-filter=A -- '*.env'</code> to find leaked secrets. Google's <code>borg</code>/<code>piper</code> uses cryptographic attestation for every commit — discuss how CLAs and signed commits create an auditable chain of custody. Mention <code>git fsck</code> for repository integrity verification and <code>git rev-list --objects --all | git cat-file --batch-check</code> for object auditing.</p></div></div>
+<div id="section-staff-interview-questions-15" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Multi-Company L7: Production Incidents &amp; Git-Based Rollback</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> A bad deployment goes to production — all pods crash-looping. Design the rollback strategy using Git: how do you revert, how fast can you revert, and how do you prevent the bad commit from being re-deployed? Design a canary deployment pipeline integrated with Git tags. How do you handle a rollback that's needed 3 months after the bad commit (when 100 other commits landed after it)?</p><p><strong>At Netflix/Amazon/Google:</strong> Incident management at Staff+ level. Key strategies: (1) Immediate rollback: <code>git revert <bad-sha></code> creates a new commit that undoes the change — this is cleaner than <code>git reset --hard</code> because it doesn't rewrite history. Deploy the revert commit. (2) For a deep rollback (3 months later): <code>git revert <bad-sha>..HEAD --no-commit</code> to undo everything since the bad commit, then cherry-pick the good ones back. Use <code>git log --grep</code> to identify which subsequent commits are safe. (3) Tag-based deployment: every deploy creates a Git tag (<code>deploy-prod-v435</code>). Rollback = deploy the previous tag. (4) Canary pipeline: deploy tag to 1% of traffic, run synthetic checks for 5 minutes, auto-promote if healthy, auto-rollback if error rate spikes. GitHub Actions: <code>deployment</code> event with <code>environment: production</code> and <code>required_contexts</code>. (5) Postmortem: use <code>git bisect</code> to find the exact bad commit if the root cause isn't obvious. Netflix's Spinnaker integrates with Git tags natively — every pipeline run is associated with a Git commit SHA. Amazon's CodePipeline uses <code>git commit ID</code> as the source artifact version. Google Cloud Deploy uses <code>skaffold</code> with Git-based delivery pipelines. Key insight: <strong>revert is a new commit, not a history rewrite</strong> — this preserves the audit trail. For database migrations that can't be reverted with a simple code revert, use <code>git revert</code> + a compensating migration. Discuss the difference between <code>git revert</code> (safe, auditable) and <code>git reset</code> (dangerous, rewrites history).</p></div></div>
+<div id="section-staff-interview-questions-16" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Multi-Company L6+: Developer Experience &amp; Inner Source</h3><div class="theme-text-muted text-sm leading-relaxed"><p><strong>Problem:</strong> Your company has 5000 engineers across 200 teams. Most teams don't know what other teams are building, leading to duplicated effort and inconsistent practices. Design an inner source program: how do you encourage cross-team contributions using Git and GitHub workflows? How do you measure developer productivity and satisfaction?</p><p><strong>At Microsoft/Google/Stripe:</strong> Inner source applies open source practices inside an organization. Key design: (1) Repository discovery — a searchable catalog of all internal repos with README, API docs, and ownership. Use GitHub's repo topics and <code>CODEOWNERS</code> for discoverability. (2) Contribution workflow: external (to the team) contributors fork the repo, create a PR, and the owning team reviews — identical to open source. Use <code>CONTRIBUTING.md</code> and issue templates. (3) Inner source license: a standard internal MIT-equivalent that allows any team to use any repo. (4) Metrics: DORA metrics (deploy frequency, lead time, MTTR, change failure rate), plus contribution metrics (number of cross-team PRs, time-to-first-PR for new hires). (5) Incentives: include cross-team contributions in performance reviews. Microsoft's <code>1ES</code> (One Engineering System) standardizes Git workflows across all of Microsoft. Google's <code>citC</code> (Clients in the Cloud) uses Piper for the entire monorepo. Stripe's <code>stripe-internal</code> monorepo has contribution guidelines published as a Markdown file at the root. Key insight: inner source fails when the friction to contribute is higher than the benefit — invest in CI/CD that makes it trivial to build and test any repo. Use <code>git sparse-checkout</code> to keep working trees small even when exploring unfamiliar repos. For measuring DX, use the SPACE framework (Satisfaction, Performance, Activity, Collaboration, Efficiency) rather than just lines of code. Discuss <code>git shortlog -sn</code> to see who's contributing across repos, and <code>git log --format='%an' --since=1month</code> for engagement tracking.</p></div></div>
+<div id="section-staff-interview-questions-17" class="scroll-mt-24 flex flex-col gap-3"><h3 class="text-xl font-semibold theme-text">Behavioral: Staff+ Leadership (All Companies)</h3><div class="theme-text-muted text-sm leading-relaxed"><p>These questions appear in every Staff+ loop. <strong>Google L6:</strong> "Tell me about the most technically complex project you've led — what was the hardest decision?" <strong>Meta L7:</strong> "Describe a time you unblocked an entire organization — how did you communicate the path forward?" <strong>Amazon L7 (Principal):</strong> "Tell me about a time you had to say no to a VP-level request — how did you handle it?" <strong>Microsoft L6–L7:</strong> "Describe a time you influenced a technical decision across multiple teams without direct authority." <strong>Netflix L7:</strong> "Tell me about a time you made a decision that was unpopular but correct — what was the outcome?" <strong>Apple L7:</strong> "Describe a situation where you had to choose between two opposing technical approaches — how did you resolve it with data?" <strong>Stripe L6:</strong> "Tell me about a time you improved developer productivity by an order of magnitude."</p><p>For all answers, use the STAR framework. Staff+ answers must demonstrate: (1) org-wide scope (not team-level), (2) technical depth with trade-offs, (3) influencing without authority, (4) mentorship and team building, and (5) learning from failure.</p></div></div></div><div id="section-dive" class="scroll-mt-24"><details class="group border theme-border theme-bg-subtle rounded-xl overflow-hidden transition-all duration-300"><summary class="flex items-center justify-between p-4 font-bold text-sm theme-text cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-brand-500">lightbulb</span><span>Deep Dive &amp; Key Takeaways</span></span><span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-open:rotate-180 text-slate-400">expand_more</span></summary><div class="px-5 pb-5 pt-2 theme-text-muted text-sm leading-relaxed border-t theme-border font-sans"><p>Staff+ interviews assess four dimensions: technical depth (can you reason about complex systems at scale?), architectural thinking (can you design for trade-offs?), organizational impact (can you drive alignment without authority?), and technical strategy (can you set technical direction?). The Git hosting system design question tests knowledge of Git internals: objects (blob, tree, commit, tag), refs (branches, tags, HEAD), packfiles (thin vs thick, bitmap indexes), and protocol negotiation (want/have, shallow). At GitHub's scale, every request goes through a load balancer to a Git frontend that performs authentication, authorization, and repository routing. The git data plane is separate from the control plane — objects are served from a distributed cache with NFS/EBS as a fallback. Packfile bitmaps speed up clone and fetch by encoding reachability. For monorepos, the key insight is that most engineers only touch a fraction of files — partial clone (<code>--filter=tree:0</code>) defers object fetching, sparse checkout limits the working tree, and <code>git fsmonitor</code> uses filesystem events instead of <code>lstat()</code> calls. CI in monorepos requires dependency graph analysis to determine which projects are affected by a change — tools like Bazel, Nx, or Turborepo compute the affected graph. Actions scale requires horizontal runner autoscaling, job partitioning (matrix), and artifact caching. The coordinator on the Actions team manages the queue, dispatches jobs to runner groups, and handles concurrency. Behavioral questions at the Staff+ level focus on scope — answers should demonstrate org-wide impact, mentoring, and technical leadership without direct authority.</p><p><strong>Company-Specific Preparation:</strong> For <strong>Google</strong>, practice distributed systems design — they care about trade-offs, consistency models, and fault tolerance. For <strong>Meta</strong>, focus on performance optimization at scale — they value concrete numbers and benchmarks. For <strong>Amazon</strong>, anchor every answer to a Leadership Principle — prepare 3 stories per principle. For <strong>Microsoft</strong>, understand their actual Git scaling work (VFS, Scalar, Azure Repos) — they want to see that you've studied their engineering blogs. For <strong>Netflix</strong>, emphasize CD, chaos engineering, and automation. For <strong>Apple</strong>, focus on cross-team collaboration and dealing with legacy systems. For <strong>Stripe</strong>, demonstrate API design taste and reliability mindset. For <strong>LinkedIn</strong>, prepare for code review and merge queue system design — they value throughput and fairness in reviewer assignment. For <strong>Airbnb</strong>, focus on migration and refactoring at scale — they want to see clean extraction strategies with minimal blast radius. For <strong>DoorDash</strong>, emphasize dependency management and cross-team coordination — they care about avoiding blocker chains. For <strong>Twitter/X</strong>, demonstrate open source community expertise — contribution workflows, bot automation, and community health metrics matter most.</p><p>Security and supply chain questions at the Staff+ level test your ability to think about the full attack surface: signed commits, secret detection, branch protection, and SBOM generation. The key insight is that Git security is not just about cryptography — it's about process automation (hooks, status checks, policies) and auditability (every action leaves a trace in the reflog). Incident management questions separate Staff from Senior by testing your rollback strategy under pressure. The canonical answer always begins with <code>git revert</code> (not <code>git reset</code>) because preserving history is paramount at scale. Developer Experience (DX) and inner source questions assess organizational thinking — can you design a contribution workflow that thousands of engineers will adopt voluntarily? The answer hinges on reducing friction: fast CI, clear ownership, and low ceremony for the contributor. Inner source succeeds when the path of least resistance is also the correct path.</p></div></details></div><div class="mt-8 pt-6 flex items-center justify-between gap-4 border-t theme-border"><a href="/docs/dx-engineering/" class="flex items-center gap-2 text-sm theme-text-muted hover:text-brand-500 transition-colors group"><span class="material-symbols-outlined text-sm transition-transform group-hover:-translate-x-0.5">arrow_back</span><span class="truncate max-w-[200px]">Developer Experience Engineering</span></a><a href="/docs/git-culture-strategy/" class="flex items-center gap-2 text-sm theme-text-muted hover:text-brand-500 transition-colors group text-right"><span class="truncate max-w-[200px]">Git Culture &amp; CI/CD Strategy</span><span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-0.5">arrow_forward</span></a></div></article></main>
+    <aside class="hidden xl:block w-48 sticky top-24 h-[calc(100vh-120px)] overflow-y-auto shrink-0 border-l theme-border pl-6">
+      <h4 class="sidebar-label !text-[10px] !pt-0 !pb-0 mb-3">On this page</h4>
+      <nav id="docs-right-outline" class="space-y-3 text-xs theme-text-muted" aria-label="Page sections"></nav>
+    </aside>
+  </div>
+  <footer class="border-t theme-border py-8 theme-bg">
+    <div class="max-w-7xl mx-auto px-6 flex justify-center items-center text-sm theme-text-muted">
+      <span>Made with ❤️ by <a href="https://www.linkedin.com/in/kallol-chakraborty-9728a699/" target="_blank" rel="noopener noreferrer" class="text-brand-500 hover:text-brand-600 transition-colors font-semibold">Kallol Chakraborty</a></span>
+    </div>
+  </footer>
+  <noscript>
+    <div class="max-w-5xl mx-auto px-6 py-8">
+      <div class="flex items-center gap-2.5 mb-6">
+        <img src="assets/logo.svg" alt="git bytes" class="w-8 h-8" />
+        <span class="text-base font-semibold">git bytes</span>
+      </div>
+      <h1 class="text-3xl font-bold mb-2">Study Guides</h1>
+      <p class="text-sm theme-text-muted mb-8">This site requires JavaScript for the full interactive experience. Below is a complete index of all available guides.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Git Fundamentals</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/git-basics/" class="text-brand-500 hover:text-brand-600">Git Basics — init, add, commit, log, diff</a></li>
+            <li><a href="/docs/branching-merging/" class="text-brand-500 hover:text-brand-600">Branching &amp; Merging</a></li>
+            <li><a href="/docs/remotes-collaboration/" class="text-brand-500 hover:text-brand-600">Remotes &amp; Collaboration</a></li>
+            <li><a href="/docs/rebasing-advanced/" class="text-brand-500 hover:text-brand-600">Rebasing &amp; Advanced Git</a></li>
+            <li><a href="/docs/git-internals/" class="text-brand-500 hover:text-brand-600">Git Internals</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">GitHub Platform</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/repos-issues/" class="text-brand-500 hover:text-brand-600">Repositories &amp; Issues</a></li>
+            <li><a href="/docs/pull-requests/" class="text-brand-500 hover:text-brand-600">Pull Requests &amp; Code Review</a></li>
+            <li><a href="/docs/github-pages/" class="text-brand-500 hover:text-brand-600">GitHub Pages</a></li>
+            <li><a href="/docs/actions-fundamentals/" class="text-brand-500 hover:text-brand-600">GitHub Actions Fundamentals</a></li>
+            <li><a href="/docs/projects-wikis/" class="text-brand-500 hover:text-brand-600">Projects, Wikis &amp; Discussions</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">GitHub Advanced</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/rest-api/" class="text-brand-500 hover:text-brand-600">GitHub REST API</a></li>
+            <li><a href="/docs/graphql-api/" class="text-brand-500 hover:text-brand-600">GitHub GraphQL API</a></li>
+            <li><a href="/docs/github-cli/" class="text-brand-500 hover:text-brand-600">GitHub CLI (gh)</a></li>
+            <li><a href="/docs/security-dependabot/" class="text-brand-500 hover:text-brand-600">Security &amp; Dependabot</a></li>
+            <li><a href="/docs/packages/" class="text-brand-500 hover:text-brand-600">Packages &amp; Registries</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Open Source &amp; Collaboration</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/forking-workflow/" class="text-brand-500 hover:text-brand-600">Forking &amp; Contribution Workflow</a></li>
+            <li><a href="/docs/community-management/" class="text-brand-500 hover:text-brand-600">Community Management</a></li>
+            <li><a href="/docs/licensing-governance/" class="text-brand-500 hover:text-brand-600">Licensing &amp; Governance</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">DevOps &amp; Automation</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/actions-advanced/" class="text-brand-500 hover:text-brand-600">GitHub Actions Advanced</a></li>
+            <li><a href="/docs/runner-architecture/" class="text-brand-500 hover:text-brand-600">Actions Runner Architecture</a></li>
+            <li><a href="/docs/deployment-pipelines/" class="text-brand-500 hover:text-brand-600">Deployment Pipelines</a></li>
+            <li><a href="/docs/copilot/" class="text-brand-500 hover:text-brand-600">GitHub Copilot</a></li>
+            <li><a href="/docs/actions-cost-optimization/" class="text-brand-500 hover:text-brand-600">Actions Cost Optimization</a></li>
+          </ul>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3 mt-6">Career &amp; Best Practices</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/best-practices/" class="text-brand-500 hover:text-brand-600">Git Best Practices</a></li>
+            <li><a href="/docs/portfolio-tips/" class="text-brand-500 hover:text-brand-600">GitHub Portfolio Tips</a></li>
+            <li><a href="/docs/interview-qa/" class="text-brand-500 hover:text-brand-600">Git Interview Q&amp;A</a></li>
+            <li><a href="/docs/patterns-antipatterns/" class="text-brand-500 hover:text-brand-600">Patterns &amp; Anti-Patterns</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Git at Scale (Staff+)</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/monorepo-management/" class="text-brand-500 hover:text-brand-600">Monorepo Management</a></li>
+            <li><a href="/docs/git-internals-deep/" class="text-brand-500 hover:text-brand-600">Git Internals Deep Dive</a></li>
+            <li><a href="/docs/merge-queue/" class="text-brand-500 hover:text-brand-600">Advanced Merge Strategies</a></li>
+            <li><a href="/docs/trunk-vs-multi-repo/" class="text-brand-500 hover:text-brand-600">Trunk-based vs Multi-Repo</a></li>
+            <li><a href="/docs/incident-debugging/" class="text-brand-500 hover:text-brand-600">Incident Debugging &amp; Rollbacks</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Enterprise &amp; Supply Chain (Staff+)</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/enterprise-admin/" class="text-brand-500 hover:text-brand-600">GitHub Enterprise Admin</a></li>
+            <li><a href="/docs/policy-as-code/" class="text-brand-500 hover:text-brand-600">Policy as Code</a></li>
+            <li><a href="/docs/api-automation/" class="text-brand-500 hover:text-brand-600">API Automation</a></li>
+            <li><a href="/docs/supply-chain-security/" class="text-brand-500 hover:text-brand-600">Supply Chain Security</a></li>
+            <li><a href="/docs/gitops/" class="text-brand-500 hover:text-brand-600">GitOps &amp; Deployments</a></li>
+            <li><a href="/docs/audit-log-streaming/" class="text-brand-500 hover:text-brand-600">Audit Log Streaming</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-brand-500 uppercase tracking-wider mb-3">Staff+ Leadership &amp; DX</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs/rfc-adr/" class="text-brand-500 hover:text-brand-600">RFC &amp; ADR Processes</a></li>
+            <li><a href="/docs/release-engineering/" class="text-brand-500 hover:text-brand-600">Release Engineering</a></li>
+            <li><a href="/docs/dx-engineering/" class="text-brand-500 hover:text-brand-600">Developer Experience Engineering</a></li>
+            <li><a href="/docs/staff-interview-questions/" class="text-brand-500 hover:text-brand-600">Staff+ Interview Questions</a></li>
+            <li><a href="/docs/git-culture-strategy/" class="text-brand-500 hover:text-brand-600">Git Culture &amp; CI/CD Strategy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t theme-border text-sm theme-text-muted">
+        <a href="index.html" class="text-brand-500 hover:text-brand-600 font-semibold">&larr; Back to Home</a>
+      </div>
+    </div>
+  </noscript>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/headroom.js@0.12.0/dist/headroom.min.js"></script>
+  <script src="js/generated.js" defer></script>
+  <script src="js/modals.js" defer></script>
+  <script src="js/loader.js" defer></script>
+  <script>
+    var header = document.querySelector('header');
+    if (header) { new Headroom(header).init(); }
+  </script>
+  <script>
+    (function() {
+      var sidebar = document.getElementById('left-sidebar');
+      var backdrop = document.getElementById('sidebar-backdrop');
+      var toggle = document.getElementById('sidebar-toggle');
+      if (!sidebar || !backdrop || !toggle) return;
+      function openSidebar() { sidebar.classList.remove('-translate-x-full'); backdrop.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+      function closeSidebar() { sidebar.classList.add('-translate-x-full'); backdrop.classList.add('hidden'); document.body.style.overflow = ''; }
+      toggle.addEventListener('click', function() { sidebar.classList.contains('-translate-x-full') ? openSidebar() : closeSidebar(); });
+      backdrop.addEventListener('click', closeSidebar);
+      sidebar.querySelectorAll('.sidebar-link').forEach(function(link) {
+        link.addEventListener('click', function() { if (window.innerWidth < 1024) closeSidebar(); });
+      });
+      window.addEventListener('resize', function() { if (window.innerWidth >= 1024) { backdrop.classList.add('hidden'); document.body.style.overflow = ''; } });
+    })();
+  </script>
+</body>
+</html>
