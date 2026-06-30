@@ -55,7 +55,7 @@ html.dark {
   --svg-accent-stroke: #a78bfa;
   --svg-accent-text: #ddd6fe;
 }
-html { font-size: 14.4px; font-family: 'Ubuntu', sans-serif; }
+html { font-size: 13px; font-family: 'Ubuntu', sans-serif; }
 code { font-family: 'Ubuntu Mono', monospace; }
 pre { font-family: 'Ubuntu Mono', monospace; }
 a { text-decoration: none; }
